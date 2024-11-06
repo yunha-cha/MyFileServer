@@ -1,0 +1,29 @@
+.sidebarContainer{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 100vh;
+    background-color: #edf2ff;
+    width: 250px;
+    padding-top: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.logout{
+    background-color: rgb(192, 216, 255);
+    margin: 20px;
+    border-radius: 12px;
+    color: white;
+    height: 30px;
+    border: none;
+    width: 70px;
+    cursor: pointer;
+}
+.title{
+    font-size: 35px;
+    user-select: none;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: center;
+}
