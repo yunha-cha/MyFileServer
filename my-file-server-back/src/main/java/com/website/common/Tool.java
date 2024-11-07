@@ -46,4 +46,29 @@ public class Tool {
         }
         return null;
     }
+    /**
+     * 파일을 삭제하는 메서드.
+     * @param fileName 삭제할 파일 이름
+     * @return 파일 삭제 성공 여부
+     */
+    public boolean deleteFile(String fileName) {
+        if (fileName != null && !fileName.isEmpty()) {
+            String filePath = uploadDir + File.separator + fileName;
+            File file = new File(filePath);
+
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("파일이 성공적으로 삭제되었습니다: " + filePath);
+                    return true;
+                } else {
+                    System.err.println("파일 삭제에 실패했습니다: " + filePath);
+                }
+            } else {
+                System.err.println("파일이 존재하지 않습니다: " + filePath);
+            }
+        } else {
+            System.err.println("유효하지 않은 파일 이름입니다.");
+        }
+        return false;
+    }
 }

@@ -45,6 +45,8 @@ api.interceptors.response.use(
             if(error.response.status === 403){
                 alert('토큰이 만료되었습니다.');
                 console.log(error.response);
+                localStorage.removeItem('token');
+                window.location.href='/';
             } else if(error.response.status === 401){   //jwt토큰이 없을 때
                 window.location.href = '/';
                 alert('토큰이 없거나, Bearer가 포함되어 있지 않습니다.');

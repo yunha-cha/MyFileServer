@@ -7,6 +7,10 @@ import com.website.security.dto.CustomUserDetails;
 import com.website.security.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,12 +53,27 @@ public class MainPageService {
         }
     }
 
-    public List<FileEntity> getMyFile(CustomUserDetails user) {
-        return fileRepository.getMyFile(user.getUserCode());
+    public Page<FileEntity> getMyFile(CustomUserDetails user, int page) {
+        Pageable pageable = PageRequest.of(page,10,  Sort.by("uploadedAt").descending());
+        return fileRepository.getMyFile(user.getUserCode(),pageable);
     }
     @Transactional
     public void increaseDownloadCount(Long fileCode) {
         FileEntity fileEntity = fileRepository.findById(fileCode).orElseThrow();
         fileEntity.setDownload_count(fileEntity.getDownload_count() + 1);
+    }
+
+    public boolean deleteFile(Long fileCode) {
+        FileEntity fileEntity = fileRepository.findById(fileCode).orElseThrow();
+        try{
+            if(!tool.deleteFile(fileEntity.getChangedName())){
+                return false;
+            }
+            fileRepository.deleteById(fileEntity.getFileCode());
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+
     }
 }

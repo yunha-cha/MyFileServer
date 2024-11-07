@@ -4,37 +4,41 @@ import axios from "axios";
 import s from "./Main.module.css";
 import { useNavigate } from "react-router-dom";
 import MobileMain from "./MobileMain";
+import { jwtDecode } from "jwt-decode";
+import InputModal from "./InputModal";
+import Pagination from "react-js-pagination";
+import '../common/Pagination.css';
 
-const Main = () => {
-    console.log('응');
-    
+const Main = () => {    
     const nav = useNavigate();
     const [description,setDescription] = useState('');
     const [myFiles, setMyFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isPhone, setIsPhone] = useState(false);
     const [allText,setAllText] = useState(null);
-
+    const [user,setUser] = useState(jwtDecode(localStorage.getItem("token")));
+    const [showInputModal, setShowInputModal] = useState(false);
+    const [fileName, setFileName] = useState('');
+    const [file, setFile]=useState(null);
+    const [page,setPage] = useState(0);
+    const [totalElements,setTotalElements] = useState(0);
 
     let token = '';
-    const upload = async (e) => {
-        let fileName = prompt("파일 이름을 입력하세요 (10자 이하)");
-        if(fileName && fileName.length > 10){
-            alert("10자 이하로 작성해주세요.");
-            return;
-        }
-        const file = e.target.files[0];
-
+    const openUploadModal = (e) => {
+        setFile(e.target.files[0]);
+        e.target.value = null;
+        setShowInputModal(true);
+    }
+    const upload = async (file) => {
         if(file){
             setLoading(true);
             const res = await api.post('/main/upload',{file:file,description:fileName});
-            await getMyFile();
+            await getMyFile(page);
             setLoading(false);
         }
     }
 
     const downloadFile = async (file) => {      
-        console.log(file);
         
         await api.post(`/main/download-count/${file.fileCode}`);
         const fileFullPath = file.fileFullPath;
@@ -59,7 +63,7 @@ const Main = () => {
         .catch((error) => {
           console.error('Error downloading the file:', error);
         });
-        await getMyFile();
+        await getMyFile(page);
     };
 
 
@@ -80,12 +84,25 @@ const Main = () => {
         return `${year}/${month}/${day} | ${hour}:${minute}:${second}`;
     };
 
-
-    const getMyFile = async () => { //내 파일들 가져오기
+    const deleteFile = async (fileCode) => {
+        const res = await api.delete(`/main/file/${fileCode}`);
+        console.log(res);
+        await getMyFile(page);        
+    }
+    const getMyFile = async (page) => { //내 파일들 가져오기
         setLoading(true);
-        const res = await api.get('/main/file');
+        const res = await api.get(`/main/file?page=${page}`);
+        setTotalElements(res.data.totalElements);
+        // console.log(res);
+        
+        
         setLoading(false);
-        setMyFiles(res.data);
+        setMyFiles(res.data.content);
+    }
+    const handlePageChange = (page) => {
+        console.log("씨발 페이지 바뀜! : ",page);
+        
+        setPage(page-1);
     }
     useEffect(()=>{
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -94,15 +111,17 @@ const Main = () => {
         }
         token = localStorage.getItem("token");
         if(token){
-            getMyFile();
+            // getMyFile(1);
         } else {
             nav("/");
         }
     },[])
     useEffect(()=>{
-        console.log(myFiles);
+        console.log("effect page ",page);
         
-    },[myFiles])
+        getMyFile(page);
+    },[page])
+
     return(
         <div>
             {isPhone ? (
@@ -110,20 +129,22 @@ const Main = () => {
             )
             :
             (
-            <div>
+            <div className={s.container}> 
+                <div className={s.pageTitle}>개인 클라우드</div>
                 <div className={s.customFileUpload}>
                     <label htmlFor="fileInput" className={s.customUploadButton}>
                         파일 업로드
                     </label>
-                    <input id="fileInput" type="file" onChange={upload} />
+                    <input id="fileInput" type="file" onChange={openUploadModal} />
                 </div>
                 <table className={s.myFileContainer}>
                     <thead className={s.thead}>
                             <tr className={s.tr}>
                                 <th>파일 이름</th>
-                                <th>업로드 시간</th>
                                 <th>다운로드 횟수</th>
+                                <th>업로드 시간</th>
                                 <th>다운로드</th>
+                                <th>삭제</th>
                             </tr>
                     </thead>
                     <tbody>
@@ -131,18 +152,23 @@ const Main = () => {
                         myFiles.map((f,i) => (
                             <tr className={s.file} key={f.fileCode}>
                                 {f.description.length>10?<td className={s.title}>{allText===i?f.description:f.description.substring(0,10)+".."}{allText===i?<></>:<button className={s.allText} onClick={()=>{setAllText(i)} }>더보기</button>}</td>:<td className={s.title}>{f.description}</td>}
+                                <td className={s.downloadCount}>{f.download_count}회</td>
                                 <td className={s.time}>{formattedDateTime(f.uploadedAt)}</td>
-                                <td className={s.downloadCount}>{f.download_count}회 다운로드</td>
-
                                 <td className={s.download}><button className={s.downloadBtn} onClick={()=>downloadFile(f)}>다운로드</button></td>
+                                {user.accountCode===f.uploadedByUser.userCode?<td title="삭제하기" className={s.deleteFile} onClick={()=>deleteFile(f.fileCode)}>❌</td>:<></>}
                             </tr>
                         ))
                     }
                     </tbody>
                 </table>
-            </div>
+                <Pagination
+                activePage={page}
+                itemsCountPerPage={10}
+                totalItemsCount={totalElements}
+                onChange={handlePageChange}/>
+                </div>
             )}
-
+        {showInputModal ? <InputModal setFileName={setFileName} upload={upload} file={file} setShow={setShowInputModal}/> : <></>}
         </div>
     )
 }
