@@ -16,7 +16,17 @@ www.seopia.online
 
 배포환경에는 2024년 11월 9일 업데이트 예정
 
-### 0.1.0
+### Ver 0.0.1
+![image](https://github.com/user-attachments/assets/2b515e3c-ad64-4da1-9040-14449326082f)
+- 배포!!
+- 파일 업로드 기능
+- 파일 다운로드 기능
+- 로그인, 로그아웃 기능
+
+### Ver 0.1.0
+
+![image](https://github.com/user-attachments/assets/33abaeae-e5b2-4b4f-bc71-d73a5e4ed358)
+
 - 다운로드 카운트 추가
 - 파일 날짜 기준 정렬
 - 로그인 관련 로직 버그 수정 (토큰이 만료되면 메세지 출력 무한 반복 버그)
