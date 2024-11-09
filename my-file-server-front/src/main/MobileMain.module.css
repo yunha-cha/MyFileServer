@@ -1,84 +1,51 @@
-.footer{
-    position: fixed;
-    bottom: 0px;
-    left: 0;
-    height: 40px;
-    width: 100%;
-    background-color:  rgb(171, 199, 255);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-.header{
-    position: fixed;
-    top: 0;
-    left:10;
-}
-.mobileContainer{
-    font-size: 13px;
-}
-.table tbody tr td button {
-    font-size: 10px;
-    width: 60px;
-    padding: 5px 10px;
-    border: none;
-    color: white;
-    font-weight: bold;
-    background-color: rgb(169, 189, 223);
-    border-radius: 4px;
-    cursor: pointer;
-}
-.time{
-    font-size: 9px
-}
-.thead {
-    width: 100%;
-    height: 20px;
-    background-color: rgb(169, 189, 223);
-    color: white;
-    border-bottom: 2px solid rgb(135, 152, 182);
-    border-radius: 5px;
+.container{
+    display: flex;
+    flex-direction: column;
 }
 
+.table {
+    width: 100vw;
+}
+.thead {
+background-color: rgb(169, 189, 223);
+color: white;
+}
 .thead th {
+    padding: 10px;
+    font-size: 15px;
+}
+.table tbody tr td {
     text-align: center;
     font-size: 13px;
 }
-.logout{
-    font-size: 10px;
-    width: 60px;
-    padding: 5px 10px;
-    margin: 10px;
+.downloadBtn{
     border: none;
-    color: white;
-    font-weight: bold;
     background-color: rgb(169, 189, 223);
     border-radius: 4px;
-    cursor: pointer;
-}
-.customFileUpload {
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-  }
-  
-  .customUploadButton {
-    cursor: pointer;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(131, 146, 173);
+    padding: 5px 10px;
     color: white;
     font-weight: bold;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    text-align: center;
+    height: 30px;
   }
+
   
-  .customUploadButton:hover {
-    background-color: rgb(135, 152, 182);
+  .footer{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 8%;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: space-around;
+    bottom: 0;
   }
-  
-  input[type="file"] {
-    position: absolute;
-    opacity: 0; /* 숨기기 */
-    cursor: pointer;
+
+  .footer button{
+    background-color: rgb(169, 189, 223);
+    color: white;
+    font-family: 'P';
+    flex: 1;  
+    font-weight: bold;
+    border: none;
   }
+

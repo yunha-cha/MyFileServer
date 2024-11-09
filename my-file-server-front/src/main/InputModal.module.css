@@ -1,19 +1,23 @@
 .modalContainer{
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 40%;
-    left: 40%;
     width: 300px;
-    height: 150px;
+    height: 165px;
     background-color: rgb(192, 216, 255);
     border-radius: 20px;
     box-shadow: 0 10px 20px 5px rgba(0, 0, 0, 0.3);
 }
-.modalContainer div{
-    color: gray;
-    padding-top: 20px;
+
+.modalContainer div:first-child{
+    user-select: none;
+    color: rgb(85, 85, 85);
+    padding: 10px;
+}
+.modalContainer div article {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .modalContainer input{
     padding-left: 10px;
@@ -22,28 +26,30 @@
     border: none;
     border-radius: 4px;
     box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1); /* 안쪽 그림자 */
+    transition-property: border-radius scale;
+    transition-duration: 0.2s;
 }
 .modalContainer input:focus{
     outline: none;
+    border-radius: 10px;
+    scale: 1.05;
 }
-.confirm {
-    margin-top: 10px;
-    width: 50%;
-    height: 20%;
+
+.confirm , .cancle{
+    user-select: none;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 80px;
     font-size: 16px;
     background-color: rgb(159, 194, 255);
     border: none;
     color: white;
-    border-radius: 10px;
+    border-radius: 3px;
     cursor: pointer;
+    transition: scale 0.2s ease;
 }
-.cancle{
-    margin-top: 10px;
-    width: 40%;
-    font-size: 15px;
-    background-color: rgb(159, 194, 255);
-    border: none;
-    color: rgb(255, 135, 135);
-    border-radius: 10px;
-    cursor: pointer;
+
+.confirm:hover, .cancle:hover{
+    scale: 1.05;
 }

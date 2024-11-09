@@ -28,9 +28,10 @@ public class MainPageController {
         return ResponseEntity.ok().body(fileEntities);
     }
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description) {
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
         if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user));
+            System.out.println(isPrivate);
+            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
         }
         return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
     }

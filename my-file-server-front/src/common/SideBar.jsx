@@ -26,8 +26,8 @@ const SideBar = () => {
         </div>
         <ul className={s.list}>
             <li>개인 클라우드</li>
-            <li>공용 클라우드</li>
-            <li>자유 게시판</li>
+            <li>공용 클라우드 (미구현)</li>
+            <li>자유 게시판 (미구현)</li>
         </ul>
       </div>
     )

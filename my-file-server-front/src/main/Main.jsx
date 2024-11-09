@@ -10,6 +10,7 @@ import Pagination from "react-js-pagination";
 import '../common/Pagination.css';
 
 const Main = () => {    
+    
     const nav = useNavigate();
     const [description,setDescription] = useState('');
     const [myFiles, setMyFiles] = useState([]);
@@ -22,6 +23,7 @@ const Main = () => {
     const [file, setFile]=useState(null);
     const [page,setPage] = useState(0);
     const [totalElements,setTotalElements] = useState(0);
+    const [isPrivate, setIsPrivate] = useState(false);
 
     let token = '';
     const openUploadModal = (e) => {
@@ -32,7 +34,9 @@ const Main = () => {
     const upload = async (file) => {
         if(file){
             setLoading(true);
-            const res = await api.post('/main/upload',{file:file,description:fileName});
+            const extension = file.name.split('.')[1];
+            
+            const res = await api.post('/main/upload',{file:file,description:fileName+'.'+extension,isPrivate:isPrivate});
             await getMyFile(page);
             setLoading(false);
         }
@@ -70,7 +74,6 @@ const Main = () => {
     const formattedDateTime = (uploadedAt) => {
         const [year, month, day, hour, minute, second] = uploadedAt.map((time) => {
             if (time === undefined || time === null) {
-                console.log(time);
                 return "00";
             } else if (time.toString().length === 1) {
                 return `0${time}`;
@@ -86,24 +89,32 @@ const Main = () => {
 
     const deleteFile = async (fileCode) => {
         const res = await api.delete(`/main/file/${fileCode}`);
-        console.log(res);
         await getMyFile(page);        
     }
     const getMyFile = async (page) => { //내 파일들 가져오기
         setLoading(true);
         const res = await api.get(`/main/file?page=${page}`);
         setTotalElements(res.data.totalElements);
-        // console.log(res);
         
         
         setLoading(false);
         setMyFiles(res.data.content);
     }
     const handlePageChange = (page) => {
-        console.log("씨발 페이지 바뀜! : ",page);
-        
         setPage(page-1);
     }
+    const calcFileSize = (size) => {
+        if (size < 1024) {
+          return size + " Bytes";
+        } else if (size < 1024 * 1024) {
+          return (size / 1024).toFixed(2) + " KB";
+        } else if (size < 1024 * 1024 * 1024) {
+          return (size / (1024 * 1024)).toFixed(2) + " MB";
+        } else {
+          return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+        }
+      };
+      
     useEffect(()=>{
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (isMobile) {
@@ -116,9 +127,7 @@ const Main = () => {
             nav("/");
         }
     },[])
-    useEffect(()=>{
-        console.log("effect page ",page);
-        
+    useEffect(()=>{        
         getMyFile(page);
     },[page])
 
@@ -143,8 +152,11 @@ const Main = () => {
                                 <th>파일 이름</th>
                                 <th>다운로드 횟수</th>
                                 <th>업로드 시간</th>
-                                <th>다운로드</th>
+                                <th>권한</th>
+                                <th>용량</th>
                                 <th>삭제</th>
+                                <th>다운로드</th>
+
                             </tr>
                     </thead>
                     <tbody>
@@ -154,8 +166,10 @@ const Main = () => {
                                 {f.description.length>10?<td className={s.title}>{allText===i?f.description:f.description.substring(0,10)+".."}{allText===i?<></>:<button className={s.allText} onClick={()=>{setAllText(i)} }>더보기</button>}</td>:<td className={s.title}>{f.description}</td>}
                                 <td className={s.downloadCount}>{f.download_count}회</td>
                                 <td className={s.time}>{formattedDateTime(f.uploadedAt)}</td>
+                                <td style={{textAlign:'center'}}>{f.private? "개인" : "공용"}</td>
+                                <td style={{textAlign:'center'}}>{calcFileSize(f.size)}</td>
+                                {user.accountCode===f.uploadedByUser.userCode?<td title="삭제하기" className={s.deleteFile} onClick={()=>deleteFile(f.fileCode)}><img width={15} src="/deleteIcon.png"/></td>:<></>}
                                 <td className={s.download}><button className={s.downloadBtn} onClick={()=>downloadFile(f)}>다운로드</button></td>
-                                {user.accountCode===f.uploadedByUser.userCode?<td title="삭제하기" className={s.deleteFile} onClick={()=>deleteFile(f.fileCode)}>❌</td>:<></>}
                             </tr>
                         ))
                     }
@@ -168,7 +182,9 @@ const Main = () => {
                 onChange={handlePageChange}/>
                 </div>
             )}
-        {showInputModal ? <InputModal setFileName={setFileName} upload={upload} file={file} setShow={setShowInputModal}/> : <></>}
+        <div className={s.inputModal}>
+        {showInputModal ? <InputModal setFileName={setFileName} upload={upload} file={file} setShow={setShowInputModal} setIsPrivate={setIsPrivate} isPrivate={isPrivate}/> : <></>}
+        </div>
         </div>
     )
 }

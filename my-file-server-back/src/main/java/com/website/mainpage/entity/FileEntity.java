@@ -34,4 +34,8 @@ public class FileEntity {
     private int download_count;
     @Column(name = "original_name")
     private String originalName;
+    @Column(name = "size")
+    private long size;
+    @Column(name = "is_private")
+    private boolean isPrivate;
 }

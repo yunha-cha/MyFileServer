@@ -3,6 +3,12 @@
   display: flex;
   flex-direction: column;
 }
+.inputModal{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
 .pageTitle{
   font-size: 24px;
   padding-bottom: 5%;
@@ -68,8 +74,12 @@
 }
 .deleteFile{
   user-select: none;
-  padding-left: 10px;
+  padding-top: 5px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  align-items: center;
 }
 .deleteFile:hover{
   scale: 1.05;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import s from './InputModal.module.css';
 
-const InputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivate }) => {
+const MobileInputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivate }) => {
     const [msg, setMsg] = useState('파일 이름을 입력하세요.');
     const [isSuccess, setIsSuccess] = useState(false);
     const ref = useRef(null);
@@ -49,4 +49,4 @@ const InputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivat
     )
 }
 
-export default InputModal;
+export default MobileInputModal;

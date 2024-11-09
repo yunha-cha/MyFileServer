@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class MainPageService {
@@ -32,12 +31,14 @@ public class MainPageService {
         this.fileRepository = fileRepository;
     }
     @Transactional
-    public String uploadFile(MultipartFile file, String description, CustomUserDetails user) {
+    public String uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate) {
         try{
             FileEntity fileEntity =  new FileEntity();
             fileEntity.setChangedName(tool.upload(file));
             fileEntity.setUploadedAt(LocalDateTime.now());
             fileEntity.setDescription(description);
+            fileEntity.setPrivate(isPrivate);
+            fileEntity.setSize(file.getSize());
             fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
             fileEntity.setUploadedByUser(userRepository.findById(user.getUsername()));
             fileEntity.setDownload_count(0);

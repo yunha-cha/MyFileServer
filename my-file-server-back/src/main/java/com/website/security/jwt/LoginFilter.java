@@ -70,6 +70,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String userRole = auth.getAuthority();
         Long userCode = customUserDetails.getUserCode();
         String token = jwtUtil.createJwt(userCode,id, userRole,  1000 * 60 * 60 * 10L); //1000 = 1초 * 60 -> 1분 * 60 -> 1시간 * 10 -> 10시간
+//        String token = jwtUtil.createJwt(userCode,id, userRole,  1000L); //1000 = 1초 * 60 -> 1분 * 60 -> 1시간 * 10 -> 10시간
         String refreshToken = jwtUtil.createJwt(userCode,id,userRole,1000 * 60 * 60 * 24 * 7L);
         //여기에 User DB에 리프레시 토큰 추가하기
         //프론트에서는 401응답 (토큰 만료)를 받았을 때 /token/refresh 경로로 토큰 재발급 요청
