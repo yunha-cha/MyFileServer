@@ -22,6 +22,11 @@ public class MainPageController {
         this.mainService = mainService;
     }
 
+    @GetMapping("/file/public")
+    public ResponseEntity<Page<FileEntity>> getPublicFile(@RequestParam int page){
+        Page<FileEntity> fileEntities = mainService.getPublicFiles(page);
+        return ResponseEntity.ok().body(fileEntities);
+    }
     @GetMapping("/file")
     public ResponseEntity<Page<FileEntity>> getMyFile(@AuthenticationPrincipal CustomUserDetails user,@RequestParam int page) {
         Page<FileEntity> fileEntities = mainService.getMyFile(user,page);

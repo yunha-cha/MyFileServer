@@ -36,7 +36,7 @@ public class JWTFilter extends OncePerRequestFilter {
      */
     private boolean checkUrl(String path){
 
-        String[] needAuthUrl = {"/login"};
+        String[] needAuthUrl = {"/login","/download","/join"};
 
         for (String s : needAuthUrl) {
             if (path.startsWith(s)) {
@@ -50,7 +50,6 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        System.out.println(path);
         if(!checkUrl(path)){
             String authorization = request.getHeader("Authorization");
             if(authorization == null || !authorization.startsWith("Bearer ")){

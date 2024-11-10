@@ -3,6 +3,7 @@ package com.website.mainpage.service;
 import com.website.common.Tool;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.repository.FileRepository;
+import com.website.mainpage.repository.MainUserRepository;
 import com.website.security.dto.CustomUserDetails;
 import com.website.security.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -23,11 +24,13 @@ public class MainPageService {
     private String downloadUrl;
     private final Tool tool;
     private final UserRepository userRepository;
+    private final MainUserRepository mainUserRepository;
     private final FileRepository fileRepository;
 
-    public MainPageService(Tool tool, UserRepository userRepository, FileRepository fileRepository) {
+    public MainPageService(Tool tool, UserRepository userRepository, MainUserRepository mainUserRepository, FileRepository fileRepository) {
         this.tool = tool;
         this.userRepository = userRepository;
+        this.mainUserRepository = mainUserRepository;
         this.fileRepository = fileRepository;
     }
     @Transactional
@@ -40,7 +43,7 @@ public class MainPageService {
             fileEntity.setPrivate(isPrivate);
             fileEntity.setSize(file.getSize());
             fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
-            fileEntity.setUploadedByUser(userRepository.findById(user.getUsername()));
+            fileEntity.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
             fileEntity.setDownload_count(0);
             if(file.getOriginalFilename() != null){
                 fileEntity.setOriginalName(StringUtils.cleanPath(file.getOriginalFilename()));
@@ -53,7 +56,10 @@ public class MainPageService {
             return e.getMessage();
         }
     }
-
+    public Page<FileEntity> getPublicFiles(int page) {
+        Pageable pageable = PageRequest.of(page,10,Sort.by("uploadedAt").descending());
+        return fileRepository.getPublicFile(pageable);
+    }
     public Page<FileEntity> getMyFile(CustomUserDetails user, int page) {
         Pageable pageable = PageRequest.of(page,10,  Sort.by("uploadedAt").descending());
         return fileRepository.getMyFile(user.getUserCode(),pageable);
