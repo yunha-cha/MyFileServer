@@ -3,10 +3,7 @@ package com.website.forum.entity;
 
 import com.website.security.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString
 @Table(name = "forum")
 public class Forum {
 
