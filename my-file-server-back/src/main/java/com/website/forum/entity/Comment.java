@@ -29,8 +29,7 @@ public class Comment {
     private User user;
 
     @JoinColumn(name = "forum_code")
-    @ManyToOne
-    private Forum forum;
+    private Long forumCode;
 
     @Column(name = "content")
     private String content;
@@ -42,4 +41,11 @@ public class Comment {
     private String ipAddress;
 
 
+    public Comment(User user, Long forumCode, String content, LocalDateTime createAt, String ipAddress) {
+        this.user = user;
+        this.forumCode = forumCode;
+        this.content = content;
+        this.createAt = createAt;
+        this.ipAddress = ipAddress;
+    }
 }

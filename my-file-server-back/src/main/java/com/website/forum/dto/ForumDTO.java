@@ -15,7 +15,7 @@ public class ForumDTO {
 
     private String title;
 
-//    private String content;
+    private String content;
 
     private String userId;
 
@@ -28,9 +28,7 @@ public class ForumDTO {
     private String ipAddress;
 
 
-    // 그냥 조회
-
-
+    // 전체 조회
     public ForumDTO(Long forumCode, String title, String userId, LocalDateTime createAt, int views) {
         this.forumCode = forumCode;
         this.title = title;
@@ -40,8 +38,9 @@ public class ForumDTO {
     }
 
     // 상세 조회
-    public ForumDTO(String title, String userId, LocalDateTime createAt, int views) {
+    public ForumDTO(String title, String content, String userId, LocalDateTime createAt, int views) {
         this.title = title;
+        this.content = content;
         this.userId = userId;
         this.createAt = createAt;
         this.views = views;
