@@ -18,7 +18,7 @@ const Login = () => {
         formData.append('password', pw);
 
         try{
-            const response = await axios.post(`http://${process.env.REACT_APP_IP}/login`, formData);
+            const response = await axios.post('/api/login', formData);
             localStorage.setItem('token', response.headers.get("Authorization"));
             navigate('/main');
         }catch(err){

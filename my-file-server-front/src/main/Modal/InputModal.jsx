@@ -4,6 +4,7 @@ import s from './InputModal.module.css';
 const InputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivate }) => {
     const [msg, setMsg] = useState('파일 이름을 입력하세요.');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
     const ref = useRef(null);
     
 
@@ -15,9 +16,12 @@ const InputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivat
         }
     }
 
-    const uploadFile = () => {
-        upload(file);
+    const uploadFile = async () => {
+        setLoading(true);
+        setMsg("업로드 중..");
+        await upload(file);
         setMsg("업로드 성공!");
+        setLoading(false);
         setIsSuccess(true);
         setIsPrivate(false);
         setTimeout(() => {
@@ -32,16 +36,16 @@ const InputModal = ({ setFileName, upload, file, setShow, setIsPrivate, isPrivat
 
     return (
         <div onKeyDown={handleKeyDown} style={isSuccess?{height:70,background:'white'}:{}} className={s.modalContainer}>
-            <div style={isSuccess?{color:'green',padding:30}:{}}>{msg}</div>
-            { !isSuccess ? <>
+            <div style={isSuccess?{color:'green',padding:30}:loading?{padding:30}:{}}>{msg}</div>
+            { !isSuccess && !loading ? <>
                 <input ref={ref} onChange={(e) => setFileName(e.target.value)} />
                 <div classs={s.buttonContainer}>
                     <article>
                     <span>개인 클라우드 저장</span>
                     <input value={isPrivate} onChange={()=>setIsPrivate(!isPrivate)} type='checkbox'/>
                     </article>
-                    <button className={s.confirm} onClick={uploadFile}>입력</button>
-                    <button className={s.cancle} onClick={() => setShow(false)}>취소</button>
+                    <button disabled={loading} className={s.confirm} onClick={uploadFile}>입력</button>
+                    <button disabled={loading} className={s.cancle} onClick={() => setShow(false)}>취소</button>
                 </div>
             </> :<></>}
             

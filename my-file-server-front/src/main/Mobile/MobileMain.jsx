@@ -45,7 +45,6 @@ const MobileMain = ({user}) => {
     };
     //이미지 열기
     const openImage =(file) => {
-        console.log(file);
         const ex = file.description.split('.')[1];        
         const isImage = ex==='jpg'||ex==='png'||ex==='jpeg'||ex==='gif'||ex==='webp';
         if(isImage){
@@ -103,8 +102,8 @@ const MobileMain = ({user}) => {
                                 <td onClick={()=>openImage(file)}>{file.description}</td>
                                 {isPublicCloud?<td>{file.uploadedByUser.id}</td>:<td>{file.private?"개인":"공개"}</td>}
                                 <td style={{fontSize:10}}>{calcFileSize(file.size)}</td>
-                                {user.accountCode===file.uploadedByUser.userCode?<td title="삭제하기" className={s.deleteFile} onClick={delFile}><img alt="Error" width={15} src="/deleteIcon.png"/></td>:<td></td>}
-                                <td className={s.download}><button className={s.downloadBtn} onClick={download}>다운로드</button></td>
+                                {user.accountCode===file.uploadedByUser.userCode?<td title="삭제하기" className={s.deleteFile} onClick={()=>delFile(file.fileCode)}><img alt="Error" width={15} src="/deleteIcon.png"/></td>:<td></td>}
+                                <td className={s.download}><button className={s.downloadBtn} onClick={()=>download(file)}>다운로드</button></td>
                             </tr>
                         )
                     })

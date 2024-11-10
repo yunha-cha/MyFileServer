@@ -1,25 +1,22 @@
 import axios from "axios";
 
-//로그인 페이지 url 세팅
-const loginPageURL = '/login';
-
 const api = axios.create({
-    baseURL: `http://${process.env.REACT_APP_IP}`,
+    baseURL: '/api',  // 리버스 프록시 경로 설정
 });
 
-//요청
+// 요청 인터셉터 설정
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if(token){
-            //토큰있으면 헤더에 추가
+        if (token) {
+            // 토큰이 있으면 헤더에 추가
             config.headers.Authorization = token;
         }
 
-        if(config.method === 'post' || config.method === ' put'){
-            //만약 post 나, put 이라면 폼데이터 사용
+        if (config.method === 'post' || config.method === 'put') {
+            // POST나 PUT 요청일 경우 FormData 사용
             const formData = new FormData();
-            for(const key in config.data){          
+            for (const key in config.data) {
                 formData.append(key, config.data[key]);
             }
             config.data = formData;
@@ -28,40 +25,38 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
-        console.log(`요청 중에 에러 발생 : ${error}`);
+        console.log(`요청 중에 에러 발생: ${error}`);
         return Promise.reject(error);
     }
 );
 
-//응답
+// 응답 인터셉터 설정
 api.interceptors.response.use(
     (response) => {
-        //정상 응답 온거 처리할거 적기
-
+        // 정상 응답 처리
         return response;
     },
     (error) => {
-        if(error.response){
-            if(error.response.status === 403){
+        if (error.response) {
+            if (error.response.status === 403) {
                 alert('토큰이 만료되었습니다.');
-                console.log(error.response);
                 localStorage.removeItem('token');
-                window.location.href='/';
-            } else if(error.response.status === 401){   //jwt토큰이 없을 때
                 window.location.href = '/';
-                alert('토큰이 없거나, Bearer가 포함되어 있지 않습니다.');
-            } else if(error.response.status === 400){
+            } else if (error.response.status === 401) { // JWT 토큰이 없을 때
+                alert('로그인이 만료되었습니다.');
+                localStorage.removeItem('token');
+                window.location.href = '/';
+            } else if (error.response.status === 400) {
                 alert('400 에러');
             }
-        } else if(error.request){
-            //요청 전에 에러 생겼을 때
-            console.log('ss');
-            
-            console.log(error);
+        } else if (error.request) {
+            // 요청 전 에러 발생
+            console.log('요청 전 에러 발생:', error);
         } else {
-            //요청도 못했을 때
-            console.error(`요청도 못함 : ${error}`)
+            // 요청 자체를 못했을 때
+            console.error(`요청 자체 실패: ${error}`);
         }
+        return Promise.reject(error);
     }
 );
 
