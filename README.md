@@ -14,8 +14,6 @@ Raspberry Pi
 
 www.seopia.online
 
-배포환경에는 2024년 11월 9일 업데이트 예정
-
 ### Ver 0.0.1
 ![image](https://github.com/user-attachments/assets/2b515e3c-ad64-4da1-9040-14449326082f)
 - 배포!!
