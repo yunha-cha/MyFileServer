@@ -22,15 +22,20 @@ public class MainPageController {
         this.mainService = mainService;
     }
 
+    @GetMapping("/file/public")
+    public ResponseEntity<Page<FileEntity>> getPublicFile(@RequestParam int page){
+        Page<FileEntity> fileEntities = mainService.getPublicFiles(page);
+        return ResponseEntity.ok().body(fileEntities);
+    }
     @GetMapping("/file")
     public ResponseEntity<Page<FileEntity>> getMyFile(@AuthenticationPrincipal CustomUserDetails user,@RequestParam int page) {
         Page<FileEntity> fileEntities = mainService.getMyFile(user,page);
         return ResponseEntity.ok().body(fileEntities);
     }
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description) {
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
         if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user));
+            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
         }
         return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
     }

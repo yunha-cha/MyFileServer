@@ -1,8 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import BackButton from '../../common/BackButton';
 
 const Join = () => {
@@ -20,7 +18,7 @@ const Join = () => {
                 formData.append('id', id);
                 formData.append('password', pw);
                 try{
-                    const res = await axios.post(`http://${process.env.REACT_APP_IP}/join`, formData);
+                    const res = await axios.post(`/api/join`, formData);
                     nav('/',{state:{message:res.data}})
                 } catch(err){
                     alert(err.response.data);

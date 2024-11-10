@@ -36,11 +36,10 @@ public class JWTFilter extends OncePerRequestFilter {
      */
     private boolean checkUrl(String path){
 
-        String[] needAuthUrl = {"/login"};
+        String[] needAuthUrl = {"/login","/download","/join"};
 
         for (String s : needAuthUrl) {
             if (path.startsWith(s)) {
-                System.out.println("검사 안함");
                 return true;
             }
         }
@@ -50,17 +49,16 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        System.out.println(path);
         if(!checkUrl(path)){
             String authorization = request.getHeader("Authorization");
             if(authorization == null || !authorization.startsWith("Bearer ")){
-                System.out.println("token이 없거나, Bearer가 포함되어 있지 않습니다.");
+//                System.out.println("token이 없거나, Bearer가 포함되어 있지 않습니다.");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"토큰이 없거나, Bearer가 포함되어 있지 않습니다.");
                 return;
             }
             String token = authorization.split(" ")[1];
             if(jwtUtil.isExpired(token)){
-                System.out.println("token Expire 상태입니다.");
+//                System.out.println("token Expire 상태입니다.");
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,"로그인이 만료되었습니다.");
                 return;
             }

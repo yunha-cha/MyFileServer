@@ -15,6 +15,7 @@ my-file-server-back/.project
 my-file-server-back/.classpath
 my-file-server-back/.settings/
 my-file-server-back/src/main/resources/application.yml
+my-file-server-back/src/main/resources/application2.yml
 
 # Frontend (React) specific ignores
 my-file-server-front/node_modules/

@@ -29,9 +29,13 @@ public class FileEntity {
     private String fileFullPath;
     @JoinColumn(name = "uploaded_by")
     @ManyToOne
-    private User uploadedByUser;
+    private MainUserEntity uploadedByUser;
     @Column(name = "download_count")
     private int download_count;
     @Column(name = "original_name")
     private String originalName;
+    @Column(name = "size")
+    private long size;
+    @Column(name = "is_private")
+    private boolean isPrivate;
 }
