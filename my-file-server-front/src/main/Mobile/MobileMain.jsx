@@ -67,6 +67,7 @@ const MobileMain = ({user}) => {
     return(
         <div className={s.container}>
             {isPublicCloud?<h1 style={{textAlign:'center'}}>공용 클라우드</h1>:<h1 style={{textAlign:'center'}}>개인 클라우드</h1>}
+            <div className={s.message}>이미지 파일은 클릭하면 미리 볼 수 있습니다.</div>
             <div className={s.imagePrintContainer}>
                 {showImageModal?
                 <>

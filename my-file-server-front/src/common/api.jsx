@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: '/api',  // 리버스 프록시 경로 설정
+    // baseURL: '/api',  // 리버스 프록시 경로 설정
+    baseURL: 'http://localhost:8080'
 });
 
 // 요청 인터셉터 설정

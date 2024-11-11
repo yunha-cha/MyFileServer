@@ -28,6 +28,7 @@ public class JoinService {
             User data = new User();
             data.setId(joinDTO.getId());
             data.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));    //비밀번호 인코딩
+            data.setEnable(false);
             data.setUserRole("ROLE_USER");
             userRepository.save(data);
         } catch (Exception e){

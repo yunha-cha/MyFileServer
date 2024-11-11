@@ -1,5 +1,6 @@
 package com.website.mainpage.controller;
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
 import com.website.security.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/main")
@@ -31,6 +33,15 @@ public class MainPageController {
     public ResponseEntity<Page<FileEntity>> getMyFile(@AuthenticationPrincipal CustomUserDetails user,@RequestParam int page) {
         Page<FileEntity> fileEntities = mainService.getMyFile(user,page);
         return ResponseEntity.ok().body(fileEntities);
+    }
+    @GetMapping("/user")
+    public ResponseEntity<MainUserEntity> getUser(@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(mainService.getUser(user));
+    }
+    @GetMapping("/other-user/{userCode}")
+    public ResponseEntity<?> getUser(@PathVariable Long userCode){
+        MainUserEntity user = mainService.getOtherUser(userCode);
+        return ResponseEntity.ok().body(Objects.requireNonNullElse(user, "유저가 없습니다."));
     }
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {

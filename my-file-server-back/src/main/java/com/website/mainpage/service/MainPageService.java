@@ -2,6 +2,7 @@ package com.website.mainpage.service;
 
 import com.website.common.Tool;
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.repository.FileRepository;
 import com.website.mainpage.repository.MainUserRepository;
 import com.website.security.dto.CustomUserDetails;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class MainPageService {
@@ -82,5 +84,14 @@ public class MainPageService {
             return false;
         }
 
+    }
+
+    public MainUserEntity getUser(CustomUserDetails user) {
+        return mainUserRepository.findById(user.getUserCode()).orElseThrow();
+    }
+
+    public MainUserEntity getOtherUser(Long userCode) {
+        Optional<MainUserEntity> user = mainUserRepository.findById(userCode);
+        return user.orElse(null);
     }
 }
