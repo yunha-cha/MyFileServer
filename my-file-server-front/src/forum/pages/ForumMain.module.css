@@ -1,12 +1,5 @@
 .container {
-    box-sizing: content-box;
-    /* width: calc(100vw - 400px); */
-    /* margin-top: 3rem;
-    margin-bottom: 3rem; */
-    /* display: flex; */
-    /* flex-direction: column; */
     background-color: aliceblue;
-    /* padding-left: 350px; */
 
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -14,10 +7,6 @@
 
     height: 100%;
 
-
-    /* root css에 추가한 것
-    align-items: flex-start;
-    padding-left: 350px; */
 }
 
 .container h2{
@@ -33,7 +22,7 @@
 
   .item {
     position: relative;
-    width: 65%;
+    /* width: 80%; */
     min-width: 400px;
     margin: 2.5rem 0;
     padding: 1.5rem 2rem;
