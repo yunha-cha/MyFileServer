@@ -1,26 +1,11 @@
-.App {
-    text-align: center;
-  }
-  
-  /* .login-container {
-    background-color: #282c34;
-    color: white;
-  
-    user-select: none;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-  } */
-   .login-container{
-    margin-top: 15%;
-   }
+
+
 
   .login-input-container {
+
+    align-self: center;
+    justify-self: center;
     background-color: white;
-  
     width: 450px;
     height: 450px;
     border-radius: 50px;

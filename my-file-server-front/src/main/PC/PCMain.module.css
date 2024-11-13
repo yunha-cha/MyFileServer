@@ -1,7 +1,8 @@
 .container{
-  padding-top: 12%;
+  padding: 5vw;
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
 }
 .pageTitle{font-size: 24px;padding-bottom: 2%;}
 /* 테이블 */
@@ -46,9 +47,7 @@
 }
 
 .pagination{
-  position: absolute;
-  top: 80%;
-  left: 45%;
+
 }
 
 .customUploadButton {

@@ -22,10 +22,10 @@ const SideBar = () => {
         }        
     },[data, dispatch, state])
     return(
-        <div>
+        <>
             {!isMobile && 
             (
-            <div>   
+            <>   
             <div className={s.sidebarContainer}>
                 <div onClick={()=>nav('/main')} className={s.title}><img alt='Error' style={{marginRight:20}} width={50} src='/icon.png'/>Cloud</div>
                 <div>
@@ -40,10 +40,10 @@ const SideBar = () => {
                     {/* <li onClick={getDisableUser}>ss</li> */}
                 </ul>
                 </div>
-            </div>
+            </>
             )}  
             <Outlet context={{isPublicCloud:isPublicCloud}}/>
-      </div>
+      </>
     )
 }
 
