@@ -1,28 +1,26 @@
-package com.website.security.entity;
+package com.website.admin.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "AdminUserEntity")
 @Table(name = "user")
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
-public class User {
+@Getter
+public class AdminUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_code")
     private Long userCode;
-
     @Column(name = "id")
     private String id;
-
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "user_role")
-    private String userRole;
-
     @Column(name = "enable")
     private boolean enable;
+    @Column(name = "user_role")
+    private String userRole;
 }

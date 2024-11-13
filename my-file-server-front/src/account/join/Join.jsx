@@ -19,6 +19,7 @@ const Join = () => {
                 formData.append('password', pw);
                 try{
                     const res = await axios.post(`/api/join`, formData);
+                    // const res = await axios.post(`http://localhost:8080/join`, formData);
                     nav('/',{state:{message:res.data}})
                 } catch(err){
                     alert(err.response.data);
@@ -72,8 +73,7 @@ const Join = () => {
             {confirmPwState ? <input className='login-pw' placeholder='비밀번호 확인' type='password' value={pw2} onChange={(e)=>{setPw2(e.target.value);checkPw(e,2)}}/> : <></>}
             {confirmPw ? <div style={{color: 'green',marginTop:10}}>비밀번호가 일치합니다.</div> : <></>}
 
-            
-            <button onClick={join} className="join-button">가입하기</button>
+            <button onClick={join} className="join-button">가입 신청하기</button>
           </div>
         </div>
       </section>

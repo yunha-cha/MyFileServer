@@ -11,7 +11,6 @@ import { useOutletContext } from "react-router-dom";
 const PCMain = ({user}) => {
     const { isPublicCloud } = useOutletContext() || {};
     const [myFiles, setMyFiles] = useState([]);
-    const [allText,setAllText] = useState(null);
     const [showInputModal, setShowInputModal] = useState(false);
     const [fileName, setFileName] = useState('');
     const [file, setFile]=useState(null);
@@ -43,6 +42,13 @@ const PCMain = ({user}) => {
         await deleteFile(fileCode);
         await getFile(); 
     }
+    const isImage = (file) => {
+        const ex = file.description.split('.')[1];  
+        return ex==='jpg'||ex==='png'||ex==='jpeg'||ex==='gif'||ex==='webp'||ex==='mp4';
+    }
+    const openImage = (file) =>{
+        isImage(file) && window.open(file.fileFullPath, "_blank", "width=800,height=600,left=300,top=300");
+    }
     //공용, 개인에 맞게 파일 가져오기
     const getFile = useCallback(async()=>{
         isPublicCloud? await getPublicFile(page,setMyFiles,setTotalElements): await getMyFile(page,setMyFiles,setTotalElements)
@@ -54,6 +60,8 @@ const PCMain = ({user}) => {
     return(
 <div className={s.container}> 
     <div className={s.pageTitle}>{isPublicCloud? `공용 클라우드`:`개인 클라우드`}</div>
+    <div className={s.message}>이미지, 동영상 파일은 클릭하면 미리 볼 수 있습니다.</div>
+    <div className={s.message}><b>{page+1}</b> 페이지</div>
     <div className={s.customFileUpload}>
         <label htmlFor="fileInput" className={s.customUploadButton}>파일 업로드</label>
         <input id="fileInput" type="file" onChange={openUploadModal} />
@@ -74,7 +82,8 @@ const PCMain = ({user}) => {
         {
         myFiles.map((f,i) => (
             <tr className={s.file} key={f.fileCode}>
-                {f.description.length>10?<td className={s.title}>{allText===i?f.description:f.description.substring(0,10)+".."}{allText===i?<></>:<button className={s.allText} onClick={()=>{setAllText(i)} }>더보기</button>}</td>:<td className={s.title}>{f.description}</td>}
+                {console.log(f)}
+                {isImage(f) ? <td onClick={()=>openImage(f)} className={s.imageTitle}>{f.description}</td>:<td className={s.title}>{f.description}</td>}
                 <td className={s.downloadCount}>{f.download_count}회</td>
                 <td className={s.time}>{formattedDateTime(f.uploadedAt)}</td>
                 {isPublicCloud?<td style={{textAlign:'center'}}>{f.uploadedByUser.id}</td>:<td style={{textAlign:'center'}}>{f.private? "개인" : "공용"}</td>}

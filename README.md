@@ -48,3 +48,4 @@ www.seopia.online
 - 개인, 공용 자료실 출시
 - 모바일 업로드 버튼 css 버그 수정
 - 최적화
+- https 인증서 발급

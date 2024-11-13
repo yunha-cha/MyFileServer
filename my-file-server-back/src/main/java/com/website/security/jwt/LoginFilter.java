@@ -8,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -39,14 +41,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String accountId = obtainUsername(request); //id를 빼옴
-        String accountPassword = obtainPassword(request);   //pw를 빼옴
+        String accountId = obtainUsername(request); // ID 가져오기
+        String accountPassword = obtainPassword(request); // 비밀번호 가져오기
 
-        //securiry에서 ID PW를 검증하기 위해선 token에 담아야함.
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(accountId,accountPassword,null);
+        // ID와 비밀번호를 검증하기 위해 토큰 생성
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(accountId, accountPassword, null);
 
-        //token에 담은 검증을 위한 매니저로 전달 매니저 구현
-        return authenticationManager.authenticate(authToken);
+        try {
+            // AuthenticationManager를 사용하여 인증 시도
+            Authentication authentication = authenticationManager.authenticate(authToken);
+
+            // 인증이 성공한 경우 사용자 세부 정보를 가져옴
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            // 계정이 활성화되지 않은 경우 예외 던지기
+            if (!customUserDetails.isEnabled()) {
+                throw new AuthenticationException("계정이 활성화되지 않았습니다.") {};
+            }
+            return authentication;
+        } catch (InternalAuthenticationServiceException exx){
+            throw new AuthenticationException("아이디가 잘못되었습니다.") {};
+        }
     }
 
     /**
@@ -88,7 +103,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("로그인 실패");
-        response.setStatus(401);
+        System.out.println("로그인 실패: " + failed.getMessage());
+
+        // 기본 메시지
+        String errorMessage = failed.getMessage();
+
+        // 예외 타입에 따라 메시지 설정
+        if (failed instanceof BadCredentialsException) {
+            errorMessage = "비밀번호가 잘못되었습니다.";
+        } else if (failed.getMessage().equals("유효하지 않은 사용자입니다.")) {
+            errorMessage = "계정이 활성화되지 않았습니다. 관리자 승인을 기다리세요.";
+        }
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        // 실패 메시지 응답 작성
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"error\": \"" + errorMessage + "\"}");
     }
 }

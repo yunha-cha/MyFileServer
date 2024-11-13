@@ -1,10 +1,12 @@
 package com.website.security.controller;
 
 import com.website.security.dto.JoinDTO;
+import com.website.security.entity.User;
 import com.website.security.service.JoinService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,8 +30,5 @@ public class JoinController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("회원가입에 실패했습니다. : "+e.getMessage());
         }
-
     }
-
-
 }

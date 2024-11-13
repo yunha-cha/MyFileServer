@@ -1,12 +1,14 @@
 import axios from 'axios';
 import './Login.css';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../../reducer/UserDataSlice';
 
 const Login = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const {message} = location.state || {};
+  const dispatch = useDispatch();
+  const [message,setMessage] = useState('');
   const [id,setId] = useState('');
   const [pw, setPw] = useState('');
 
@@ -21,9 +23,11 @@ const Login = () => {
             // const response = await axios.post('/api/login', formData);
             const response = await axios.post('http://localhost:8080/login', formData);
             localStorage.setItem('token', response.headers.get("Authorization"));
+            dispatch(getUser());
             navigate('/main');
         }catch(err){
-            alert("로그인에 실패하였습니다. \n다시 시도해주시기 바랍니다.", err);
+            setMessage(err.response.data.error);
+            
         }
     }
   }
@@ -32,7 +36,7 @@ const Login = () => {
     if(localStorage.getItem('token')){
         navigate('/main');
     }
-  }, []);
+  }, [navigate]);
 
   return (
       <section className="login-container">
@@ -42,6 +46,7 @@ const Login = () => {
             <input className="login-id" placeholder="아이디" value={id} onChange={(e)=>setId(e.target.value)}/>
             <input className="login-pw" placeholder="비밀번호" type="password" value={pw} onChange={(e)=>setPw(e.target.value)} onKeyDown={(e)=>login(e)}/>
             <button onClick={(e)=>login(e)} className="login-button">로그인</button>
+            <button onClick={()=>navigate('/join')} className="login-button">회원 가입 신청</button>
             <div className='find-account-container'>
             </div>
           </div>

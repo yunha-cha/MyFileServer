@@ -1,0 +1,13 @@
+.members{
+    display: flex;
+}
+
+.members div {
+    padding: 20px;
+}
+
+.members button{
+    background-color: transparent;
+    border-width: 1px;
+    border-radius: 10px;
+}

@@ -10,7 +10,7 @@ const MobileMain = ({user}) => {
     const nav = useNavigate();
     const [page,setPage] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
-    const [myFiles, setMyFiles] = useState([]);
+    const [myFiles, setMyFiles] = useState(null);
     const [file, setFile]=useState(null);
     const [showInputModal, setShowInputModal] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
@@ -54,6 +54,9 @@ const MobileMain = ({user}) => {
             setShowImageModal(false);
             setImageModalSrc('');
         }
+        if(ex === 'mp4'){
+            window.open(file.fileFullPath, "_blank", "width=800,height=600,left=300,top=300");
+        }
     }
     //공용, 개인에 맞게 파일 가져오기
     const getFile = useCallback(async()=>{
@@ -67,11 +70,12 @@ const MobileMain = ({user}) => {
     return(
         <div className={s.container}>
             {isPublicCloud?<h1 style={{textAlign:'center'}}>공용 클라우드</h1>:<h1 style={{textAlign:'center'}}>개인 클라우드</h1>}
+            <div className={s.message}>이미지 파일은 클릭하면 미리 볼 수 있습니다.</div>
             <div className={s.imagePrintContainer}>
                 {showImageModal?
                 <>
                     <div className={s.imagePrintContainerTitle}>
-                        <div>이미지 미리보기</div>
+                        <div style={{fontSize:'3vmin'}}>이미지 미리보기</div>
                         <button onClick={()=>setShowImageModal(false)}>X</button>
                     </div>
                     <img height={100} alt="이미지를 불러올 수 없습니다." src={imageModalSrc}/>
@@ -81,9 +85,9 @@ const MobileMain = ({user}) => {
                 <label htmlFor="fileInput" className={s.customUploadButton}>
                     파일 업로드
                 </label>
-                <input id="fileInput" type="file" onChange={openUploadModal} />
+                <input id="fileInput" type="file" onChange={openUploadModal} accept="audio/*|video/*|image|*"/>
             </div>
-            <div style={{maxHeight:500,overflowY:'auto'}}>
+            <div className={s.tableContainer} style={{maxHeight:500,overflowY:'auto'}}>
             <table className={s.table}>
                 <thead className={s.thead}>
                     <tr className={s.tr}>
@@ -96,7 +100,7 @@ const MobileMain = ({user}) => {
                 </thead>
                 <tbody>
                 {
-                    myFiles.map((file,i)=> {
+                    myFiles ? myFiles.map((file,i)=> {
                         return (
                             <tr key={i}>
                                 <td onClick={()=>openImage(file)}>{file.description}</td>
@@ -106,19 +110,10 @@ const MobileMain = ({user}) => {
                                 <td className={s.download}><button className={s.downloadBtn} onClick={()=>download(file)}>다운로드</button></td>
                             </tr>
                         )
-                    })
+                    }) : <tr><td className={s.emptyTableValue} colSpan={5}>ss</td></tr>
                 }
                 </tbody>
             </table>
-            </div>
-            <div className={s.footer}>
-                <button onClick={()=>setIsPublicCloud(false)}>개인 클라우드</button>
-                <button onClick={()=>setIsPublicCloud(true)}>공용 클라우드</button>
-                <button>게시판(준비중)</button>
-                <button onClick={()=>{
-                    localStorage.removeItem('token');
-                    nav('/');
-                }}>로그아웃</button>
             </div>
             <div style={{position:'fixed',bottom:'50%',left:'50%',transform:'translate(-50%, -50%)'}}>
                 {showInputModal ? <InputModal setFileName={setFileName} upload={upload} file={file} setShow={setShowInputModal} setIsPrivate={setIsPrivate} isPrivate={isPrivate}/> : <></>}
@@ -129,6 +124,16 @@ const MobileMain = ({user}) => {
                     itemsCountPerPage={10}
                     totalItemsCount={totalElements}
                     onChange={(page)=>setPage(page - 1)}/>
+            </div>
+
+            <div className={s.footer}>
+                <button onClick={()=>setIsPublicCloud(false)}>개인 클라우드</button>
+                <button onClick={()=>setIsPublicCloud(true)}>공용 클라우드</button>
+                <button>게시판(준비중)</button>
+                <button onClick={()=>{
+                    localStorage.removeItem('token');
+                    nav('/');
+                }}>로그아웃</button>
             </div>
 
         </div>
