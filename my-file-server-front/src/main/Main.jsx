@@ -18,8 +18,10 @@ const Main = () => {
         isMobile ? setIsPhone(true) : setIsPhone(false);
     },[nav]);
     
-    return <div>
-            {isPhone ?<MobileMain user={user}/>:<PCMain user={user}/>}
-        </div>
+    return (
+    <>
+    {isPhone ?<MobileMain user={user}/>:<PCMain user={user}/>}
+    </>
+    )
 }
 export default Main;
