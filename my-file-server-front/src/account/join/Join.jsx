@@ -18,8 +18,8 @@ const Join = () => {
                 formData.append('id', id);
                 formData.append('password', pw);
                 try{
-                    // const res = await axios.post(`/api/join`, formData);
-                    const res = await axios.post(`http://localhost:8080/join`, formData);
+                    const res = await axios.post(`/api/join`, formData);
+                    // const res = await axios.post(`http://localhost:8080/join`, formData);
                     nav('/',{state:{message:res.data}})
                 } catch(err){
                     alert(err.response.data);
