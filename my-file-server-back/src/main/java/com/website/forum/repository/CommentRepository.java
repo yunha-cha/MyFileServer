@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 
-    @Query("SELECT new com.website.forum.dto.CommentDTO(c.user, c.content, c.createAt) FROM Comment c")
+    @Query("SELECT new com.website.forum.dto.CommentDTO(c.user, c.content, c.createAt) FROM Comment c WHERE c.forumCode = :forumCode")
     Page<CommentDTO> findAllByForumCode(Pageable pageable, Long forumCode);
 }
