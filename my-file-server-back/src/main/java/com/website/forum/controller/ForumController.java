@@ -26,8 +26,12 @@ public class ForumController {
     @GetMapping("/forum")
     public ResponseEntity<Page<ForumDTO>> getForumList(@RequestParam int page){
 
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("createAt").descending());
-        return ResponseEntity.ok().body(forumService.getForumList(pageable));
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("createAt").descending());
+
+        Page<ForumDTO> forumList = forumService.getForumList(pageable);
+
+
+        return ResponseEntity.ok().body(forumList);
     }
 
 

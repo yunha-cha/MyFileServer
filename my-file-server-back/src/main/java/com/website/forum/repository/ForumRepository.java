@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ForumRepository extends JpaRepository<Forum, Long> {
 
-    @Query("SELECT new com.website.forum.dto.ForumDTO(f.forumCode, f.title, f.user.id, f.createAt, f.views) FROM Forum f")
+    @Query("SELECT new com.website.forum.dto.ForumDTO(f.forumCode, f.title, f.content, f.user.id, f.createAt, f.views) FROM Forum f")
     Page<ForumDTO> findAllForumPage(Pageable pageable);
 
     @Query("SELECT new com.website.forum.dto.ForumDTO(f.title, f.content, f.user.id, f.createAt, f.views) FROM Forum f WHERE f.forumCode = :forumCode")

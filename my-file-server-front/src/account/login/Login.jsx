@@ -18,7 +18,8 @@ const Login = () => {
         formData.append('password', pw);
 
         try{
-            const response = await axios.post('/api/login', formData);
+            // const response = await axios.post('/api/login', formData);
+            const response = await axios.post('http://localhost:8080/login', formData);
             localStorage.setItem('token', response.headers.get("Authorization"));
             navigate('/main');
         }catch(err){

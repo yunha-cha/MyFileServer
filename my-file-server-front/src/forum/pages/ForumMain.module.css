@@ -1,5 +1,94 @@
-.container{
-    margin: 100px;
+.container {
+    box-sizing: content-box;
+    /* width: calc(100vw - 400px); */
+    /* margin-top: 3rem;
+    margin-bottom: 3rem; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    background-color: aliceblue;
+    /* padding-left: 350px; */
+
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    padding-left: 100px;
+
+    height: 100%;
+
+
+    /* root css에 추가한 것
+    align-items: flex-start;
+    padding-left: 350px; */
+}
+
+.container h2{
+    margin-bottom: 2rem;
+}
+
+/* itemBoard.css */
+.forum {
+    padding-left: 8rem;
+    border-left: 4px solid rgb(102, 161, 255);
+}
+  
+
+  .item {
+    position: relative;
+    width: 65%;
+    min-width: 400px;
+    margin: 2.5rem 0;
+    padding: 1.5rem 2rem;
+    background-color: rgb(219, 233, 255);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 원 */
+  .item::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: -3px;
+    width: 15px;
+    height: 15px;
+    background-color: #007bff;
+    background-color: rgb(102, 161, 255);
+    border-radius: 50%;
+}
+
+.item .date{
+    color: rgb(127, 176, 255);
+}
+
+  
+.itemContent {
+    margin-top: 1rem;
+}
+
+.itemContent p{
+    margin-left: 0.3rem;
+    
+}
+
+
+
+  .itemWrap {
+    font-size: 14px;
+    color: #555;
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .author {
+    font-weight: bold;
+    color: rgb(127, 176, 255)
+  }
+
+  .stick{
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+  }
+  
+  .views {
+    color: #888;
+    text-align: left;
   }

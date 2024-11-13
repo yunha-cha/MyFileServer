@@ -6,6 +6,8 @@ import SideBar from "./common/SideBar";
 
 import ForumMain from "./forum/pages/ForumMain";
 import UserPage from "./user-page/UserPage";
+import ForumDetail from "./forum/pages/ForumDetail";
+import { useState } from "react";
 
 
 function App() {
@@ -13,13 +15,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login/>}/>
-        <Route path="/join" element={<Join/>}/>
-        <Route path="/main" element={<Main/>}/>
         {/* <Route path="/join" element={<Join/>}/> */}
         <Route element={<SideBar/>}>
           <Route path="/main" element={<Main/>}/>
           <Route path="/user/:id" element={<UserPage/>}/>
           <Route path="/forum" element={<ForumMain/>} />
+          <Route path="/forum/:code" element={<ForumDetail/>} />
         </Route>
       </Routes>
     </BrowserRouter>

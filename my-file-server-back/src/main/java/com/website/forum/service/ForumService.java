@@ -29,7 +29,7 @@ public class ForumService {
     public Page<ForumDTO> getForumList(Pageable pageable) {
 
         Page<ForumDTO> forumList = forumRepository.findAllForumPage(pageable);
-        System.out.println("forumService: " + forumList);
+        System.out.println(forumList);
         return forumList;
     }
 

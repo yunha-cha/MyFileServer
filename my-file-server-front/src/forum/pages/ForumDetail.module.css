@@ -1,0 +1,55 @@
+.forumDetail {
+    opacity: 0;
+    /* margin-top: 3rem;
+    margin-bottom: 3rem; */
+    align-items: left;
+    background-color: aliceblue;
+
+    padding-right: 10rem;
+    transition: transform 0.5s ease;
+    transform: translateX(100%); /* 처음 위치는 화면 밖 오른쪽 */
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.sliding {
+    transform: translateX(0); /* 페이지가 오른쪽에서 왼쪽으로 슬라이드 */
+    opacity: 1; /* 페이지가 보이게 됨 */
+}
+
+
+.title{
+    border-bottom: 4px solid rgba(127, 176, 255, 0.841);
+    padding-bottom: 0.5em;
+    margin-bottom: 10px;
+
+}
+
+.container{
+    margin-top: 4em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+
+.containerHeader{
+    color: rgb(127, 176, 255);
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2em;
+}
+
+.containerContent{
+    font-size: 18px;
+    min-height: 18em;
+}
+
+.containerFooter{
+    display: flex;
+    justify-content: flex-end;
+    color: rgb(127, 176, 255);
+    border-bottom: 4px solid rgba(127, 176, 255, 0.8);
+    padding-bottom: 0.5em;
+
+}
