@@ -39,7 +39,6 @@ const Login = () => {
   }, [navigate]);
 
   return (
-      <section className="login-container">
         <div className="login-input-container">
           <div className="login-input">
             <div className="login-input-text">Login{message? <div className='login-server-message'>{message}</div> :<></>}</div>
@@ -51,7 +50,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </section>
   );
 }
 

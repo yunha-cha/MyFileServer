@@ -1,14 +1,15 @@
 .sidebarContainer{
     position: fixed;
-    left: 0px;
-    top: 0px;
-    height: 100vh;
+    top: 0;
+    left: 0;
+    height: 100%;
     background-color: #edf2ff;
     width: 250px;
     padding-top: 20px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    flex: 0 0 auto;
 }
 .logout{
     background-color: rgb(192, 216, 255);
