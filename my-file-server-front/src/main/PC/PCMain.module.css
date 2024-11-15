@@ -1,8 +1,10 @@
 .container{
-  padding: 5vw;
+  padding-top: 4vw;
+  padding-left: 4vw;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
+  height: 100vh;
 }
 .pageTitle{font-size: 24px;padding-bottom: 2%;}
 /* 테이블 */
