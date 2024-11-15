@@ -55,7 +55,7 @@ export const downloadFile = async (file) => {
       link.remove();
     })
     .catch((error) => {
-      console.error('Error downloading the file:', error);
+      window.open(fileFullPath, '_blank');
     });
 };
 

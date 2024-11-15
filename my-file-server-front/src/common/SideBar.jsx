@@ -30,7 +30,7 @@ const SideBar = () => {
                 <div onClick={()=>nav('/main')} className={s.title}><img alt='Error' style={{marginRight:20}} width={50} src='/icon.png'/>Cloud</div>
                 <div>
                     <button onClick={logout} className={s.logout}>Logout</button>
-                    <button onClick={()=>nav(`/user/${data.userCode}`)} className={s.logout}>mypage</button>
+                    <button onClick={()=>nav(`/user/${data.userCode}`)} className={s.logout}>My Page</button>
                 </div>
                 <ul className={s.list}>
                     <li onClick={()=>{nav('/main');setIsPublicCloud(false)}}>개인 클라우드</li>

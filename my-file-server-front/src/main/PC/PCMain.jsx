@@ -25,10 +25,15 @@ const PCMain = ({user}) => {
         setShowInputModal(true);
     }
     //업로드 하기
-    const upload = async (file) => {
+    const upload = async (file,setPercent) => {
         if(file){
             const extension = file.name.split('.')[1];
-            await api.post('/main/upload',{file:file,description:fileName+'.'+extension,isPrivate:isPrivate});
+            await api.post('/main/upload',{file:file,description:fileName+'.'+extension,isPrivate:isPrivate},{
+                onUploadProgress: (e) => {
+                    const percent = Math.round((e.loaded*100) / e.total);
+                    setPercent(percent);
+                }
+            });
             await getFile();
         }
     }
@@ -82,7 +87,6 @@ const PCMain = ({user}) => {
         {
         myFiles.map((f,i) => (
             <tr className={s.file} key={f.fileCode}>
-                {console.log(f)}
                 {isImage(f) ? <td onClick={()=>openImage(f)} className={s.imageTitle}>{f.description}</td>:<td className={s.title}>{f.description}</td>}
                 <td className={s.downloadCount}>{f.download_count}회</td>
                 <td className={s.time}>{formattedDateTime(f.uploadedAt)}</td>

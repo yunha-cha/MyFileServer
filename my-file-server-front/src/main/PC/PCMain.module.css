@@ -46,24 +46,22 @@
   transform: translate(-50%,-50%);
 }
 
-.pagination{
-
-}
-
 .customUploadButton {
   margin-bottom: 10px;
   cursor: pointer;
   display: inline-block;
   padding: 10px 20px;
-  background-color: rgb(131, 146, 173);
+  background-color: rgb(192, 216, 255);
   color: white;
   font-weight: bold;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   text-align: center;
 }
 .customUploadButton:hover{
-  background-color: rgb(110, 122, 145);
+  background-color: rgb(139, 184, 255);
+  box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-10%);
 }
 
 input[type="file"] {
