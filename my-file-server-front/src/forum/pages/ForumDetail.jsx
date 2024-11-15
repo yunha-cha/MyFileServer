@@ -18,7 +18,6 @@ const ForumDetail = () => {
         setForum(res.data);
     }
 
-
     const getCommentList = async() => {
         const res = await api.get(`/comment/${code}?page=0`);
         setComments(res.data.content);
@@ -35,17 +34,9 @@ const ForumDetail = () => {
         
     }, [])
 
-    // useEffect(() => {
-    //     if(code){
-    //         getCommentList();
-    //     }
-        
-    // }, [code])
-
     useEffect(() => {
         console.log(forum);
         console.log("comments: ", comments);
-
 
     }, [forum, comments])
 
@@ -57,7 +48,19 @@ const ForumDetail = () => {
 
     
 
-          // 날짜 포맷팅 함수
+    // textarea handle
+    const handleTextarea = (e) => {
+        console.log(e.target.style.height);
+        console.log(e.target.scrollHeight);
+        
+        
+        e.target.style.height = 'auto';
+        e.target.style.height = `${e.target.scrollHeight}px`;
+
+    }
+
+
+    // 날짜 포맷팅 함수
     const formattedDate = (createAt) => {
 
         const today = new Date();
@@ -101,6 +104,14 @@ const ForumDetail = () => {
 
            {/* 댓글 리스트 */}
             <div className={s.containerComment}>
+
+                <div className={s.containerWrite}>
+                    <textarea rows="2" placeholder="댓글 작성"
+                        onInput={handleTextarea}
+                    />
+                    <button>확인</button>
+
+                </div>
 
                 {comments.map((comment, idx) => (
                     <div className={s.comment}>
