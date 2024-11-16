@@ -29,6 +29,7 @@
     background-color: rgb(219, 233, 255);
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
   }
 
   /* 원 */
@@ -42,6 +43,13 @@
     background-color: #007bff;
     background-color: rgb(102, 161, 255);
     border-radius: 50%;
+}
+
+.item:hover{
+  box-shadow: 2px 2px 10px 5px rgba(146, 185, 248, 0.513);
+  transform: translateY(-6%);
+  cursor: pointer;
+
 }
 
 .item .date{
@@ -69,7 +77,8 @@
 
   .author {
     font-weight: bold;
-    color: rgb(127, 176, 255)
+    color: rgb(127, 176, 255);
+    font-size: 16px;
   }
 
   .stick{

@@ -66,9 +66,8 @@ const ForumMain = () => {
             </div>
 
             <div className={s.itemWrap}>
+                <div>🐹</div>
                 <div className={s.author}>{forum.userId}</div>
-                <div className={s.stick}> | </div>
-                <div className={s.views}>views: {forum.views}</div> 
             </div>
             
             </div>

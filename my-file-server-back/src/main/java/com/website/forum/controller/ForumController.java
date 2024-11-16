@@ -3,6 +3,7 @@ package com.website.forum.controller;
 import com.website.forum.dto.ForumDTO;
 import com.website.forum.service.ForumService;
 import com.website.security.dto.CustomUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +62,17 @@ public class ForumController {
         return ResponseEntity.ok().body(forumService.removeForum(forumCode));
     }
 
+
+    /* 조회수 세기 */
+    @PostMapping("/views")
+    public ResponseEntity<?> countView(Long forumCode, HttpServletRequest request){
+        try{
+            forumService.countView(forumCode, request.getRemoteAddr());
+           return ResponseEntity.ok().body("조회수 세기 성공");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("조회수 세기 실패");
+        }
+    }
 
 
 
