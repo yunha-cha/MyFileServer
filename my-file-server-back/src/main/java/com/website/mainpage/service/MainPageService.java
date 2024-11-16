@@ -1,11 +1,15 @@
 package com.website.mainpage.service;
 
 import com.website.common.Tool;
+import com.website.forum.repository.CommentRepository;
+import com.website.forum.repository.ForumRepository;
+import com.website.mainpage.dto.UserPageDTO;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.repository.FileRepository;
 import com.website.mainpage.repository.MainUserRepository;
 import com.website.security.dto.CustomUserDetails;
+import com.website.security.entity.User;
 import com.website.security.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +32,15 @@ public class MainPageService {
     private final UserRepository userRepository;
     private final MainUserRepository mainUserRepository;
     private final FileRepository fileRepository;
-
-    public MainPageService(Tool tool, UserRepository userRepository, MainUserRepository mainUserRepository, FileRepository fileRepository) {
+    private final ForumRepository forumRepository;
+    private final CommentRepository commentRepository;
+    public MainPageService(Tool tool, UserRepository userRepository, MainUserRepository mainUserRepository, FileRepository fileRepository, ForumRepository forumRepository, CommentRepository commentRepository) {
         this.tool = tool;
         this.userRepository = userRepository;
         this.mainUserRepository = mainUserRepository;
         this.fileRepository = fileRepository;
+        this.forumRepository = forumRepository;
+        this.commentRepository = commentRepository;
     }
     @Transactional
     public String uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate) {
@@ -90,8 +97,25 @@ public class MainPageService {
         return mainUserRepository.findById(user.getUserCode()).orElseThrow();
     }
 
-    public MainUserEntity getOtherUser(Long userCode) {
-        Optional<MainUserEntity> user = mainUserRepository.findById(userCode);
-        return user.orElse(null);
+    public UserPageDTO getOtherUser(Long userCode) {
+        MainUserEntity user = mainUserRepository.findById(userCode).orElseThrow();
+        int writtenPostCount = forumRepository.getUserWrittenPostCount(userCode);
+        int writtenCommentCount = commentRepository.getUserWrittenCommentCount(userCode);
+        int uploadCount = fileRepository.getUserFileUploadCount(userCode);
+        return new UserPageDTO(
+                user.getUserCode(),
+                user.getId(),
+                writtenPostCount,
+                writtenCommentCount,
+                uploadCount,
+                "/icon.png"
+        );
+    }
+
+    @Transactional
+    public void modifyUser(UserPageDTO user) {
+        User userEntity = userRepository.findByUserCode(user.getUserCode());
+        userEntity.setId(user.getUserId());
+        userRepository.save(userEntity);
     }
 }

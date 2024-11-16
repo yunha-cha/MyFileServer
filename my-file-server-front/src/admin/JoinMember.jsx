@@ -17,25 +17,24 @@ function JoinMember() {
         setDisableUsers(res.data);
     }
     const enableUser = async (userCode) => {
-        const res = await api.post(`/admin/user-enable/${userCode}`);
-        console.log(res.data);
+        await api.post(`/admin/user-enable/${userCode}`);
+        getDisableUser();
     }
     useEffect(()=>{
         getDisableUser();
     },[])
     return (
-        <div>
+        <div className={s.container}>
             {data && data.userRole==='ROLE_USER' ? permissionDenied() : 
             <div>
-                <div>반갑다 어드민</div>
-                {disableUsers.map((user)=>(
+                {disableUsers[0] ? disableUsers.map((user)=>(
                     <div key={user.userCode} className={s.members}>
                         <div>{user.userCode}</div>
                         <div>{user.id}</div>
                         <div>{user.userRole}</div>
                         {user.enable ? <></> : <button onClick={()=>enableUser(user.userCode)}>회원가입 승인</button>}
                     </div>
-                ))}
+                )):<div>회원 가입을 요청한 유저가 없습니다.</div>}
             </div>
             }
         </div>

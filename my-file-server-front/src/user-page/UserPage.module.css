@@ -1,0 +1,136 @@
+.container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 마이페이지 컨테이너 */
+.myPageContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  /* 프로필 섹션 */
+  .profileSection {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .profileImage {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  
+  .userInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+  .userInfo input{
+    border-color: rgb(192, 216, 255);
+    border-style: solid;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+
+  }
+  .userInfo input:focus{
+    outline: none;
+    border-color: rgb(139, 184, 255);
+    box-shadow: inset 0 0 4px 2px rgb(139, 184, 255);
+  }
+  .userInfo input:first-child{
+    height: 40px;
+    width: 70px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 23px;
+    font-weight: bold;
+  }
+  .userInfo input:last-child{
+    height: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .editButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .editButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 활동 섹션 */
+  .activitySection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .activityCards {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .activityCard {
+    text-align: center;
+    padding: 10px;
+    flex: 1;
+    margin: 0 10px;
+    background-color: #f1f3f5;
+    border-radius: 8px;
+    transition: transform 0.3s;
+  }
+  
+  /* .activityCard:hover {
+    transform: translateY(-5px);
+  } */
+  
+  /* 설정 섹션 */
+  .settingsSection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .settingsButton {
+    display: block;
+    width: 100%;
+    background-color: rgb(192, 216, 255);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .settingsButton:hover {
+    background-color: rgb(139, 184, 255);
+    box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10%);
+  }
+  

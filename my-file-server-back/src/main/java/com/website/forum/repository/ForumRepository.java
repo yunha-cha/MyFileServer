@@ -16,4 +16,7 @@ public interface ForumRepository extends JpaRepository<Forum, Long> {
 
     @Query("SELECT new com.website.forum.dto.ForumDTO(f.title, f.content, f.user.id, f.createAt, f.views) FROM Forum f WHERE f.forumCode = :forumCode")
     ForumDTO findByForumCode(Long forumCode);
+
+    @Query("SELECT COUNT(f) FROM Forum f WHERE f.user.userCode=:userCode")
+    int getUserWrittenPostCount(Long userCode);
 }

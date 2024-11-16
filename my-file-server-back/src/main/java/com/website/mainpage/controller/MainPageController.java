@@ -1,4 +1,5 @@
 package com.website.mainpage.controller;
+import com.website.mainpage.dto.UserPageDTO;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
@@ -40,8 +41,21 @@ public class MainPageController {
     }
     @GetMapping("/other-user/{userCode}")
     public ResponseEntity<?> getUser(@PathVariable Long userCode){
-        MainUserEntity user = mainService.getOtherUser(userCode);
-        return ResponseEntity.ok().body(Objects.requireNonNullElse(user, "유저가 없습니다."));
+        try{
+            UserPageDTO user = mainService.getOtherUser(userCode);
+            return ResponseEntity.ok().body(Objects.requireNonNullElse(user, "유저가 없습니다."));
+        }
+        catch (Exception e){return ResponseEntity.badRequest().body("유저가 없습니다.");}
+    }
+    @PostMapping("/user")
+    public ResponseEntity<?> modifyUser(UserPageDTO user){
+        System.out.println(user.getUserId());
+        try{
+            mainService.modifyUser(user);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {

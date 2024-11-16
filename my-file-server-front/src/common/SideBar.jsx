@@ -17,7 +17,7 @@ const SideBar = () => {
     }
     useEffect(()=>{
         setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-        if(!data && state !== 'loading'){  
+        if(!data && state !== 'loading' && state !== 'success'){  
             dispatch(getUser());
         }        
     },[data, dispatch, state])
@@ -36,9 +36,8 @@ const SideBar = () => {
                 <ul className={s.list}>
                     <li onClick={()=>{nav('/main');setIsPublicCloud(false)}}>개인 클라우드</li>
                     <li onClick={()=>{nav('/main');setIsPublicCloud(true)}}>공용 클라우드</li>
-                    <li onClick={()=>nav('/forum')}>자유 게시판 (미구현)</li>
+                    <li onClick={()=>nav('/forum')}>자유 게시판 (구현 중)</li>
                     {data && data.userRole === 'ROLE_ADMIN'&&<li onClick={()=>nav('/admin')}>관리자 페이지</li>}
-                    {/* <li onClick={getDisableUser}>ss</li> */}
                 </ul>
                 </div>
             </>

@@ -10,6 +10,22 @@
 /* 테이블 */
 .thead {background-color: rgb(169, 189, 223);color: white;}
 .thead th {padding: 10px;}
+.tableUser{text-align: center;}
+.tableUser button{
+  font-weight: bold;
+  border: none;
+  background-color: rgb(192, 216, 255);
+  color: white;
+  padding: 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.tableUser button:hover{
+  background-color: rgb(139, 184, 255);
+  box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-10%);
+}
 .download{
   height: 30px;
   padding: 5px 10px;

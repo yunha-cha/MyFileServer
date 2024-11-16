@@ -12,4 +12,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     @Query("SELECT f FROM FileEntity f WHERE f.isPrivate=false")
     Page<FileEntity> getPublicFile(Pageable pageable);
+    @Query("SELECT COUNT(f) FROM FileEntity f WHERE f.uploadedByUser.userCode=:userCode")
+    int getUserFileUploadCount(Long userCode);
 }

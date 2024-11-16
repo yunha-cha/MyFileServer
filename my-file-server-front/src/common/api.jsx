@@ -40,7 +40,6 @@ api.interceptors.response.use(
     (error) => {
         if (error.response) {
             if (error.response.status === 403) {
-                alert('토큰이 만료되었습니다.');
                 localStorage.removeItem('token');
                 window.location.href = '/';
             } else if (error.response.status === 401) { // JWT 토큰이 없을 때
@@ -48,7 +47,8 @@ api.interceptors.response.use(
                 localStorage.removeItem('token');
                 window.location.href = '/';
             } else if (error.response.status === 400) {
-                alert('400 에러');
+                console.log(error.response);
+                
             }
         } else if (error.request) {
             // 요청 전 에러 발생
