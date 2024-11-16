@@ -6,10 +6,13 @@ import com.website.forum.repository.ForumRepository;
 import com.website.security.dto.CustomUserDetails;
 import com.website.security.entity.User;
 import com.website.security.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -63,6 +66,7 @@ public class ForumService {
     }
 
 
+    @Transactional
     public String removeForum(Long forumCode) {
 
         Forum removedForum = forumRepository.findById(forumCode).orElseThrow(() -> new NoSuchElementException("데이터가 없음"));
@@ -71,6 +75,20 @@ public class ForumService {
     }
 
 
+    public void countView(Long forumCode, String remoteAddr) {
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession(true);
+
+        String sessionKey = "viewedForum_" + forumCode + "_ip_" + remoteAddr;
+        Boolean hasViewed = (Boolean) session.getAttribute(sessionKey);
+
+        if(hasViewed == null || !hasViewed){
+            forumRepository.incrementViewCount(forumCode);
+            session.setAttribute(sessionKey, true);
+        }
+
+    }
 
 
 }

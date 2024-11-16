@@ -33,7 +33,8 @@ public class CommentDTO {
 
 
     /* 조회 */
-    public CommentDTO(User user, String content, LocalDateTime createAt) {
+    public CommentDTO(Long commentCode, User user, String content, LocalDateTime createAt) {
+        this.commentCode = commentCode;
         this.user = user;
         this.content = content;
         this.createAt = createAt;
