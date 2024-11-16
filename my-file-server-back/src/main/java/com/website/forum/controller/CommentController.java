@@ -4,6 +4,7 @@ package com.website.forum.controller;
 import com.website.forum.dto.CommentDTO;
 import com.website.forum.service.CommentService;
 import com.website.security.dto.CustomUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,9 +40,15 @@ public class CommentController {
 
     /* 댓글 등록 */
     @PostMapping("/{forumCode}")
-    public ResponseEntity<String> registComment(@AuthenticationPrincipal CustomUserDetails user, @RequestBody CommentDTO commentDTO, @PathVariable Long forumCode){
+    public ResponseEntity<String> registComment(@AuthenticationPrincipal CustomUserDetails user, CommentDTO commentDTO, @PathVariable Long forumCode, HttpServletRequest request){
 
-        return ResponseEntity.ok().body(commentService.registComment(user, commentDTO, forumCode));
+        String clientIp = request.getRemoteAddr();
+        try{
+            commentService.registComment(user, commentDTO, forumCode, clientIp);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
 
     }
 

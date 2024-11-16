@@ -28,17 +28,16 @@ public class CommentService {
 
 
     /* 댓글 등록 */
-    public String registComment(CustomUserDetails user, CommentDTO commentDTO, Long forumCode) {
+    public void registComment(CustomUserDetails user, CommentDTO commentDTO, Long forumCode, String clientIp) {
 
         Comment newComment = new Comment(
                 userRepository.findById(user.getUsername()),
                 forumCode,
                 commentDTO.getContent(),
                 LocalDateTime.now(),
-                commentDTO.getIpAddress()       // 프론트에서 ip 주소 줌 아마도
+                clientIp
         );
         commentRepository.save(newComment);
-        return "댓글 등록 성공";
 
     }
 
