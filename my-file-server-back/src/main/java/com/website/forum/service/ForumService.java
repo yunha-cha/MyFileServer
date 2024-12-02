@@ -1,5 +1,6 @@
 package com.website.forum.service;
 
+import com.website.common.Tool;
 import com.website.forum.dto.ForumDTO;
 import com.website.forum.entity.Forum;
 import com.website.forum.repository.ForumRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -20,10 +22,12 @@ import java.util.NoSuchElementException;
 @Service
 public class ForumService {
 
+    private final Tool tool;
     private final ForumRepository forumRepository;
     private final UserRepository userRepository;
 
-    public ForumService(ForumRepository forumRepository, UserRepository userRepository) {
+    public ForumService(Tool tool, ForumRepository forumRepository, UserRepository userRepository) {
+        this.tool = tool;
         this.forumRepository = forumRepository;
         this.userRepository = userRepository;
     }
@@ -44,7 +48,7 @@ public class ForumService {
 
 
     @Transactional
-    public String registForum(CustomUserDetails user, ForumDTO forumDTO) {
+    public String registForum(CustomUserDetails user, ForumDTO forumDTO, String remoteAddr) {
 
         // user entity 조회
         User registUser = userRepository.findById(user.getUsername());
@@ -53,12 +57,12 @@ public class ForumService {
         Forum newForum = new Forum(
                 forumDTO.getForumCode(),
                 forumDTO.getTitle(),
-                "임시 content",
+                forumDTO.getContent(),
                 registUser,
                 LocalDateTime.now(),
                 0,
                 "비공개",
-                forumDTO.getIpAddress()
+                remoteAddr
         );
         forumRepository.save(newForum);
 
@@ -75,13 +79,18 @@ public class ForumService {
     }
 
 
+    @Transactional
     public void countView(Long forumCode, String remoteAddr) {
+
+        System.out.println("forumCode = " + forumCode);
+        System.out.println("request = " + remoteAddr);
 
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession(true);
 
         String sessionKey = "viewedForum_" + forumCode + "_ip_" + remoteAddr;
         Boolean hasViewed = (Boolean) session.getAttribute(sessionKey);
+
 
         if(hasViewed == null || !hasViewed){
             forumRepository.incrementViewCount(forumCode);
@@ -91,4 +100,9 @@ public class ForumService {
     }
 
 
+    public String uploadEditorImg(MultipartFile file) {
+
+
+        return tool.upload(file);
+    }
 }

@@ -7,6 +7,7 @@ import UserPage from "./user-page/UserPage";
 import ForumDetail from "./forum/pages/ForumDetail";
 import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
+import ForumCreate from "./forum/pages/ForumCreate";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="admin" element={<JoinMember/>}/>
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
+          <Route path="/forum/write" element={<ForumCreate />} />
         </Route>
       </Routes>
     </BrowserRouter>
