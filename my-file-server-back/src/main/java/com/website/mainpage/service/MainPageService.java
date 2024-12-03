@@ -5,8 +5,10 @@ import com.website.forum.repository.CommentRepository;
 import com.website.forum.repository.ForumRepository;
 import com.website.mainpage.dto.UserPageDTO;
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.repository.FileRepository;
+import com.website.mainpage.repository.FolderRepository;
 import com.website.mainpage.repository.MainUserRepository;
 import com.website.security.dto.CustomUserDetails;
 import com.website.security.entity.User;
@@ -22,7 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class MainPageService {
@@ -34,13 +36,15 @@ public class MainPageService {
     private final FileRepository fileRepository;
     private final ForumRepository forumRepository;
     private final CommentRepository commentRepository;
-    public MainPageService(Tool tool, UserRepository userRepository, MainUserRepository mainUserRepository, FileRepository fileRepository, ForumRepository forumRepository, CommentRepository commentRepository) {
+    private final FolderRepository folderRepository;
+    public MainPageService(Tool tool, UserRepository userRepository, MainUserRepository mainUserRepository, FileRepository fileRepository, ForumRepository forumRepository, CommentRepository commentRepository, FolderRepository folderRepository) {
         this.tool = tool;
         this.userRepository = userRepository;
         this.mainUserRepository = mainUserRepository;
         this.fileRepository = fileRepository;
         this.forumRepository = forumRepository;
         this.commentRepository = commentRepository;
+        this.folderRepository = folderRepository;
     }
     @Transactional
     public String uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate) {
@@ -117,5 +121,24 @@ public class MainPageService {
         User userEntity = userRepository.findByUserCode(user.getUserCode());
         userEntity.setId(user.getUserId());
         userRepository.save(userEntity);
+    }
+
+    public Long getUserRootFolder(Long userCode) {
+        return folderRepository.getUserRootFolderCode(userCode);
+    }
+
+    public FolderEntity getFileInFolder(Long folderCode, Long userCode) {
+        try{
+            FolderEntity files =  folderRepository.getFileInFolder(folderCode, userCode);
+            List<FolderEntity> folders = folderRepository.getFolderInFolder(folderCode,userCode);
+            for(FolderEntity f : folders){
+                f.setFiles(null);
+            }
+            files.setFolders(folders);
+            return files;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }

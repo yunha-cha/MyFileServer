@@ -4,6 +4,8 @@ import api from "../common/api";
 //개인 클라우드 파일 가져오는 함수임
 export const getMyFile = async (page,setMyFiles, setTotalElements) => {
     const res = await api.get(`/main/file?page=${page}`);
+    console.log(res);
+    
     setTotalElements && setTotalElements(res.data.totalElements);
     setMyFiles(res.data.content);
 }

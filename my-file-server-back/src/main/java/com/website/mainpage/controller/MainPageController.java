@@ -1,9 +1,11 @@
 package com.website.mainpage.controller;
 import com.website.mainpage.dto.UserPageDTO;
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
 import com.website.security.dto.CustomUserDetails;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -73,5 +75,22 @@ public class MainPageController {
         if(mainService.deleteFile(fileCode)){
             return ResponseEntity.ok().body("삭제 성공!");
         } else { return ResponseEntity.badRequest().body("삭제 실패!");}
+    }
+    @GetMapping("/root-folder")
+    public ResponseEntity<Long> getUserRootFolder(@AuthenticationPrincipal CustomUserDetails user){
+        Long a = mainService.getUserRootFolder(user.getUserCode());
+        System.out.println(a);
+        return ResponseEntity.ok().body(a);
+    }
+    @GetMapping("/folder")
+    public ResponseEntity<?> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        //폴더 코드랑, 유저가 옴
+        //
+        try{
+            return ResponseEntity.ok().body(mainService.getFileInFolder(folderCode, user.getUserCode()));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
