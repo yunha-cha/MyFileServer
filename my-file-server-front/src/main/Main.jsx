@@ -1,6 +1,6 @@
 import MobileMain from "./Mobile/MobileMain";
 import '../common/Pagination.css';
-import PCMain from "./PC/PCMain";
+import PCMainUpdate from "./PC/PCMainUpdate";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -20,7 +20,7 @@ const Main = () => {
     
     return (
     <>
-    {isPhone ?<MobileMain user={user}/>:<PCMain user={user}/>}
+    {isPhone ?<MobileMain user={user}/>:<PCMainUpdate user={user}/>}
     </>
     )
 }

@@ -123,13 +123,23 @@ public class MainPageService {
         userRepository.save(userEntity);
     }
 
+    @Transactional
     public Long getUserRootFolder(Long userCode) {
-        return folderRepository.getUserRootFolderCode(userCode);
+        Long userRootFolderCode = folderRepository.getUserRootFolderCode(userCode);
+        if(userRootFolderCode==null){   //처음에 루트 폴더 만들어주기
+            FolderEntity newFolderEntity = new FolderEntity();
+            newFolderEntity.setUser(userCode);
+            newFolderEntity.setFolderName("rootFolder"+userCode);
+            folderRepository.save(newFolderEntity);
+            userRootFolderCode = folderRepository.getUserRootFolderCode(userCode);
+        }
+        return userRootFolderCode;
     }
 
     public FolderEntity getFileInFolder(Long folderCode, Long userCode) {
         try{
             FolderEntity files =  folderRepository.getFileInFolder(folderCode, userCode);
+            //로직 비효율적임 고치자 나중에
             List<FolderEntity> folders = folderRepository.getFolderInFolder(folderCode,userCode);
             for(FolderEntity f : folders){
                 f.setFiles(null);

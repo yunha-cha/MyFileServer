@@ -78,9 +78,7 @@ public class MainPageController {
     }
     @GetMapping("/root-folder")
     public ResponseEntity<Long> getUserRootFolder(@AuthenticationPrincipal CustomUserDetails user){
-        Long a = mainService.getUserRootFolder(user.getUserCode());
-        System.out.println(a);
-        return ResponseEntity.ok().body(a);
+        return ResponseEntity.ok().body(mainService.getUserRootFolder(user.getUserCode()));
     }
     @GetMapping("/folder")
     public ResponseEntity<?> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
