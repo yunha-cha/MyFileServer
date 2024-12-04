@@ -3,7 +3,9 @@ package com.website.mainpage.service;
 import com.website.common.Tool;
 import com.website.forum.repository.CommentRepository;
 import com.website.forum.repository.ForumRepository;
+import com.website.mainpage.dto.UserFolderDTO;
 import com.website.mainpage.dto.UserPageDTO;
+import com.website.mainpage.dto.UserUploadFileDTO;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
@@ -46,27 +48,52 @@ public class MainPageService {
         this.commentRepository = commentRepository;
         this.folderRepository = folderRepository;
     }
+    private String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            return "";
+        }
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex == -1 || dotIndex == originalFilename.length() - 1) {
+            return "";
+        }
+        return originalFilename.substring(dotIndex + 1);
+    }
+
     @Transactional
-    public String uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate) {
+    public UserUploadFileDTO uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate, Long folderCode) {
         try{
             FileEntity fileEntity =  new FileEntity();
             fileEntity.setChangedName(tool.upload(file));
             fileEntity.setUploadedAt(LocalDateTime.now());
-            fileEntity.setDescription(description);
+            fileEntity.setDescription(description+"."+this.getFileExtension(file));
             fileEntity.setPrivate(isPrivate);
             fileEntity.setSize(file.getSize());
             fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
             fileEntity.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
+            fileEntity.setFolder(folderRepository.findById(folderCode).orElseThrow());
             fileEntity.setDownload_count(0);
             if(file.getOriginalFilename() != null){
                 fileEntity.setOriginalName(StringUtils.cleanPath(file.getOriginalFilename()));
             } else {
-                fileEntity.setOriginalName("파일");
+                fileEntity.setOriginalName("file");
             }
-            fileRepository.save(fileEntity);
-            return "업로드 성공";
+            FileEntity savedEntity = fileRepository.save(fileEntity);
+            return new UserUploadFileDTO(
+                savedEntity.getFileCode(),
+                    savedEntity.getChangedName(),
+                    savedEntity.getUploadedAt(),
+                    savedEntity.getDescription(),
+                    savedEntity.getFileFullPath(),
+                    savedEntity.getDownload_count(),
+                    savedEntity.getOriginalName(),
+                    savedEntity.getSize(),
+                    savedEntity.isPrivate(),
+                    savedEntity.getFolder().getFolderCode(),
+                    "업로드 성공!"
+            );
         } catch (Exception e){
-            return e.getMessage();
+            return new UserUploadFileDTO(e.getMessage());
         }
     }
     public Page<FileEntity> getPublicFiles(int page) {
@@ -136,19 +163,13 @@ public class MainPageService {
         return userRootFolderCode;
     }
 
-    public FolderEntity getFileInFolder(Long folderCode, Long userCode) {
+    public UserFolderDTO getDataInFolder(Long folderCode, Long userCode) throws Exception {
         try{
-            FolderEntity files =  folderRepository.getFileInFolder(folderCode, userCode);
-            //로직 비효율적임 고치자 나중에
-            List<FolderEntity> folders = folderRepository.getFolderInFolder(folderCode,userCode);
-            for(FolderEntity f : folders){
-                f.setFiles(null);
-            }
-            files.setFolders(folders);
-            return files;
+            List<FolderEntity> folders = folderRepository.getFolderInFolder(userCode, folderCode);
+            List<FileEntity> files = fileRepository.getFileInFolder(userCode, folderCode);
+            return new UserFolderDTO(folders, files, "success");
         } catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
+            throw new Exception(e.getMessage());
         }
     }
 }

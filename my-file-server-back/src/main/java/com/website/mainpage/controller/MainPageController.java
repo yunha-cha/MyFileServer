@@ -1,5 +1,7 @@
 package com.website.mainpage.controller;
+import com.website.mainpage.dto.UserFolderDTO;
 import com.website.mainpage.dto.UserPageDTO;
+import com.website.mainpage.dto.UserUploadFileDTO;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
@@ -59,13 +61,13 @@ public class MainPageController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
-        if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
-        }
-        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
+//        if (!file.isEmpty()) {
+//            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
+//        }
+//        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
+//    }
     @PostMapping("/download-count/{fileCode}")
     public void increaseCount(@PathVariable Long fileCode){
         mainService.increaseDownloadCount(fileCode);
@@ -81,14 +83,25 @@ public class MainPageController {
         return ResponseEntity.ok().body(mainService.getUserRootFolder(user.getUserCode()));
     }
     @GetMapping("/folder")
-    public ResponseEntity<?> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
-        //폴더 코드랑, 유저가 옴
-        //
+    public ResponseEntity<UserFolderDTO> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
         try{
-            return ResponseEntity.ok().body(mainService.getFileInFolder(folderCode, user.getUserCode()));
+            return ResponseEntity.ok().body(mainService.getDataInFolder(folderCode, user.getUserCode()));
         } catch (Exception e){
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            //에러 내용 상세 응답이기 때문에 나중에 수정할 것!!
+            return ResponseEntity.badRequest().body(new UserFolderDTO(e.getMessage()));
         }
     }
+    @PostMapping("/upload")
+    public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
+                                                        @RequestParam("file") MultipartFile file,
+                                                        String description,
+                                                        boolean isPrivate,
+                                                        Long folderCode)
+    {
+        if (!file.isEmpty()) {
+            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate, folderCode));
+        }
+        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+
 }

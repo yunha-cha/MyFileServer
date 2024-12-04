@@ -27,11 +27,12 @@ public class FolderEntity {
     @Column(name = "parent_folder_code")
     private Long parentFolderCode;
 
-    @OneToMany(mappedBy = "folder")
-    private List<FileEntity> files = new ArrayList<>();
+//    @OneToMany(mappedBy = "folder")
+//    private List<FileEntity> files = new ArrayList<>();
 
-    @Transient
-    private List<FolderEntity> folders = new ArrayList<>();
+//    @Transient
+//    private List<FolderEntity> otherFolders = new ArrayList<>();
+
 
     //parentFolderCode가 이 엔티티에 folderCode랑 같은 애들
 
