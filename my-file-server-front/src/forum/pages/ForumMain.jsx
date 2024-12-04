@@ -74,8 +74,6 @@ const ForumMain = () => {
 
 
 
-
-
     return <div className={s.container}>
 
       <h2>자유 게시판</h2>

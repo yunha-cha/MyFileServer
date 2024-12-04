@@ -31,6 +31,7 @@ api.interceptors.request.use(
     }
 );
 
+
 // 응답 인터셉터 설정
 api.interceptors.response.use(
     (response) => {
