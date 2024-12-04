@@ -3,6 +3,8 @@ import s from "./ForumMain.module.css"
 import api from "../../common/api";
 import { useNavigate } from "react-router-dom";
 import DOMPurify from 'dompurify';
+import GoToTopButton from "./GoToTopButton";
+import WritePostButton from "./WritePostButton";
 
 const ForumMain = () => {
 
@@ -75,8 +77,9 @@ const ForumMain = () => {
 
 
     return <div className={s.container}>
-
-      <h2>자유 게시판</h2>
+        <GoToTopButton/>
+        <WritePostButton/>
+      <h2 id="forumTitle">자유 게시판</h2>
         <div className={s.forum}>
             
         {forums.map((forum, idx) => (
@@ -111,7 +114,7 @@ const ForumMain = () => {
         )}
 
         </div>
-
+        
 
     </div>
 
