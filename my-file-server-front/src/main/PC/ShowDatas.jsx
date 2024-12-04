@@ -1,6 +1,13 @@
 import React from 'react';
 
 const ShowDatas = ({ folder, intoFolder, file }) => {
+    const matchFileImage = {
+        "hwp" : "/hancom.png",
+        "hwpx" : "/hancom.png",
+        "pdf" : "/pdf.png",
+        "mp4" : "/mp4.png",
+        "zip" : "/zip.png"
+    }
     if (folder) {
         const {
             folderCode,
@@ -21,8 +28,11 @@ const ShowDatas = ({ folder, intoFolder, file }) => {
             fileCode,
             description
         } = file;
+        const fileType = description.split(".").pop();
+        const fileImage = matchFileImage[fileType] || "/defaultImage.png";
         return (
             <div key={fileCode}>
+                <img src={fileImage} style={{width: 64, height: 64}}/>
                 <div>{description}</div>
             </div>
         )
