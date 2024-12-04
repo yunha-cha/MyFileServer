@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../common/api';
+import ShowDatas from './ShowDatas';
 
 function PCMainUpdate(props) {
     //지금 현재 화면에 렌더링하는 데이터 state
@@ -37,22 +38,19 @@ function PCMainUpdate(props) {
 
     return (
         <div>
+            {/* <ShowDatas/> */}
             {
                 //폴더 부터 보여주기
                 files&&
                 files.folders.map((folder)=>(
-                    <div key={folder.folderCode}>
-                        <div onClick={()=>intoFolder(folder.folderCode)}>{folder.folderName}</div>
-                    </div>
+                    <ShowDatas folder={folder} intoFolder={intoFolder} file={null}/>
                 ))
             }
             {
                 //파일 보여주기
                 files&&
                 files.files.map((file)=>(
-                    <div key={file.fileCode}>
-                        <div>{file.description}</div>
-                    </div>
+                    <ShowDatas folder={null} intoFolder={null}file={file}/>
                 ))
             }
         </div>
