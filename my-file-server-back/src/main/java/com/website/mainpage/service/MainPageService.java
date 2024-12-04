@@ -167,7 +167,7 @@ public class MainPageService {
         try{
             List<FolderEntity> folders = folderRepository.getFolderInFolder(userCode, folderCode);
             List<FileEntity> files = fileRepository.getFileInFolder(userCode, folderCode);
-            return new UserFolderDTO(folders, files, "success");
+            return new UserFolderDTO(folderCode, folders, files, "success");
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }

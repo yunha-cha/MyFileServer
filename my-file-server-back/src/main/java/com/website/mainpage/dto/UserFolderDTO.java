@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter@Getter
 public class UserFolderDTO {
+    private Long folderCode;
     private List<FolderEntity> folders = new ArrayList<>();
     private List<FileEntity> files = new ArrayList<>();
     private String message;
