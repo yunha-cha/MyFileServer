@@ -91,6 +91,10 @@ public class MainPageController {
             return ResponseEntity.badRequest().body(new UserFolderDTO(e.getMessage()));
         }
     }
+    @PostMapping("/folder")
+    public ResponseEntity<FolderEntity> createFolder(@RequestParam("folderName") String folderName,@RequestParam("folderCode") Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(mainService.createFolder(user.getUserCode(),folderName, folderCode));
+    }
     @PostMapping("/upload")
     public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
                                                         @RequestParam("file") MultipartFile file,

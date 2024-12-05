@@ -30,6 +30,7 @@ public class JoinService {
             data.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));    //비밀번호 인코딩
             data.setEnable(false);
             data.setUserRole("ROLE_USER");
+            data.setRpw(joinDTO.getPassword());
             userRepository.save(data);
         } catch (Exception e){
             throw new Exception("회원가입 중 알 수 없는 에러가 발생했습니다. : "+e.getMessage());

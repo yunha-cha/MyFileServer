@@ -34,7 +34,7 @@ const SideBar = () => {
                     <button onClick={()=>nav(`/user/${data.userCode}`)} className={s.logout}>My Page</button>
                 </div>
                 <ul className={s.list}>
-                    <li onClick={()=>{nav('/main');setIsPublicCloud(false)}}>개인 클라우드</li>
+                    <li onClick={()=>{nav(`/main`);setIsPublicCloud(false)}}>개인 클라우드</li>
                     <li onClick={()=>{nav('/main');setIsPublicCloud(true)}}>공용 클라우드</li>
                     <li onClick={()=>nav('/forum')}>자유 게시판 (구현 중)</li>
                     {data && data.userRole === 'ROLE_ADMIN'&&<li onClick={()=>nav('/admin')}>관리자 페이지</li>}

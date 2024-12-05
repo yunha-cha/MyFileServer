@@ -172,4 +172,12 @@ public class MainPageService {
             throw new Exception(e.getMessage());
         }
     }
+
+    public FolderEntity createFolder(Long userCode, String folderName, Long folderCode) {
+        FolderEntity folder = new FolderEntity();
+        folder.setFolderName(folderName);
+        folder.setParentFolderCode(folderCode);
+        folder.setUser(userCode);
+        return folderRepository.save(folder);
+    }
 }

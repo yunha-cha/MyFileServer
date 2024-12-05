@@ -1,6 +1,7 @@
 import React from 'react';
+import s from './ShowDatas.module.css';
 
-const ShowDatas = ({ folder, intoFolder, file }) => {
+const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile }) => {
     const matchFileImage = {
         "hwp" : "/hancom.png",
         "hwpx" : "/hancom.png",
@@ -15,8 +16,7 @@ const ShowDatas = ({ folder, intoFolder, file }) => {
         } = folder;
         return (
             <div key={folderCode}>
-                
-                <div onClick={() => intoFolder(folderCode)}>
+                <div className={s.fileContainer} onClick={() => intoFolder(folderCode)}>
                     <img src='/folder.png' style={{width: 64, height: 64}}/>
                     <div>{folderName}</div>
                 </div>
@@ -31,7 +31,7 @@ const ShowDatas = ({ folder, intoFolder, file }) => {
         const fileType = description.split(".").pop();
         const fileImage = matchFileImage[fileType] || "/defaultImage.png";
         return (
-            <div key={fileCode}>
+            <div onClick={()=>showDetailOfFile(file)} className={s.fileContainer} key={fileCode}>
                 <img src={fileImage} style={{width: 64, height: 64}}/>
                 <div>{description}</div>
             </div>

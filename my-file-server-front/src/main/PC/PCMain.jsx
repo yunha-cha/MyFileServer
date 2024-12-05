@@ -65,7 +65,7 @@ const PCMain = ({user}) => {
     //공용 개인이 바뀔 때 페이지 초기화하기
     useEffect(()=>{setPage(0);},[isPublicCloud]);
     return(
-<div className={s.container}> 
+<div className={s.container}>
     <div className={s.pageTitle}>{isPublicCloud? `공용 클라우드`:`개인 클라우드`}</div>
     <div className={s.message}>이미지, 동영상 파일은 클릭하면 미리 볼 수 있습니다.</div>
     <div className={s.message}><b>{page+1}</b> 페이지</div>
