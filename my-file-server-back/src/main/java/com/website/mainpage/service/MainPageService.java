@@ -92,9 +92,9 @@ public class MainPageService {
         );
     }
     @Transactional
-    public UserUploadFileDTO uploadPublicFile(MultipartFile file, String description, CustomUserDetails user) {
+    public void uploadPublicFile(MultipartFile file, String description, CustomUserDetails user) {
         FileEntity fileEntity = this.uploadFile(file, description, user, false);
-        return convertFileEntity(fileRepository.save(fileEntity));
+        fileRepository.save(fileEntity);
     }
     @Transactional
     public UserUploadFileDTO uploadPrivateFile(MultipartFile file, String description, CustomUserDetails user, Long folderCode) {

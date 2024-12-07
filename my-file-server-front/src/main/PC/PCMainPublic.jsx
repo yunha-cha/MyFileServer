@@ -1,11 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import s from './PCMainPublic.module.css'
 import api from '../../common/api';
 import Pagination from 'react-js-pagination';
-import { calcFileSize } from '../function';
+import { calcFileSize, canOpenFile, deleteFile, downloadFile, formattedDateTime } from '../function';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function PCMainPublic() {
+
+    const nav = useNavigate();
 
     const {data} = useSelector((state)=>state.user);    //스토어 유저 정보 가져오기
     
@@ -14,6 +17,13 @@ function PCMainPublic() {
     const [page, setPage] = useState(0);    //현재 페이지
     const [totalElements, setTotalElements] = useState(0);  //총 파일 개수
 
+    //업로드 관련 state
+    const fileInputRef = useRef(null);
+    const fileNameRef = useRef(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadFile, setUploadFile] = useState(null);
+    const [fileName, setFileName] = useState('');
+    const [percent, setPercent] = useState(0);
 
     const getPublicFile = useCallback(async () => { //페이지에 따라 파일 가져오는 함수
         const res = await api.get(`/main/file/public?page=${page}`);
@@ -21,26 +31,59 @@ function PCMainPublic() {
         setFiles(res.data.content);
     },[page]);
 
-    const downloadFile = (file) => {    //파일 다운로드 함수
-        console.log('다운로드 :',file);
+    const downloadSelectedFile = (file) => {    //파일 다운로드 함수
+        downloadFile(file);
     }
 
-    const handleFileChnage = (file) => {//파일 업로드 함수
-        //모달 띄워야 하는데..
-        console.log('업로드 :',file);
+    const upload = async () => {//파일 업로드 함수
+        if(fileName.length>20){
+            alert('파일 이름은 20자를 넘을 수 없어요.');
+            setFileName('');
+        } else {
+            setIsUploading(true);
+            let name = fileName;
+            if(fileName.length===0){
+                name='새 파일';
+            }
+            await api.post('/main/upload/public', { file: uploadFile, description: name }, {
+                onUploadProgress: (e) => {
+                    const percent = Math.round((e.loaded * 100) / e.total);
+                    setPercent(percent);
+                }
+            });
+            await getPublicFile();
+
+            setUploadFile(null);
+            setFileName('');
+            setPercent(0);
+            setIsUploading(false);
+            fileInputRef.current.value = "";
+        }
     }
 
-    const deleteFile = (file) =>{   //파일 삭제 함수
-        console.log('삭제 :',file);
+
+    const deleteSelectedFile = async (file) =>{   //파일 삭제 함수
+        await deleteFile(file.fileCode);
+        getPublicFile();
     }
 
-    const selectUser = (user) => {  //유저 선택 함수
-        console.log('클릭 :',user);
+    const selectUser = (user) => {  //유저 선택 함수 유저 페이지 이동
+        nav(`/user/${user.userCode}`);
+    }
+
+    const openFile = (file) => {    //사진, 동영상 미리보기
+        if(canOpenFile(file)){
+            window.open(file.fileFullPath, "_blank",'width=500,height=500,menubar=no,toolbar=no,location=no,status=no');
+        }
     }
 
 
     useEffect(()=>{getPublicFile()},[page,getPublicFile]);
-
+    useEffect(()=>{
+        if(uploadFile){
+            fileNameRef.current.focus();
+        }
+    },[uploadFile])
 
     return (
         <div className={s.container}>
@@ -49,9 +92,22 @@ function PCMainPublic() {
                 <h5>사진, 동영상 파일은 클릭하여 미리볼 수 있습니다.</h5>
             </div>
             <div className={s.buttonContainer}>
-                <div>
+                <div style={{display:'flex',width:'50vw',alignItems:'center'}}>
                     <label htmlFor="fileInput" className={s.customUploadButton}>공용 파일 업로드</label>
-                    <input id="fileInput" type="file"  onChange={(e)=>handleFileChnage(e.target.files[0])}/>
+                    <input ref={fileInputRef} id="fileInput" type="file"  onChange={(e)=>setUploadFile(e.target.files[0])}/>
+                    {uploadFile&&isUploading===false?   //업로드 파일이 있고, 지금 업로드 중이 아니지?
+                    <div style={{display:'flex'}}>
+                        <input ref={fileNameRef} className={s.uploadInput} value={fileName} onChange={(e)=>setFileName(e.target.value)} onKeyDown={(e)=>e.key==='Enter'&&upload()} placeholder='파일 명을 입력해주세요!'/>
+                        <button className={s.uploadButton} onClick={upload}>업로드</button>
+                    </div>
+                    :
+                    uploadFile&&isUploading&&
+                    <div className={s.progressBar}>
+                        <div className={s.progressText}>{percent}%</div>
+                        <div className={s.progress} style={{ width: `${percent}%`}}></div>
+                    </div>
+                    }
+
                 </div>
             </div>
             <table className={s.table}>
@@ -70,13 +126,13 @@ function PCMainPublic() {
                     {
                         files.map((file)=>(
                             <tr key={file.fileCode}>
-                                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button onClick={()=>deleteFile(file)}>삭제</button>:file.fileCode}</td>
-                                <td style={{flex:5}} className={s.left}>{file.description}{}</td>
+                                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button onClick={()=>deleteSelectedFile(file)}>삭제</button>:file.fileCode}</td>
+                                <td style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
                                 <td style={{flex:1}} className={s.center}><div onClick={()=>selectUser(file.uploadedByUser)} className={s.uploaderData}>{file.uploadedByUser.id}</div></td>
-                                <td style={{flex:1}} className={s.timeData}>2024-12-06(아직)</td>
+                                <td style={{flex:1}} className={s.timeData}>{formattedDateTime(file.uploadedAt)}</td>
                                 <td style={{flex:1}} className={s.center}>{file.download_count}</td>
                                 <td style={{flex:1}} className={s.center}>{calcFileSize(file.size)}</td>
-                                <td style={{flex:1}} className={s.center}><button onClick={()=>downloadFile(file)} className={s.downloadButton}>다운로드</button></td> 
+                                <td style={{flex:1}} className={s.center}><button onClick={()=>downloadSelectedFile(file)} className={s.downloadButton}>다운로드</button></td> 
                             </tr>
                         ))
                     }
@@ -89,6 +145,7 @@ function PCMainPublic() {
                 totalItemsCount={totalElements}
                 onChange={(page)=>setPage(page-1)}/>
             </div>
+
         </div>
     );
 }

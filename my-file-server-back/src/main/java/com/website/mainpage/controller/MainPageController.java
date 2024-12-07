@@ -112,7 +112,8 @@ public class MainPageController {
     @PostMapping("/upload/public")
     public ResponseEntity<UserUploadFileDTO> uploadPublicFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description){
         if(!file.isEmpty()){
-            return ResponseEntity.ok().body(mainService.uploadPublicFile(file,description,user));
+            mainService.uploadPublicFile(file,description,user);
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
     }

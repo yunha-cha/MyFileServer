@@ -77,3 +77,17 @@ export const formattedDateTime = (uploadedAt) => {
   }
   return `${year}/${month}/${day} | ${hour}:${minute}:${second}`;
 };
+
+export const canOpenFile = (file) => {
+  const extention = file.description.split('.').pop();
+  switch(extention){
+    case 'jpg':
+    case 'png':
+    case 'jpeg':
+    case 'gif':
+    case 'webp':
+        return true;
+    default:
+      return false;
+}
+}
