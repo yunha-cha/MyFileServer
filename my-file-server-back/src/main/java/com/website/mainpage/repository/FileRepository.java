@@ -24,6 +24,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
      * @param folderCode 폴더 기본 키
      * @return 파일 List
      */
-    @Query("SELECT f FROM FileEntity f WHERE f.uploadedByUser.userCode = :userCode AND f.folder.folderCode = :folderCode")
+    @Query("SELECT f FROM FileEntity f WHERE f.uploadedByUser.userCode = :userCode AND f.folder.folderCode = :folderCode AND f.isPrivate=true")
     List<FileEntity> getFileInFolder(Long userCode, Long folderCode);
 }

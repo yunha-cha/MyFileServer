@@ -59,43 +59,50 @@ public class MainPageService {
         }
         return originalFilename.substring(dotIndex + 1);
     }
-
-    @Transactional
-    public UserUploadFileDTO uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate, Long folderCode) {
-        try{
-            FileEntity fileEntity =  new FileEntity();
-            fileEntity.setChangedName(tool.upload(file));
-            fileEntity.setUploadedAt(LocalDateTime.now());
-            fileEntity.setDescription(description+"."+this.getFileExtension(file));
-            fileEntity.setPrivate(isPrivate);
-            fileEntity.setSize(file.getSize());
-            fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
-            fileEntity.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
-            fileEntity.setFolder(folderRepository.findById(folderCode).orElseThrow());
-            fileEntity.setDownload_count(0);
-            if(file.getOriginalFilename() != null){
-                fileEntity.setOriginalName(StringUtils.cleanPath(file.getOriginalFilename()));
-            } else {
-                fileEntity.setOriginalName("file");
-            }
-            FileEntity savedEntity = fileRepository.save(fileEntity);
-            return new UserUploadFileDTO(
-                savedEntity.getFileCode(),
-                    savedEntity.getChangedName(),
-                    savedEntity.getUploadedAt(),
-                    savedEntity.getDescription(),
-                    savedEntity.getFileFullPath(),
-                    savedEntity.getDownload_count(),
-                    savedEntity.getOriginalName(),
-                    savedEntity.getSize(),
-                    savedEntity.isPrivate(),
-                    savedEntity.getFolder().getFolderCode(),
-                    "업로드 성공!"
-            );
-        } catch (Exception e){
-            return new UserUploadFileDTO(e.getMessage());
+    private FileEntity uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate){
+        FileEntity fileEntity =  new FileEntity();
+        fileEntity.setChangedName(tool.upload(file));
+        fileEntity.setUploadedAt(LocalDateTime.now());
+        fileEntity.setDescription(description+"."+this.getFileExtension(file));
+        fileEntity.setPrivate(isPrivate);
+        fileEntity.setSize(file.getSize());
+        fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
+        fileEntity.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
+        fileEntity.setDownload_count(0);
+        if(file.getOriginalFilename() != null){
+            fileEntity.setOriginalName(StringUtils.cleanPath(file.getOriginalFilename()));
+        } else {
+            fileEntity.setOriginalName("file");
         }
+        return fileRepository.save(fileEntity);
     }
+    private UserUploadFileDTO convertFileEntity(FileEntity savedEntity){
+        return new UserUploadFileDTO(
+                savedEntity.getFileCode(),
+                savedEntity.getChangedName(),
+                savedEntity.getUploadedAt(),
+                savedEntity.getDescription(),
+                savedEntity.getFileFullPath(),
+                savedEntity.getDownload_count(),
+                savedEntity.getOriginalName(),
+                savedEntity.getSize(),
+                savedEntity.isPrivate(),
+                savedEntity.getFolder().getFolderCode(),
+                "업로드 성공!"
+        );
+    }
+    @Transactional
+    public UserUploadFileDTO uploadPublicFile(MultipartFile file, String description, CustomUserDetails user) {
+        FileEntity fileEntity = this.uploadFile(file, description, user, false);
+        return convertFileEntity(fileRepository.save(fileEntity));
+    }
+    @Transactional
+    public UserUploadFileDTO uploadPrivateFile(MultipartFile file, String description, CustomUserDetails user, Long folderCode) {
+        FileEntity fileEntity = this.uploadFile(file, description, user, true);
+        fileEntity.setFolder(folderRepository.findById(folderCode).orElseThrow());
+        return convertFileEntity(fileRepository.save(fileEntity));
+    }
+
     public Page<FileEntity> getPublicFiles(int page) {
         Pageable pageable = PageRequest.of(page,10,Sort.by("uploadedAt").descending());
         return fileRepository.getPublicFile(pageable);
@@ -175,9 +182,32 @@ public class MainPageService {
 
     public FolderEntity createFolder(Long userCode, String folderName, Long folderCode) {
         FolderEntity folder = new FolderEntity();
-        folder.setFolderName(folderName);
+        if(folderName == null || folderName.equalsIgnoreCase("null") || folderName.length() > 10 || folderName.isBlank()){
+            folderName = "새 폴더";
+        }
+        folder.setFolderName(folderName.trim());
         folder.setParentFolderCode(folderCode);
         folder.setUser(userCode);
         return folderRepository.save(folder);
+    }
+
+    @Transactional
+    public boolean deleteFolder(Long folderCode, Long userCode) {
+        try{
+            List<FileEntity> files = fileRepository.getFileInFolder(userCode, folderCode);
+            List<FolderEntity> folders = folderRepository.getFolderInFolder(userCode,folderCode);
+            folderRepository.deleteAll(folders);
+            fileRepository.deleteAll(files);
+            folderRepository.deleteById(folderCode);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+    @Transactional
+    public void modifyFolderName(Long folderCode, String description) {
+        FolderEntity folder = folderRepository.findById(folderCode).orElseThrow();
+        folder.setFolderName(description);
+        folderRepository.save(folder);
     }
 }

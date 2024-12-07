@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './ShowDatas.module.css';
 
-const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile }) => {
+const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile, handleContextMenu }) => {
     const matchFileImage = {
         "hwp" : "/hancom.png",
         "hwpx" : "/hancom.png",
@@ -16,8 +16,8 @@ const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile }) => {
         } = folder;
         return (
             <div key={folderCode}>
-                <div className={s.fileContainer} onClick={() => intoFolder(folderCode)}>
-                    <img src='/folder.png' style={{width: 64, height: 64}}/>
+                <div onContextMenu={(e)=>handleContextMenu(e,folderCode)} className={s.fileContainer} onClick={() => intoFolder(folderCode)}>
+                    <img src='/folder.png' style={{width: 64, height: 64}} alt='Error'/>
                     <div>{folderName}</div>
                 </div>
             </div>
@@ -29,11 +29,21 @@ const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile }) => {
             description
         } = file;
         const fileType = description.split(".").pop();
-        const fileImage = matchFileImage[fileType] || "/defaultImage.png";
+        let fileImage = '';
+        switch(fileType){
+            case 'jpg':
+            case 'png':
+            case 'jpeg':
+            case 'gif':
+            case 'webp':
+                fileImage = file.fileFullPath; break;
+            default:
+                fileImage = matchFileImage[fileType] || "/defaultImage.png"; break;
+        }
         return (
             <div onClick={()=>showDetailOfFile(file)} className={s.fileContainer} key={fileCode}>
-                <img src={fileImage} style={{width: 64, height: 64}}/>
-                <div>{description}</div>
+                <img src={fileImage} style={{width: 64, height: 64, borderRadius:5}} alt='Error'/>
+                <div style={{textAlign:'center'}}>{description}</div>
             </div>
         )
     }
