@@ -49,3 +49,8 @@ www.seopia.online
 - 모바일 업로드 버튼 css 버그 수정
 - 최적화
 - https 인증서 발급
+
+### Ver 0.2.0
+![image](https://github.com/user-attachments/assets/6acc563c-e1ee-4981-aff3-352f23ff5154)
+
+- 잠시
