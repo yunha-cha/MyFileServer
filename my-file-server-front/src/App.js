@@ -7,6 +7,7 @@ import UserPage from "./user-page/UserPage";
 import ForumDetail from "./forum/pages/ForumDetail";
 import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
+import Craw from "./admin/Craw";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="main" element={<Main/>}/>
           <Route path="user/:id" element={<UserPage/>}/>
           <Route path="admin" element={<JoinMember/>}/>
+          <Route path="/admin/craw" element={<Craw/>}/>
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
         </Route>

@@ -4,8 +4,11 @@ import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
 import com.website.security.dto.CustomUserDetails;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,7 @@ import java.util.Objects;
 @RequestMapping("/main")
 public class MainPageController {
     private final MainPageService mainService;
-
+    private static final long ONE_GB = 1024L * 1024L * 1024L; // 1GB in bytes
     public MainPageController(MainPageService mainService) {
         this.mainService = mainService;
     }
@@ -58,11 +61,29 @@ public class MainPageController {
         }
     }
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
-        if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate, HttpServletRequest request) {
+//        if (!file.isEmpty()) {
+//            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
+//        }
+//        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
+        try {
+            if (file.getSize() > ONE_GB) {
+                System.out.println("파일 크기가 1GB를 초과했습니다. 스트리밍 방식으로 처리합니다.");
+
+                // 스트리밍 방식으로 처리
+                try (ServletInputStream inputStream = request.getInputStream()) {
+                    mainService.uploadLargeFile(inputStream, description, user, isPrivate);
+                }
+            } else {
+                System.out.println("파일 크기가 1GB 이하입니다. 기존 방식으로 처리합니다.");
+
+                // 기존 MultipartFile 방식으로 처리
+                mainService.uploadFile(file, description, user, isPrivate);
+            }
+            return ResponseEntity.ok("파일 업로드 성공");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패");
         }
-        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
     }
     @PostMapping("/download-count/{fileCode}")
     public void increaseCount(@PathVariable Long fileCode){

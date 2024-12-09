@@ -30,7 +30,6 @@ const ForumDetail = () => {
             ...newComment,
             content: e.target.value
         });
-        console.log("댓글 작성중.. ",newComment);
 
         
     }
@@ -91,11 +90,6 @@ const ForumDetail = () => {
         
     }, [])
 
-    // useEffect(() => {
-    //     console.log(forum);
-    //     console.log("comments: ", comments);
-
-    // }, [forum, comments])
 
 
 
