@@ -1,11 +1,13 @@
 package com.website.mainpage.controller;
+import com.website.mainpage.dto.UserFolderDTO;
 import com.website.mainpage.dto.UserPageDTO;
+import com.website.mainpage.dto.UserUploadFileDTO;
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
 import com.website.security.dto.CustomUserDetails;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -60,31 +62,6 @@ public class MainPageController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate, HttpServletRequest request) {
-//        if (!file.isEmpty()) {
-//            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
-//        }
-//        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
-        try {
-            if (file.getSize() > ONE_GB) {
-                System.out.println("파일 크기가 1GB를 초과했습니다. 스트리밍 방식으로 처리합니다.");
-
-                // 스트리밍 방식으로 처리
-                try (ServletInputStream inputStream = request.getInputStream()) {
-                    mainService.uploadLargeFile(inputStream, description, user, isPrivate);
-                }
-            } else {
-                System.out.println("파일 크기가 1GB 이하입니다. 기존 방식으로 처리합니다.");
-
-                // 기존 MultipartFile 방식으로 처리
-                mainService.uploadFile(file, description, user, isPrivate);
-            }
-            return ResponseEntity.ok("파일 업로드 성공");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패");
-        }
-    }
     @PostMapping("/download-count/{fileCode}")
     public void increaseCount(@PathVariable Long fileCode){
         mainService.increaseDownloadCount(fileCode);
@@ -95,4 +72,55 @@ public class MainPageController {
             return ResponseEntity.ok().body("삭제 성공!");
         } else { return ResponseEntity.badRequest().body("삭제 실패!");}
     }
+    @GetMapping("/root-folder")
+    public ResponseEntity<Long> getUserRootFolder(@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(mainService.getUserRootFolder(user.getUserCode()));
+    }
+    @GetMapping("/folder")
+    public ResponseEntity<UserFolderDTO> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        try{
+            return ResponseEntity.ok().body(mainService.getDataInFolder(folderCode, user.getUserCode()));
+        } catch (Exception e){
+            //에러 내용 상세 응답이기 때문에 나중에 수정할 것!!
+            return ResponseEntity.badRequest().body(new UserFolderDTO(e.getMessage()));
+        }
+    }
+    @PostMapping("/folder")
+    public ResponseEntity<FolderEntity> createFolder(@RequestParam("folderName") String folderName,@RequestParam("folderCode") Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(mainService.createFolder(user.getUserCode(),folderName, folderCode));
+    }
+    @DeleteMapping("/folder")
+    public ResponseEntity<?> deleteFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        if(user!=null){
+            return ResponseEntity.ok().body(mainService.deleteFolder(folderCode, user.getUserCode()));
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
+                                                        @RequestParam("file") MultipartFile file,
+                                                        String description,
+                                                        boolean isPrivate,
+                                                        Long folderCode)
+    {
+        if (!file.isEmpty()) {
+            return ResponseEntity.ok().body(mainService.uploadPrivateFile(file, description, user, folderCode));
+        }
+        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+    @PostMapping("/upload/public")
+    public ResponseEntity<UserUploadFileDTO> uploadPublicFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description){
+        if(!file.isEmpty()){
+            mainService.uploadPublicFile(file,description,user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+    @PostMapping("/folder-name")
+    public ResponseEntity<?> modifyFolderName(@RequestParam("folderCode") Long folderCode,@RequestParam("description") String description){
+        mainService.modifyFolderName(folderCode,description);
+        return ResponseEntity.ok().build();
+    }
+
 }

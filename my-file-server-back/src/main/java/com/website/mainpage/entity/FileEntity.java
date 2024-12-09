@@ -1,6 +1,6 @@
 package com.website.mainpage.entity;
 
-import com.website.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,4 +38,9 @@ public class FileEntity {
     private long size;
     @Column(name = "is_private")
     private boolean isPrivate;
+
+    @JoinColumn(name = "folder_code") // 외래 키로 FolderEntity의 ID 참조
+    @ManyToOne
+    @JsonIgnore
+    private FolderEntity folder;
 }

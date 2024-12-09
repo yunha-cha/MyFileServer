@@ -49,11 +49,9 @@ public class ForumDTO {
 
 
     // 등록
-    public ForumDTO(String title, String userId, LocalDateTime createAt, String ipAddress) {
+    public ForumDTO(Long forumCode, String title, String content) {
+        this.forumCode = forumCode;
         this.title = title;
-//        this.content = content;
-        this.userId = userId;
-        this.createAt = createAt;
-        this.ipAddress = ipAddress;
+        this.content = content;
     }
 }

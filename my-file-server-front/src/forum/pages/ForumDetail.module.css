@@ -55,6 +55,9 @@
     font-size: 18px;
     min-height: 18em;
 }
+.containerContent img{
+    max-width: 600px;
+}
 
 .containerWrite{
     display: flex;

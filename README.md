@@ -49,3 +49,7 @@ www.seopia.online
 - 모바일 업로드 버튼 css 버그 수정
 - 최적화
 - https 인증서 발급
+
+### Ver 0.2.0
+
+- 잠시

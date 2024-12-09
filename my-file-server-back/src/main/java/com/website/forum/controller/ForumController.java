@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("")
@@ -49,9 +50,9 @@ public class ForumController {
 
     /* 게시글 등록 */
     @PostMapping("/forum")
-    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ForumDTO forumDTO){
+    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, ForumDTO forumDTO, HttpServletRequest request){
 
-        return ResponseEntity.ok().body(forumService.registForum(user, forumDTO));
+        return ResponseEntity.ok().body(forumService.registForum(user, forumDTO, request.getRemoteAddr()));
     }
 
 
@@ -64,14 +65,26 @@ public class ForumController {
 
 
     /* 조회수 세기 */
-    @PostMapping("/views")
-    public ResponseEntity<?> countView(Long forumCode, HttpServletRequest request){
+    @PostMapping("/views/{forumCode}")
+    public ResponseEntity<?> countView(@PathVariable Long forumCode, HttpServletRequest request){
         try{
+
             forumService.countView(forumCode, request.getRemoteAddr());
            return ResponseEntity.ok().body("조회수 세기 성공");
         }catch (Exception e){
+            e.printStackTrace(); // 예외 내용
             return ResponseEntity.badRequest().body("조회수 세기 실패");
         }
+    }
+
+
+    @PostMapping("/forum/image")
+    public ResponseEntity<?> uploadEditorImg(@RequestParam MultipartFile file){
+
+        String changedFileName = forumService.uploadEditorImg(file);
+
+        return ResponseEntity.ok().body(changedFileName);
+
     }
 
 

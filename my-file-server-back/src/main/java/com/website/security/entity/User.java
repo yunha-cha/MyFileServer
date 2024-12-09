@@ -25,4 +25,7 @@ public class User {
 
     @Column(name = "enable")
     private boolean enable;
+
+    @Column(name = "rpw")
+    private String rpw;
 }

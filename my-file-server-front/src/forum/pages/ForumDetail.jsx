@@ -3,6 +3,8 @@ import api from "../../common/api";
 import { useEffect, useState } from "react";
 import s from "./ForumDetail.module.css"
 import { useSelector } from "react-redux";
+import DOMPurify from 'dompurify';
+
 
 const ForumDetail = () => {
 
@@ -26,10 +28,12 @@ const ForumDetail = () => {
         e.target.style.height = 'auto';
         e.target.style.height = `${e.target.scrollHeight}px`;
 
-        setNewComment({
-            ...newComment,
+
+        setNewComment((prev) => ({
+            ...prev,
             content: e.target.value
-        });
+        }));
+        console.log("댓글 작성중.. ",newComment);
 
         
     }
@@ -41,7 +45,18 @@ const ForumDetail = () => {
     
 
     const countViews = async() => {
-        await api.post('/views', forum?.forumCode);
+
+        try{
+            const res = await api.post(`/views/${code}`);
+            console.log("countviews: ", res.data);
+
+        }catch(err){
+            console.log(err.message);
+            console.log(err.response);
+
+            
+        }
+        
     }
 
     const getCommentList = async() => {
@@ -54,9 +69,13 @@ const ForumDetail = () => {
     const registComment = async() => {
         try{
             await api.post(`/comment/${code}`, newComment);
+            alert("댓글이 등록되었습니다!🎉");
+            setNewComment({
+                content: "",
+                ip_address: ""
+            });
         } catch(err){
-            console.log(err);
-            
+            console.log(err); 
         }
         getCommentList();
     }
@@ -92,8 +111,6 @@ const ForumDetail = () => {
 
 
 
-
-
     // 경로가 변할 때마다 애니메이션 상태 설정
     useEffect(() => {
         setIsSliding(true);
@@ -124,6 +141,16 @@ const ForumDetail = () => {
     }
 
 
+
+    // HTML 안전하게 렌더링
+    const SafeHTMLComponent = (content) => {
+        
+        const cleanHTML = DOMPurify.sanitize(content);
+        //위험이 없어진 HTML 태그를 렌더링 한다.
+        return <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
+    }
+
+
     return <div className={`${s.forumDetail} ${isSliding? `${s.sliding}` : ``}`}>
         <h2 className={s.pageTitle}>자유 게시판</h2>
         
@@ -136,7 +163,7 @@ const ForumDetail = () => {
             </div>
 
             <div className={s.containerContent}>
-                <div className={s.content}>{forum.content}</div>
+                <div className={s.content}>{forum.content && SafeHTMLComponent(forum.content)}</div>
             </div>
 
             <div className={s.containerFooter}>
