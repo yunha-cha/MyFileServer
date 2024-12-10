@@ -89,5 +89,23 @@ export const canOpenFile = (file) => {
         return true;
     default:
       return false;
+  }
 }
+export const getFileIconByExtension = (fileFullPath) =>{
+  let extention = fileFullPath.split('.').pop();
+  switch(extention){
+    case 'jpg':
+    case 'png':
+    case 'jpeg':
+    case 'gif':
+    case 'webp':
+      return fileFullPath;
+    case 'zip': return '/zip.png'
+    case 'mp4': return '/mp4.png'
+    case 'pdf': return '/pdf.png'
+    case 'hwp':
+    case 'hwpx':
+      return '/hancom.png'
+    default: return '/defaultImage.png'
+  }
 }

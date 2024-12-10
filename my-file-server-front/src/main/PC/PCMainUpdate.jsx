@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../common/api';
 import ShowDatas from './ShowDatas';
-import s from './PCMain.module.css';
+import s from './PCMainUpdate.module.css';
 import InputModal from '../Modal/InputModal';
 import { calcFileSize, deleteFile, downloadFile, formattedDateTime } from '../function';
 import Modal from '../Modal/Modal';
 
-function PCMainUpdate() {
+function PCMainUpdate() {    
     const [history, setHistory] = useState([]);
     const [folderCode, setFolderCode] = useState(null);
     const [isShowFileDetail, setIsShowFileDetail] = useState(false);
@@ -82,7 +82,8 @@ function PCMainUpdate() {
         const myFiles = await api.get(`/main/folder?folderCode=${folderCode}`);
         setFolderCode(myFiles.data.folderCode);
         setFiles(myFiles.data);
-        setUploadFolderCode(myFiles.data.folderCode)
+        setUploadFolderCode(myFiles.data.folderCode);
+        
     }, []);
 
 

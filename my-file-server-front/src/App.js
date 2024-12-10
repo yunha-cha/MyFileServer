@@ -9,6 +9,7 @@ import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
 import PCMainPublic from "./main/PC/PCMainPublic";
+import NotFound from "./common/NotFound";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/forum/:code" element={<ForumDetail/>} />
           <Route path="/forum/write" element={<ForumCreate />} />
         </Route>
+        <Route path="*" element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>
   );

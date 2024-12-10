@@ -28,7 +28,7 @@ function PCMainPublic() {
     const getPublicFile = useCallback(async () => { //페이지에 따라 파일 가져오는 함수
         const res = await api.get(`/main/file/public?page=${page}`);
         setTotalElements(res.data.totalElements);        
-        setFiles(res.data.content);
+        setFiles(res.data.content);        
     },[page]);
 
     const downloadSelectedFile = (file) => {    //파일 다운로드 함수
@@ -141,7 +141,7 @@ function PCMainPublic() {
             <div className={s.pagination}>
                 <Pagination
                 activePage={page}
-                itemsCountPerPage={10}
+                itemsCountPerPage={15}
                 totalItemsCount={totalElements}
                 onChange={(page)=>setPage(page-1)}/>
             </div>

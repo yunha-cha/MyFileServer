@@ -1,0 +1,24 @@
+.fileDetailMenu{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 40%;
+    width: 100vw;
+    background-color: rgb(192,218,255);
+    z-index: 100;
+    transition: bottom 0.5s ease;
+}
+.closeFileDetailMenu{
+    height: 10%;
+    margin-bottom: 10px;
+}
+.fileDetail{
+    display: flex;
+}
+.fileDetailMenu img{
+    min-height: 50px;
+    max-height: 200px;
+    min-width: 50px;
+    max-width: 200px;
+    border-radius: 20px;
+}
