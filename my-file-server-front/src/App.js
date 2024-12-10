@@ -8,6 +8,7 @@ import ForumDetail from "./forum/pages/ForumDetail";
 import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
+import PCMainPublic from "./main/PC/PCMainPublic";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/join" element={<Join/>}/>
         <Route element={<SideBar/>}>
           <Route path="main" element={<Main/>}/>
+          <Route path="/main/public" element={<PCMainPublic/>}/>
           <Route path="user/:id" element={<UserPage/>}/>
           <Route path="admin" element={<JoinMember/>}/>
           <Route path="/forum" element={<ForumMain/>} />

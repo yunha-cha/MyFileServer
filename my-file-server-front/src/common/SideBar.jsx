@@ -8,7 +8,6 @@ const SideBar = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const {data, state} = useSelector((state)=>state.user);
-    const [isPublicCloud, setIsPublicCloud] = useState(false);
     const [isMobile, setIsMobile] = useState();
     
     const logout = () => {
@@ -34,15 +33,15 @@ const SideBar = () => {
                     <button onClick={()=>nav(`/user/${data.userCode}`)} className={s.logout}>My Page</button>
                 </div>
                 <ul className={s.list}>
-                    <li onClick={()=>{nav('/main');setIsPublicCloud(false)}}>개인 클라우드</li>
-                    <li onClick={()=>{nav('/main');setIsPublicCloud(true)}}>공용 클라우드</li>
-                    <li onClick={()=>nav('/forum')}>자유 게시판 (구현 중)</li>
+                    <li onClick={()=>{nav(`/main`)}}>개인 클라우드</li>
+                    <li onClick={()=>{nav('/main/public')}}>공용 클라우드</li>
+                    <li onClick={()=>nav('/forum')}>자유 게시판</li>
                     {data && data.userRole === 'ROLE_ADMIN'&&<li onClick={()=>nav('/admin')}>관리자 페이지</li>}
                 </ul>
                 </div>
             </>
             )}  
-            <Outlet context={{isPublicCloud:isPublicCloud}}/>
+            <Outlet/>
       </>
     )
 }

@@ -10,6 +10,7 @@ import com.website.security.dto.CustomUserDetails;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -61,13 +62,6 @@ public class MainPageController {
             return ResponseEntity.badRequest().build();
         }
     }
-//    @PostMapping("/upload")
-//    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description, boolean isPrivate) {
-//        if (!file.isEmpty()) {
-//            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate));
-//        }
-//        return ResponseEntity.ok().body("파일이 존재하지 않습니다.");
-//    }
     @PostMapping("/download-count/{fileCode}")
     public void increaseCount(@PathVariable Long fileCode){
         mainService.increaseDownloadCount(fileCode);
@@ -91,6 +85,18 @@ public class MainPageController {
             return ResponseEntity.badRequest().body(new UserFolderDTO(e.getMessage()));
         }
     }
+    @PostMapping("/folder")
+    public ResponseEntity<FolderEntity> createFolder(@RequestParam("folderName") String folderName,@RequestParam("folderCode") Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(mainService.createFolder(user.getUserCode(),folderName, folderCode));
+    }
+    @DeleteMapping("/folder")
+    public ResponseEntity<?> deleteFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        if(user!=null){
+            return ResponseEntity.ok().body(mainService.deleteFolder(folderCode, user.getUserCode()));
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
     @PostMapping("/upload")
     public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
                                                         @RequestParam("file") MultipartFile file,
@@ -99,9 +105,22 @@ public class MainPageController {
                                                         Long folderCode)
     {
         if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadFile(file, description, user, isPrivate, folderCode));
+            return ResponseEntity.ok().body(mainService.uploadPrivateFile(file, description, user, folderCode));
         }
         return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+    @PostMapping("/upload/public")
+    public ResponseEntity<UserUploadFileDTO> uploadPublicFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description){
+        if(!file.isEmpty()){
+            mainService.uploadPublicFile(file,description,user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+    @PostMapping("/folder-name")
+    public ResponseEntity<?> modifyFolderName(@RequestParam("folderCode") Long folderCode,@RequestParam("description") String description){
+        mainService.modifyFolderName(folderCode,description);
+        return ResponseEntity.ok().build();
     }
 
 }
