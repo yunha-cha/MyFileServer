@@ -38,20 +38,20 @@ const ForumCreate = () => {
     }
 
 
-    const registFiles = useCallback(async() => {
+    // const registFiles = useCallback(async() => {
 
-        const res = await api.post(`/upload`, {files : uploadFiles});
-        console.log(res.data);
+    //     const res = await api.post(`/upload`, {files : uploadFiles});
+    //     console.log(res.data);
 
-        setChangedName(res.data);
+    //     setChangedName(res.data);
         
-    }, [uploadFiles]);
+    // }, [uploadFiles]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        registFiles();
+    //     registFiles();
 
-    }, [uploadFiles, registFiles]);
+    // }, [uploadFiles, registFiles]);
 
 
 
@@ -93,7 +93,7 @@ const ForumCreate = () => {
                 <QuillEditor newForum={newForum} setNewForum={setNewForum}/>
             </div>
 
-            <div style={{marginTop: "2em"}}>
+            {/* <div style={{marginTop: "2em"}}>
                 <div className={s.itemTitle}>첨부 파일을 업로드 하세요.</div>
                 <label className={s.fileUploadBtn} htmlFor="uploadInput">파일 업로드</label>
                 <input type="file" id="uploadInput" name="files" multiple onChange={(e) => {
@@ -101,7 +101,7 @@ const ForumCreate = () => {
                 }
                 }/>
 
-            </div>
+            </div> */}
 
         </div>
 
