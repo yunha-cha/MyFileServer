@@ -5,10 +5,22 @@
     align-items: center;
     top: 0;
     right: 0;
-    background-color: white;
+    background-color: rgb(192, 218, 255);
+    color: white;
     height: 100%;
     width: 60%;
-    /* border-radius: 10px 10px; */
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
     z-index: 100;
     transition: right 0.5s ease;
+}
+.sideMenu ol{
+    list-style: none;
+    align-self: flex-start;
+}
+.sideMenu ol li{
+    padding-top: 40px;
+}
+.userButton{
+    justify-self: flex-end;
 }

@@ -44,7 +44,7 @@ function UploadButton({state, setState, addFile, addFolder}) {
     return (
         <aside style={state ? {
             bottom: 0,
-            left: 0,
+            right: 0,
             width: '100vw',
             borderRadius: 0,
             textAlign: 'left'

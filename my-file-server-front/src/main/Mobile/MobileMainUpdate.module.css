@@ -4,14 +4,33 @@
     overflow: auto;
 }
 .header{
+    position: fixed;
     width: 100vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
     /* main과 맞출 것! */
-    height: 5vh;    
+    height: 5vh;
     background-color: rgb(192, 216, 255);
     color: white;
+}
+.title{
+    padding-left:5vw;
+}
+.hambuger{
+    color:white;
+    background:transparent;
+    border:none;
+    font-size:25px;
+    font-weight:bolder;
+}
+.headerButtonContainer{
+    padding-right: 3vw;
+    
+}
+
+.facker{
+    height: 5vh;
 }
 .main{
     /* header와 맞출 것! */

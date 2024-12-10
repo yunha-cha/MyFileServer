@@ -5,6 +5,10 @@ function Sidebar({state}) {
     const nav = useNavigate();
     return (
         <aside style={state ? { right: 0 } : { right: -250 }} className={s.sideMenu}>
+            <div style={{display:'flex',paddingTop:20}}>
+                <img height={60} width={70} src='/icon.png'/>
+                <h3 style={{paddingLeft:10}}>파일 클라우드</h3>
+            </div>
             <ol>
                 <li onClick={()=>nav('/')}>공용 클라우드</li>
                 <li onClick={()=>nav('/')}>게시판</li>

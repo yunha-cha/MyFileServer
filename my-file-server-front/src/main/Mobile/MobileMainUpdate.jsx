@@ -71,13 +71,13 @@ const MobileMainUpdate = ({ user }) => {
         <div className={s.container}>
 
             <header className={s.header}>
-                <div>내 파일</div>
-                <div>
-                    <button>돋보기</button>
+                <div className={s.title}>내 파일</div>
+                <div className={s.headerButtonContainer}>
                     {history.length!==0&&<button onClick={back}>뒤로가기</button>}
-                    <button onClick={() => setMenuOpen(fileMenuOpen?false:!menuOpen)}>☰</button>
+                    <button className={s.hambuger} onClick={() => setMenuOpen(fileMenuOpen?false:!menuOpen)}>☰</button>
                 </div>
             </header>
+            <div className={s.facker}></div>
 
             <main className={s.main}>
                 <section className={s.folderContainer}>
