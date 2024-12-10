@@ -76,8 +76,6 @@ const ForumMain = () => {
 
 
 
-
-
     return <div className={s.container}>
         <GoToTopButton/>
         <WritePostButton/>

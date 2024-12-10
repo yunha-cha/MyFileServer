@@ -19,6 +19,7 @@ const GoToTopButton = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
     const handleScrollToTop = () => {
         // 부드럽게 화면 상단으로 스크롤
         window.scrollTo({
@@ -30,7 +31,7 @@ const GoToTopButton = () => {
     return isVisible ? (
         <div style={{ position: 'fixed', bottom: '20px', left: '60%', zIndex: '5' }}>
             <button onClick={handleScrollToTop} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                <IoIosArrowDropup size={40} />
+                <IoIosArrowDropup size={40} color="rgb(127, 176, 255)"/>
             </button>
         </div>
     ) : null;

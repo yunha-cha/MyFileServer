@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,8 +22,8 @@ public class Attachment {
     private Long attachmentCode;
 
     @JoinColumn(name = "forum_code")
-    @ManyToOne
-    private Forum forum;
+//    @ManyToOne
+    private Long forumCode;
 
     @Column(name = "changed_name")
     private String changedName;
@@ -37,4 +39,7 @@ public class Attachment {
 
     @Column(name = "size")
     private int size;
+
+    @Column(name = "upload_date")
+    private LocalDateTime uploadDate;
 }

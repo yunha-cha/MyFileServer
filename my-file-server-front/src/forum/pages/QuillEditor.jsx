@@ -44,7 +44,6 @@ const QuillEditor = ({newForum, setNewForum}) => {
         try {
           const {data} = await api.post('/forum/image', {file:file}); 
           const url = `http://${process.env.REACT_APP_IP}/download/${data}`;
-          console.log("upload ", url);
           
           quillRef.current.getEditor().insertEmbed(range.index, "image", url);
         } catch (e) {
@@ -76,6 +75,7 @@ const QuillEditor = ({newForum, setNewForum}) => {
           content: value
       }))}
       value={newForum.content}
+      placeholder="작성해보세요 아무렇게나"
       />
     );
 
