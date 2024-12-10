@@ -13,6 +13,7 @@ api.interceptors.request.use(
             // 토큰이 있으면 헤더에 추가
             config.headers.Authorization = token;
         }
+        config.credentials = 'include';
 
         if (config.method === 'post' || config.method === 'put') {
             // POST나 PUT 요청일 경우 FormData 사용
@@ -22,6 +23,7 @@ api.interceptors.request.use(
             }
             config.data = formData;
             config.headers['Content-Type'] = 'multipart/form-data';
+            
         }
         return config;
     },

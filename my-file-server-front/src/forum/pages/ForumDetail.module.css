@@ -8,7 +8,7 @@
     margin-right: 10rem;
     margin-left: 10rem;
     transition: all 0.8s ease-out;
-    transform: translateX(100%); /* 처음 위치는 화면 밖 오른쪽 */
+    transform: translateX(20%); /* 처음 위치는 화면 밖 오른쪽 */
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
@@ -52,7 +52,7 @@
 }
 
 .containerContent{
-    font-size: 18px;
+    font-size: 16px;
     min-height: 18em;
 }
 .containerContent img{
