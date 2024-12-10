@@ -104,7 +104,7 @@ public class MainPageService {
     }
 
     public Page<FileEntity> getPublicFiles(int page) {
-        Pageable pageable = PageRequest.of(page,10,Sort.by("uploadedAt").descending());
+        Pageable pageable = PageRequest.of(page,15,Sort.by("uploadedAt").descending());
         return fileRepository.getPublicFile(pageable);
     }
     public Page<FileEntity> getMyFile(CustomUserDetails user, int page) {
