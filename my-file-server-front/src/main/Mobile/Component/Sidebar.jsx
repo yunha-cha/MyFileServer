@@ -10,7 +10,8 @@ function Sidebar({state}) {
                 <h3 style={{paddingLeft:10}}>파일 클라우드</h3>
             </div>
             <ol>
-                <li onClick={()=>nav('/')}>공용 클라우드</li>
+                <li onClick={()=>nav('/main/public')}>공용 클라우드</li>
+                <li onClick={()=>nav('/main')}>개인 클라우드</li>
                 <li onClick={()=>nav('/')}>게시판</li>
             </ol>
             <div className={s.userButton}>
