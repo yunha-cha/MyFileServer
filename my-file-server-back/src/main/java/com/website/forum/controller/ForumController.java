@@ -53,7 +53,7 @@ public class ForumController {
 
     /* 게시글 등록 */
     @PostMapping("/forum")
-    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, ForumDTO forumDTO, HttpServletRequest request, String  ){
+    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, ForumDTO forumDTO, HttpServletRequest request){
 
         return ResponseEntity.ok().body(forumService.registForum(user, forumDTO, request.getRemoteAddr()));
     }
