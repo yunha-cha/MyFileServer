@@ -8,17 +8,19 @@
     display: flex;
     flex-direction: column;
     border-bottom: none;
-    padding: 15px;
+    padding: 8px;
     position: relative;
+    padding-top: 13px;
+    padding-bottom: 13px;
 }
 
 .object::before {
     content: "";
     position: absolute;
     bottom: 0; /* 요소의 아래쪽에 경계선 배치 */
-    left: 63px;
+    left: 47px;
     /* width: calc(100% - 63px); */
-    width: 82.5vw;
+    width: 87vw;
     height: 0.8px; /* 경계선 두께 */
     background-color: rgb(159, 159, 159); /* 경계선 색상 */
     /* z-index: 1;  */
@@ -27,7 +29,7 @@
 .sort{
     display: flex;
     flex-direction: row;
-    gap: 22px;
+    gap: 10px;
 }
 
 .dateAndSizeSort{
