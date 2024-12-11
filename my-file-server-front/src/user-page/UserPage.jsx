@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useOutletContext, useParams } from "react-router-dom"
 import api from "../common/api";
 import s from './UserPage.module.css';
 import { useSelector } from "react-redux";
+import MobileHeader from "../main/Mobile/Component/MobileHeader";
 
 function UserPage() {
+    const isMobile = useOutletContext();
+    console.log(isMobile);
+    
     const {id} = useParams();
     const nav = useNavigate();
     const {data} = useSelector((state)=>state.user);
@@ -30,6 +34,7 @@ function UserPage() {
     useEffect(()=>{getUser()},[getUser]);
     return (
         <div className={s.container}>
+          {isMobile&&<MobileHeader title='마이페이지'/>}
             {
             user&&data?
             <div className={s.myPageContainer}>

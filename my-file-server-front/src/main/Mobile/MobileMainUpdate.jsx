@@ -6,6 +6,7 @@ import FileDetailMenu from './Component/FileDetailMenu';
 import Sidebar from './Component/Sidebar';
 import UploadButton from './Component/UploadButton';
 import api from '../../common/api';
+import { getPrivateFile } from '../apiFunction';
 
 const MobileMainUpdate = ({ user }) => {
     const [history, setHistory] = useState([]);
@@ -16,6 +17,7 @@ const MobileMainUpdate = ({ user }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     //업로드 메뉴 출력 여부
     const [uploadMenuOpen, setUploadMenuOpen] = useState(false);
+    const [folderCode, setFolderCode] = useState(0);
     //하단 파일 상세 메뉴 출력 여부
     const [fileMenuOpen, setFileMenuOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState({});
@@ -35,11 +37,11 @@ const MobileMainUpdate = ({ user }) => {
             const { data } = await api.get('/main/root-folder');
             folderCode = data;
         }
-        
-        const myFiles = await api.get(`/main/folder?folderCode=${folderCode}`);
-                
-        setFiles(myFiles.data.files);
-        setFolders(myFiles.data.folders);
+        getPrivateFile(folderCode,data=>{
+            setFolderCode(folderCode);
+            setFiles(data.files);
+            setFolders(data.folders);
+        })
     }, []);
     //폴더 내부로 들어갈 때 호출되는 함수
     const intoFolder = (folderCode) => {      
@@ -89,7 +91,7 @@ const MobileMainUpdate = ({ user }) => {
             </main>
 
             {/* 업로드 버튼 */}
-            <UploadButton state={uploadMenuOpen} setState={setUploadMenuOpen} addFile={addFile} addFolder={addFolder}/>
+            <UploadButton state={uploadMenuOpen} setState={setUploadMenuOpen} addFile={addFile} addFolder={addFolder} folderCode={folderCode}/>
             {/* 사이드 바 */}
             <Sidebar state={menuOpen}/>
             {/* 하단 파일 누르면 나오는 디테일 */}

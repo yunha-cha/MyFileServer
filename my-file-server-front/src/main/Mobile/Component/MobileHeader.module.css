@@ -1,10 +1,7 @@
-.container{
-    width: 100vw;
-    min-height: 100vh;
-    overflow: auto;
-}
 .header{
+    z-index: 1000;
     position: fixed;
+    top: 0;
     width: 100vw;
     display: flex;
     align-items: center;
@@ -28,22 +25,6 @@
     padding-right: 3vw;
     
 }
-
-.facker{
-    height: 5vh;
-}
-.main{
-    /* header와 맞출 것! */
-    min-height: 95vh;
-}
-
-
-  
-
-.userButton{
-    justify-self: flex-end;
-}
-
 .overlay{
     position: fixed;
     top: 0;
@@ -51,4 +32,8 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.facker{
+    height: 5vh;
 }

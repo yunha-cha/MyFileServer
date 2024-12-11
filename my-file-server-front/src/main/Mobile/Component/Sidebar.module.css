@@ -22,5 +22,14 @@
     padding-top: 40px;
 }
 .userButton{
+    position: fixed;
+    bottom: 30px;
     justify-self: flex-end;
+}
+.userButton button{
+    border: none;
+    background-color: transparent;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
 }

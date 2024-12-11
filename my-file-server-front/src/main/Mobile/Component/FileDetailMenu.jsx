@@ -12,7 +12,7 @@ function FileDetailMenu({ file, setClose, state }) {
                     <div><b>이름</b> : {file.description}</div>
                     <div><b>용량</b> : {file.fileCode&&calcFileSize(file.size)}</div>
                     <div style={{fontSize:14}}><b>날짜</b> : {file.fileCode&&formattedDateTime(file.uploadedAt)}</div>
-                    <div><b>원본</b> : {file.fileCode&&truncateString(file.originalName, 8)}</div>
+                    <div><b>원본</b> : {file.fileCode&&truncateString(file.originalName, 12)}</div>
                 </div>
             </div>
         </aside>
