@@ -13,23 +13,16 @@ function UploadButton({state, setState, addFile, addFolder, folderCode}) {
     }
 
     return (
-        <aside style={state ? {
-            bottom: 0,
-            right: 0,
-            width: '100vw',
-            borderRadius: 0,
-        } : {
-            width: '20vw'
-        }} onClick={() => !state && setState(!state)} className={s.upload}>
-            {state ? 
-                <div className={s.uploadMenuOpen}>
-                    <div className={s.customFileUpload}>
-                        <label htmlFor="fileInput" className={s.customUploadButton}>파일 업로드</label>
+        <aside onClick={()=>setState(!state)} className={s.upload}>
+            <div className={s.text}>{state?'>':'+'}</div>
+                <div style={state?{right:'25vw'}:{right:-500}} className={s.uploadMenuOpen}>
+                    <div className={s.uploadButtonContainer}>
+                        <label style={state?{}:{width:0}} htmlFor="fileInput" className={s.fileUploadButton}>파일 업로드</label>
                         <input id="fileInput" type="file" onChange={handelUpload} />
-                        <button className={s.newFolder} onClick={createNewFolder}>새 폴더</button>
-                        <button className={s.closeButton} onClick={() => setState(false)}>{">"}</button>
+                        <button style={state?{}:{width:0}} className={s.folderUploadButton} onClick={createNewFolder}>새 폴더</button>
                     </div>
-                </div> : <div className={s.plusText}>+</div>}
+                    {/* <button className={s.closeButton} onClick={() => setState(false)}>{">"}</button> */}
+                </div>
         </aside>
     );
 }

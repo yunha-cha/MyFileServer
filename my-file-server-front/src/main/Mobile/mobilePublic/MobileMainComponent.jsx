@@ -5,6 +5,7 @@ import api from '../../../common/api';
 import Pagination from 'react-js-pagination';
 import MobilePublicContent from './MobilePublicContent';
 import FileDetailMenu from '../Component/FileDetailMenu';
+import MobileHeader from '../Component/MobileHeader';
 
 const MobileMainComponent = () => {
     /**사이드 메뉴 바 출력 여부>*/
@@ -17,7 +18,7 @@ const MobileMainComponent = () => {
         file: {}
     })
     const closeDetailMenu = () => {
-        setFileDetail((data)=>data.isOpen = false);
+        setFileDetail((data)=>{ return{...data, isOpen : false}});
     }
     const [page, setPage] = useState(0);    //현재 페이지
     const [totalElements, setTotalElements] = useState(0);  //총 파일 개수
@@ -36,14 +37,9 @@ const MobileMainComponent = () => {
         getPublicFile();
     }, [getPublicFile])
     return (
-        <div>
-            <header className={s.header}>
-                <div>공용 클라우드</div>
-                <div>
-                    <button>돋보기</button>
-                    <button onClick={() => setMenuOpen(true)}>☰</button>
-                </div>
-            </header>
+        <div style={{minHeight:'100vh',overflow:'auto'}}>
+            <MobileHeader title='공용 클라우드'/>
+            <div className='facker' style={{marginTop:'5vh'}}></div>
             {/* 콘텐츠 출력 영역 */}
             {publicDatas.length > 0 ?
                 publicDatas.map((data)=> (
@@ -52,8 +48,6 @@ const MobileMainComponent = () => {
                 :
                 <p>공용 클라우드에 자료가 없습니다.</p>
             }
-            {/* 사이드 바 */}
-            <Sidebar state={menuOpen}/>
             {/* 슬라이드 메뉴바 */}
             {menuOpen && <div className={s.overlay} onClick={() => {setMenuOpen(false)}}></div>}
             <div className={s.pagination}>
@@ -64,7 +58,7 @@ const MobileMainComponent = () => {
                 onChange={(page)=>setPage(page-1)}/>
             </div>
             {/* 사용자가 터치한 파일 */}
-            {fileDetail.isOpen && <FileDetailMenu file={fileDetail.file} setClose={closeDetailMenu} state={fileDetail.isOpen}/>}
+            <FileDetailMenu file={fileDetail.file} setClose={closeDetailMenu} state={fileDetail.isOpen}/>
         </div>
     );
 };

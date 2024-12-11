@@ -90,9 +90,10 @@
   }
   @media screen and (max-width: 768px) {
     .login-input-container {
-
       width: 90vw;
       height: 50vh;
-
+    }
+    .login-id, .login-pw, .join-nickname{
+      width: 70vw;
     }
   }

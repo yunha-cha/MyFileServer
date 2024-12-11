@@ -1,13 +1,14 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import api from "../../common/api";
 import { useEffect, useState } from "react";
 import s from "./ForumDetail.module.css"
 import { useSelector } from "react-redux";
 import DOMPurify from 'dompurify';
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 
 const ForumDetail = () => {
-
+    const isMobile = useOutletContext();
     const {code} = useParams();
     const nav = useNavigate();
 
@@ -175,6 +176,7 @@ const ForumDetail = () => {
 
 
     return <div className={`${s.forumDetail} ${isSliding? `${s.sliding}` : ``}`}>
+        {isMobile&&<MobileHeader title='글 보기'/>}
         <h2 className={s.pageTitle}>자유 게시판</h2>
         
         <div className={s.container}>

@@ -2,11 +2,12 @@ import QuillEditor from "./QuillEditor"
 import s from "./ForumCreate.module.css";
 import { useCallback, useEffect, useState } from "react";
 import api from "../../common/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 
 const ForumCreate = () => {
-
+    const isMobile = useOutletContext();
     const nav = useNavigate();
     const [msg, setMsg] = useState(false);
 
@@ -57,7 +58,7 @@ const ForumCreate = () => {
 
 
     return <div className={s.forumCreate}>
-
+        {isMobile&&<MobileHeader title='글 쓰기'/>}
         <div className={s.containerHeader}>
             <h2 className={s.pageTitle}>게시글 작성</h2>
             <button className={s.submitBtn} onClick={() => registForum()}>등록</button>

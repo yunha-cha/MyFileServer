@@ -88,7 +88,7 @@
     color: rgb(127, 176, 255);
 }
 
-.forumCreate button{
+.submitBtn{
     padding: 0.5rem 1.5rem;
     height: 40px;
     border-radius: 5px;
@@ -101,7 +101,6 @@
     text-align: center;
     font-size: 14px;
     font-weight: bold;
-    
 }
 
 .forumCreate button:hover{
@@ -131,4 +130,38 @@
     background-color: rgb(139, 184, 255);
     box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.1);
     transform: translateY(-10%);
+  }
+  @media screen and (max-width: 768px) {
+    .forumCreate{
+        margin-right: 0;
+        margin-left: 0;
+        padding-top: 5vh;
+        padding-bottom: 0;
+        overflow-x: hidden;
+    }
+    .container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2em;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .pageTitle{
+        display: none;
+    }
+    .forumCreate input{
+        width: 90vw;
+    }
+    .itemTitle, .explain{
+        padding-left: 4vw;
+        align-self: flex-start;
+    }
+    .submitBtn{
+        position: absolute;
+        bottom: 1vh;
+        left: 50vw;
+        transform: translateX(-50%);
+    }
   }

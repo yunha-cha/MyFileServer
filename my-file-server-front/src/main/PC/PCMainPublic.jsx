@@ -5,6 +5,7 @@ import Pagination from 'react-js-pagination';
 import { calcFileSize, canOpenFile, deleteFile, downloadFile, formattedDateTime } from '../function';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { FaTrashAlt } from 'react-icons/fa';
 
 function PCMainPublic() {
 
@@ -126,7 +127,7 @@ function PCMainPublic() {
                     {
                         files.map((file)=>(
                             <tr key={file.fileCode}>
-                                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button onClick={()=>deleteSelectedFile(file)}>삭제</button>:file.fileCode}</td>
+                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button className={s.delete} onClick={()=>deleteSelectedFile(file)}><FaTrashAlt size={15} color="#ff2020" style={{alignSelf:'center'}}/></button>:file.fileCode}</td>
                                 <td style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
                                 <td style={{flex:1}} className={s.center}><div onClick={()=>selectUser(file.uploadedByUser)} className={s.uploaderData}>{file.uploadedByUser.id}</div></td>
                                 <td style={{flex:1}} className={s.timeData}>{formattedDateTime(file.uploadedAt)}</td>

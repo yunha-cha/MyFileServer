@@ -18,7 +18,7 @@
     content: "";
     position: absolute;
     bottom: 0; /* 요소의 아래쪽에 경계선 배치 */
-    left: 47px;
+    /* left: 47px; */
     /* width: calc(100% - 63px); */
     width: 87vw;
     height: 0.8px; /* 경계선 두께 */

@@ -21,6 +21,10 @@ const MobileMainUpdate = ({ user }) => {
     //하단 파일 상세 메뉴 출력 여부
     const [fileMenuOpen, setFileMenuOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState({});
+    const [background,setBackground] = useState(true);
+    useEffect(()=>{
+        setBackground(menuOpen);
+    },[menuOpen])
 
     const handleClickFile = (file) => {
         setFileMenuOpen(true);
@@ -75,7 +79,7 @@ const MobileMainUpdate = ({ user }) => {
             <header className={s.header}>
                 <div className={s.title}>내 파일</div>
                 <div className={s.headerButtonContainer}>
-                    {history.length!==0&&<button onClick={back}>뒤로가기</button>}
+                    {history.length!==0&&<button className={s.back} onClick={back}>{"< "}&nbsp;뒤로가기</button>}
                     <button className={s.hambuger} onClick={() => setMenuOpen(fileMenuOpen?false:!menuOpen)}>☰</button>
                 </div>
             </header>
@@ -97,7 +101,7 @@ const MobileMainUpdate = ({ user }) => {
             {/* 하단 파일 누르면 나오는 디테일 */}
             <FileDetailMenu file={selectedFile} setClose={setFileMenuOpen} state={fileMenuOpen}/>
             {/* 반투명 오버레이 */}
-            {menuOpen && <div className={s.overlay} onClick={() => {setMenuOpen(false)}}></div>}
+            {menuOpen && <div style={background?{opacity:1}:{opacity:0}} className={s.overlay} onClick={() => {setMenuOpen(false)}}></div>}
         </div>
     )
 }

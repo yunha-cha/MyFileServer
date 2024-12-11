@@ -1,5 +1,4 @@
 .writePostButton{
-    z-index: 1000;
     position: fixed;
     bottom: 40px;
     left: 90%;
@@ -27,24 +26,15 @@
     transform: translateY(-10%);
 
 }
-
+/* 모바일 용 */
 @media screen and (max-width: 768px) {
     .writePostButton{
-        position: sticky;
+        position: static;
     }
-    
     .writePostButton button{
         padding: 0.7rem 1.5rem;
         max-height: 55px;
-        border-radius: 8px;
-        /* text-align: center; */
-        border: none;
         background-color: rgb(161, 197, 255);
-        background-color: rgba(161, 197, 255, 0.395);
-        color: white;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        letter-spacing: 2px;
-        
+        z-index: 1;
     }
   }

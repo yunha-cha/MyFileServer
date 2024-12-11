@@ -109,6 +109,7 @@ export const getFileIconByExtension = (fileFullPath) =>{
     case 'webp':
       return fileFullPath;
     case 'zip': return '/zip.png'
+    case 'mp3': return '/mp3.png'
     case 'mp4': return '/mp4.png'
     case 'pdf': return '/pdf.png'
     case 'hwp':
