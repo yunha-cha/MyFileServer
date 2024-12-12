@@ -15,7 +15,6 @@ import com.website.mainpage.repository.MainUserRepository;
 import com.website.security.dto.CustomUserDetails;
 import com.website.security.entity.User;
 import com.website.security.repository.UserRepository;
-import jakarta.servlet.ServletInputStream;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,8 +32,6 @@ import java.util.List;
 public class MainPageService {
     @Value("${file.download-url}")
     private String downloadUrl;
-    @Value("${file.upload-dir}")
-    private String uploadDir;
     private final Tool tool;
     private final UserRepository userRepository;
     private final MainUserRepository mainUserRepository;
@@ -64,6 +60,7 @@ public class MainPageService {
         return originalFilename.substring(dotIndex + 1);
     }
     private FileEntity uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate){
+        System.out.println("2");
         FileEntity fileEntity =  new FileEntity();
         fileEntity.setChangedName(tool.upload(file));
         fileEntity.setUploadedAt(LocalDateTime.now());
@@ -81,6 +78,7 @@ public class MainPageService {
         return fileRepository.save(fileEntity);
     }
     private UserUploadFileDTO convertFileEntity(FileEntity savedEntity){
+        System.out.println("3");
         return new UserUploadFileDTO(
                 savedEntity.getFileCode(),
                 savedEntity.getChangedName(),
@@ -97,6 +95,7 @@ public class MainPageService {
     }
     @Transactional
     public void uploadPublicFile(MultipartFile file, String description, CustomUserDetails user) {
+        System.out.println(1);
         FileEntity fileEntity = this.uploadFile(file, description, user, false);
         fileRepository.save(fileEntity);
     }
@@ -164,7 +163,6 @@ public class MainPageService {
     @Transactional
     public Long getUserRootFolder(Long userCode) {
         Long userRootFolderCode = folderRepository.getUserRootFolderCode(userCode);
-        System.out.println(userRootFolderCode);
         if(userRootFolderCode==null){   //처음에 루트 폴더 만들어주기
             FolderEntity newFolderEntity = new FolderEntity();
             newFolderEntity.setUser(userCode);
@@ -178,8 +176,6 @@ public class MainPageService {
     public UserFolderDTO getDataInFolder(Long folderCode, Long userCode) throws Exception {
         try{
             List<FolderEntity> folders = folderRepository.getFolderInFolder(userCode, folderCode);
-            System.out.println("userCode = " + userCode);
-            System.out.println("folderCode = " + folderCode);
             List<FileEntity> files = fileRepository.getFileInFolder(userCode, folderCode);
             return new UserFolderDTO(folderCode, folders, files, "success");
         } catch (Exception e){

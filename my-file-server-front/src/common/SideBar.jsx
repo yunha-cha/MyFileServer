@@ -3,7 +3,6 @@ import s from './SideBar.module.css';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../reducer/UserDataSlice';
-import api from './api';
 const SideBar = () => {
     
     const nav = useNavigate();
@@ -21,11 +20,6 @@ const SideBar = () => {
             dispatch(getUser());
         }        
     },[data, dispatch, state])
-    const get = async () => {
-        const res = await api.get('/admin/getTwi');
-        console.log(res);
-        
-    }
     return(
         <>
             {!isMobile && 
@@ -43,7 +37,6 @@ const SideBar = () => {
                     <li onClick={()=>{nav('/main/public')}}>공용 클라우드</li>
                     <li onClick={()=>nav('/forum')}>자유 게시판</li>
                     {data && data.userRole === 'ROLE_ADMIN'&&<li onClick={()=>nav('/admin')}>관리자 페이지</li>}
-                    {data && data.userRole === 'ROLE_ADMIN'&&<li onClick={()=>{nav('/admin/craw')}}>테스트</li>}
                 </ul>
                 </div>
             </>

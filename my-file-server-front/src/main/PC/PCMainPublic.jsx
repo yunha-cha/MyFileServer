@@ -46,6 +46,9 @@ function PCMainPublic() {
             if(fileName.length===0){
                 name='새 파일';
             }
+            console.log(name);
+            console.log(uploadFile);
+            
             await api.post('/main/upload/public', { file: uploadFile, description: name }, {
                 onUploadProgress: (e) => {
                     const percent = Math.round((e.loaded * 100) / e.total);

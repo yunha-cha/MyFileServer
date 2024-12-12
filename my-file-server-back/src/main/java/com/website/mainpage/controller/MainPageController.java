@@ -25,7 +25,7 @@ import java.util.Objects;
 @RequestMapping("/main")
 public class MainPageController {
     private final MainPageService mainService;
-    private static final long ONE_GB = 1024L * 1024L * 1024L; // 1GB in bytes
+
     public MainPageController(MainPageService mainService) {
         this.mainService = mainService;
     }
@@ -78,7 +78,6 @@ public class MainPageController {
     }
     @GetMapping("/folder")
     public ResponseEntity<UserFolderDTO> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
-        System.out.println("folderCode = " + folderCode);
         try{
             return ResponseEntity.ok().body(mainService.getDataInFolder(folderCode, user.getUserCode()));
         } catch (Exception e){
@@ -102,21 +101,14 @@ public class MainPageController {
     public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
                                                         @RequestParam("file") MultipartFile file,
                                                         String description,
-                                                        boolean isPrivate,
                                                         Long folderCode)
     {
-        if (!file.isEmpty()) {
-            return ResponseEntity.ok().body(mainService.uploadPrivateFile(file, description, user, folderCode));
-        }
-        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+        return ResponseEntity.ok().body(mainService.uploadPrivateFile(file, description, user, folderCode));
     }
     @PostMapping("/upload/public")
     public ResponseEntity<UserUploadFileDTO> uploadPublicFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description){
-        if(!file.isEmpty()){
-            mainService.uploadPublicFile(file,description,user);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+        mainService.uploadPublicFile(file,description,user);
+        return ResponseEntity.ok().build();
     }
     @PostMapping("/folder-name")
     public ResponseEntity<?> modifyFolderName(@RequestParam("folderCode") Long folderCode,@RequestParam("description") String description){

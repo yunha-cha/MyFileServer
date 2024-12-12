@@ -54,9 +54,11 @@ function PCMainUpdate() {
         }))
     }
     //업로드 하기
-    const upload = async (file, setPercent) => {
-        if (file) {
-            const res = await api.post('/main/upload', { file: file, description: fileName , isPrivate: isPrivate, folderCode: uploadFolderCode }, {
+    const upload = async (files, setPercent) => {
+        console.log(files);
+        
+        if (files) {
+            const res = await api.post('/main/upload', { file: files, description: fileName , folderCode: uploadFolderCode }, {
                 onUploadProgress: (e) => {
                     const percent = Math.round((e.loaded * 100) / e.total);
                     setPercent(percent);
