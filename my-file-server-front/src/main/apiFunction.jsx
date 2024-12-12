@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import api from "../common/api";
 /**
@@ -36,6 +37,20 @@ export const creataPrivateFile = async (file,description,folderCode,callBack) =>
     const res = await api.post(`/main/upload`,{file:file,description:description,folderCode:folderCode});
     callBack(res.data);
 }
+
+/**
+ * 
+ * @param {*} file 
+ * @param {*} description 
+ * @param {*} callBack 
+ */
+export const createPublicFile = async(file, description, callBack) => {
+  console.log(file);
+  
+  const res = await api.post(`/main/upload/public`,{file: file, description: description});
+  callBack(res.data);
+}
+
 /**
  * 파일 다운로드하는 함수
  * @param {File} file 서버에서 응답한 파일 객체 

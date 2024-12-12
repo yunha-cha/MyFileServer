@@ -6,6 +6,7 @@ import Pagination from 'react-js-pagination';
 import MobilePublicContent from './MobilePublicContent';
 import FileDetailMenu from '../Component/FileDetailMenu';
 import MobileHeader from '../Component/MobileHeader';
+import MobilePublicFileAddButton from './MobilePublicFileAddButton';
 
 const MobileMainComponent = () => {
     /**사이드 메뉴 바 출력 여부>*/
@@ -17,6 +18,8 @@ const MobileMainComponent = () => {
         isOpen: false,
         file: {}
     })
+    // const [selectByUploadFile, setSelectByUploadFile] = useState(null);
+
     const closeDetailMenu = () => {
         setFileDetail((data)=>{ return{...data, isOpen : false}});
     }
@@ -59,6 +62,7 @@ const MobileMainComponent = () => {
             </div>
             {/* 사용자가 터치한 파일 */}
             <FileDetailMenu file={fileDetail.file} setClose={closeDetailMenu} state={fileDetail.isOpen}/>
+            <MobilePublicFileAddButton getPublicFile={getPublicFile}/>
         </div>
     );
 };
