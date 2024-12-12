@@ -22,7 +22,6 @@ function App() {
           <Route path="/main/public" element={<PCMainPublic/>}/>
           <Route path="user/:id" element={<UserPage/>}/>
           <Route path="admin" element={<JoinMember/>}/>
-          <Route path="/admin/craw" element={<Craw/>}/>
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
           <Route path="/forum/write" element={<ForumCreate />} />

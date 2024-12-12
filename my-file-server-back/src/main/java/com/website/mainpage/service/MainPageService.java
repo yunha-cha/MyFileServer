@@ -164,6 +164,7 @@ public class MainPageService {
     @Transactional
     public Long getUserRootFolder(Long userCode) {
         Long userRootFolderCode = folderRepository.getUserRootFolderCode(userCode);
+        System.out.println(userRootFolderCode);
         if(userRootFolderCode==null){   //처음에 루트 폴더 만들어주기
             FolderEntity newFolderEntity = new FolderEntity();
             newFolderEntity.setUser(userCode);
@@ -177,6 +178,8 @@ public class MainPageService {
     public UserFolderDTO getDataInFolder(Long folderCode, Long userCode) throws Exception {
         try{
             List<FolderEntity> folders = folderRepository.getFolderInFolder(userCode, folderCode);
+            System.out.println("userCode = " + userCode);
+            System.out.println("folderCode = " + folderCode);
             List<FileEntity> files = fileRepository.getFileInFolder(userCode, folderCode);
             return new UserFolderDTO(folderCode, folders, files, "success");
         } catch (Exception e){

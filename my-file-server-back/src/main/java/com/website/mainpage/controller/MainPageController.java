@@ -78,6 +78,7 @@ public class MainPageController {
     }
     @GetMapping("/folder")
     public ResponseEntity<UserFolderDTO> getFileInFolder(@RequestParam Long folderCode, @AuthenticationPrincipal CustomUserDetails user){
+        System.out.println("folderCode = " + folderCode);
         try{
             return ResponseEntity.ok().body(mainService.getDataInFolder(folderCode, user.getUserCode()));
         } catch (Exception e){
