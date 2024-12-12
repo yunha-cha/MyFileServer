@@ -49,7 +49,7 @@ const MobilePublicContent = ({contentData, setFileDetail}) => {
                     //파일 state하나 지우기
                     //해야 됨
                     window.location.reload();
-                })} size={15} color="#ff2020" className={s.trashIcon} />
+                })} size={15} color="#ff2020" className={s.trashIcon} style={{alignSelf:'center'}}/>
             )}
         </div>
     </div>
