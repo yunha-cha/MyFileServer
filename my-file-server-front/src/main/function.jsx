@@ -16,19 +16,6 @@ export const getPublicFile = async (page,setMyFiles, setTotalElements) => {
     setMyFiles(res.data.content);
 }
 
-//파일 사이즈 Byte 받아서 이쁘게 계산해주는 함수임
-export const calcFileSize = (size) => {
-    if (size < 1024) {
-      return size + " Bytes";
-    } else if (size < 1024 * 1024) {
-      return (size / 1024).toFixed(2) + " KB";
-    } else if (size < 1024 * 1024 * 1024) {
-      return (size / (1024 * 1024)).toFixed(2) + " MB";
-    } else {
-      return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-    }
-};
-
 //파일 지우는 함수임
 export const deleteFile = async (fileCode) => {
     await api.delete(`/main/file/${fileCode}`);
@@ -60,24 +47,44 @@ export const downloadFile = async (file) => {
       window.open(fileFullPath, '_blank');
     });
 };
+//시간을 이쁘게 출력해주는 함수임 레거시 버전
+// export const formattedDateTimeLEGACY = (uploadedAt) => {
+//   const [year, month, day, hour, minute, second] = uploadedAt.map((time) => {
+//       if (time === undefined || time === null) {
+//           return "00";
+//       } else if (time.toString().length === 1) {
+//           return `0${time}`;
+//       } else {
+//           return time;
+//       }
+//   });
+//   if(second===undefined){
+//       return `${year}/${month}/${day} | ${hour}:${minute}:00`
+//   }
+//   return `${year}/${month}/${day} | ${hour}:${minute}:${second}`;
+// };
 
 //시간을 이쁘게 출력해주는 함수임
-export const formattedDateTime = (uploadedAt) => {
-  const [year, month, day, hour, minute, second] = uploadedAt.map((time) => {
-      if (time === undefined || time === null) {
-          return "00";
-      } else if (time.toString().length === 1) {
-          return `0${time}`;
-      } else {
-          return time;
-      }
-  });
-  if(second===undefined){
-      return `${year}/${month}/${day} | ${hour}:${minute}:00`
-  }
-  return `${year}/${month}/${day} | ${hour}:${minute}:${second}`;
-};
+export const formattedDateTime = (createAt) => {
 
+  const today = new Date();
+
+  const formattedDate = `${createAt[0]}-${String(createAt[1]).padStart(2, '0')}-${String(createAt[2]).padStart(2, '0')}T${String(createAt[3]).padStart(2, '0')}:${String(createAt[4]).padStart(2, '0')}:${String(createAt[5]).padStart(2, '0')}`;
+  const createDate = new Date(formattedDate);
+  
+  const diffMs = today - createDate;
+  const diffInMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffInHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffInDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffInMinutes < 1) return "방금 전";
+  if (diffInMinutes < 60) return `${diffInMinutes}분 전`;
+  if (diffInHours < 24) return `${diffInHours}시간 전`;
+  if (diffInDays < 1) return `${diffInDays}일 전`;
+
+  return `${createAt[0]}.${String(createAt[1]).padStart(2, '0')}.${String(createAt[2]).padStart(2, '0')} ${String(createAt[3]).padStart(2, '0')}:${String(createAt[4]).padStart(2, '0')}`;
+}
+//클릭해서 열 수 있는 파일인지 체크하는 함수
 export const canOpenFile = (file) => {
   const extention = file.description.split('.').pop();
   switch(extention){
@@ -89,5 +96,46 @@ export const canOpenFile = (file) => {
         return true;
     default:
       return false;
+  }
 }
+//확장자에 따라서 아이콘 정해주는 함수
+export const getFileIconByExtension = (fileFullPath) =>{
+  let extention = fileFullPath.split('.').pop();
+  switch(extention){
+    case 'jpg':
+    case 'png':
+    case 'jpeg':
+    case 'gif':
+    case 'webp':
+      return fileFullPath;
+    case 'zip': return '/zip.png'
+    case 'mp3': return '/mp3.png'
+    case 'mp4': return '/mp4.png'
+    case 'pdf': return '/pdf.png'
+    case 'hwp':
+    case 'hwpx':
+      return '/hancom.png'
+    default: return '/defaultImage.png'
+  }
 }
+
+//문자열 n번 째 다음부터 ...으로 대체 하는 함수
+export const truncateString = (str, n) => {
+  if (str.length > n) {
+      return str.slice(0, n) + "...";
+  }
+  return str;
+}
+
+//파일 사이즈 Byte 받아서 이쁘게 계산해주는 함수임
+export const calcFileSize = (size) => {
+  if (size < 1024) {
+    return size + " Bytes";
+  } else if (size < 1024 * 1024) {
+    return (size / 1024).toFixed(2) + " KB";
+  } else if (size < 1024 * 1024 * 1024) {
+    return (size / (1024 * 1024)).toFixed(2) + " MB";
+  } else {
+    return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+  }
+};

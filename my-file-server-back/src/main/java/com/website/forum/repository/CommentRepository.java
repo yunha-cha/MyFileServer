@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<CommentDTO> findAllByForumCode(Pageable pageable, Long forumCode);
     @Query("SELECT COUNT(c) FROM Comment c WHERE c.user.userCode=:userCode")
     int getUserWrittenCommentCount(Long userCode);
+
+    void deleteByForumCode(Long forumCode);
 }

@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./ForumMain.module.css"
 import api from "../../common/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import DOMPurify from 'dompurify';
 import GoToTopButton from "./GoToTopButton";
 import WritePostButton from "./WritePostButton";
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 const ForumMain = () => {
-
+    const isMobile = useOutletContext();
     const nav = useNavigate();
 
     const [forums, setForums] = useState([]);
@@ -76,9 +77,8 @@ const ForumMain = () => {
 
 
 
-
-
     return <div className={s.container}>
+        {isMobile&&<MobileHeader title='게시판'/>}
         <GoToTopButton/>
         <WritePostButton/>
       <h2 id="forumTitle">자유 게시판</h2>

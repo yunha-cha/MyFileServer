@@ -8,7 +8,9 @@ import ForumDetail from "./forum/pages/ForumDetail";
 import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
-import PCMainPublic from "./main/PC/PCMainPublic";
+// import PCMainPublic from "./main/PC/PCMainPublic";
+import NotFound from "./common/NotFound";
+import MobilePublicMain from "./main/Mobile/mobilePublic/MobilePublicMain";
 
 
 function App() {
@@ -19,13 +21,14 @@ function App() {
         <Route path="/join" element={<Join/>}/>
         <Route element={<SideBar/>}>
           <Route path="main" element={<Main/>}/>
-          <Route path="/main/public" element={<PCMainPublic/>}/>
+          <Route path="/main/public" element={<MobilePublicMain/>}/>
           <Route path="user/:id" element={<UserPage/>}/>
           <Route path="admin" element={<JoinMember/>}/>
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
           <Route path="/forum/write" element={<ForumCreate />} />
         </Route>
+        <Route path="*" element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>
   );

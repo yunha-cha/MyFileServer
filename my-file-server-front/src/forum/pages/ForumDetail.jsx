@@ -1,14 +1,16 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import api from "../../common/api";
 import { useEffect, useState } from "react";
 import s from "./ForumDetail.module.css"
 import { useSelector } from "react-redux";
 import DOMPurify from 'dompurify';
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 
 const ForumDetail = () => {
-
+    const isMobile = useOutletContext();
     const {code} = useParams();
+    const nav = useNavigate();
 
     const {data} = useSelector((state) => state.user);
 
@@ -59,6 +61,22 @@ const ForumDetail = () => {
         
     }
 
+
+    const deleteForum = async() => {
+        try{
+            if(window.confirm("정말 삭제하시겠습니까?")){
+                await api.delete(`/forum/${code}`);
+                nav(`/forum`);
+            }
+        } catch(err){
+            console.log(err, "삭제 실패!!");
+            
+        }
+        
+        
+    }
+
+
     const getCommentList = async() => {
         const res = await api.get(`/comment/${code}?page=0`);
         setComments(res.data.content);
@@ -84,10 +102,7 @@ const ForumDetail = () => {
     const deleteComment = async(code) => {
         try{
             if(window.confirm("댓글을 삭제하시겠습니까?")){
-                alert("삭제되었습니다.");
                 await api.delete(`/comment/${code}`);
-            } else {
-                alert("삭제가 취소되었습니다.");
             }
 
         } catch(err){
@@ -101,11 +116,12 @@ const ForumDetail = () => {
 
     useEffect(() => {
         if(code){
-            // countViews();
+            // countViews(); 조회수
             getForumDetail();
             getCommentList();
+            console.log("data user: ", data);
+            
         }
-        
         
     }, [])
 
@@ -113,7 +129,15 @@ const ForumDetail = () => {
 
     // 경로가 변할 때마다 애니메이션 상태 설정
     useEffect(() => {
-        setIsSliding(true);
+
+        setIsSliding(false);  // 처음엔 슬라이딩이 되지 않도록 설정
+        const timeoutId = setTimeout(() => {
+        setIsSliding(true); // 0.1초 후에 슬라이딩 시작
+        }, 100); // 애니메이션 시작을 100ms 후에 설정 (조정 가능)
+
+        return () => clearTimeout(timeoutId); // 컴포넌트가 unmount될 때 타이머 정리
+
+        
       }, [location]); // location이 바뀔 때마다 애니메이션 재시작
 
 
@@ -152,6 +176,7 @@ const ForumDetail = () => {
 
 
     return <div className={`${s.forumDetail} ${isSliding? `${s.sliding}` : ``}`}>
+        {isMobile&&<MobileHeader title='글 보기'/>}
         <h2 className={s.pageTitle}>자유 게시판</h2>
         
         <div className={s.container}>
@@ -159,7 +184,15 @@ const ForumDetail = () => {
 
             <div className={s.containerHeader}>
                 <div>작성자 <b>{forum.userId}</b></div>
-                <div>{forum.createAt && formattedDate(forum.createAt)}</div>
+                <div style={{display: "flex"}}>
+                    {forum.createAt && formattedDate(forum.createAt)}
+                    { forum?.userId === data?.id ?
+                            <div className={s.deleteBtn} onClick={() => deleteForum()}>
+                                <img alt="delete" width={15} src="/deleteIcon.png"/>
+                            </div> : <></>
+                    }
+                
+                </div>
             </div>
 
             <div className={s.containerContent}>

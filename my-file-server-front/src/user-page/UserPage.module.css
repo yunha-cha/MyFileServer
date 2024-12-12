@@ -1,3 +1,4 @@
+
 .container{
     height: 100vh;
     width: 100vw;
@@ -11,7 +12,6 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
     color: #333;
   }
   
@@ -133,4 +133,23 @@
     box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.1);
     transform: translateY(-10%);
   }
-  
+  @media screen and (max-width: 768px) {
+    .myPageContainer {
+      max-width: 90vw;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+    .profileImage {
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      margin-right: 20px;
+    }
+    .activityCard h4{
+      font-size: 0.9em;
+    }
+    .activityCards p{
+      font-size: 1em;
+    }
+  }

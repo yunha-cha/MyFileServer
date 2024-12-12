@@ -8,7 +8,6 @@
     /* justify-content: center; */
     padding-left: 40px;
     padding-right: 40px;
-    padding-top: 7%;
 }
 .titleContianer{
     align-self: flex-start;
@@ -56,7 +55,7 @@ border-collapse: collapse;
 border-bottom: 1px solid #d3d3d3;
 padding: 10px;
 }
-
+.delete{background-color: transparent; border: none;}
 .left {text-align: left; align-content: center;}
 .right {  float: right; align-content: center;}
 .center { text-align: center;align-content: center;}

@@ -48,7 +48,7 @@ const SideBar = () => {
                 </div>
             </>
             )}  
-            <Outlet/>
+            <Outlet context={isMobile}/>
       </>
     )
 }

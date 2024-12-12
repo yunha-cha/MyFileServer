@@ -2,6 +2,7 @@ package com.website.forum.controller;
 
 import com.website.forum.dto.ForumDTO;
 import com.website.forum.service.ForumService;
+import com.website.mainpage.dto.UserUploadFileDTO;
 import com.website.security.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("")
@@ -86,6 +89,21 @@ public class ForumController {
         return ResponseEntity.ok().body(changedFileName);
 
     }
+
+
+    /* 첨부파일 업로드 */
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadAttachment(@RequestParam List<MultipartFile> files){
+
+        if (!files.isEmpty()) {
+            return ResponseEntity.ok().body(forumService.uploadAttachment(files));
+        }
+        return ResponseEntity.badRequest().body(new UserUploadFileDTO("파일이 존재하지 않습니다."));
+    }
+
+
+
+
 
 
 

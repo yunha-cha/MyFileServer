@@ -1,10 +1,18 @@
 import QuillEditor from "./QuillEditor"
 import s from "./ForumCreate.module.css";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../common/api";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 
 const ForumCreate = () => {
+    const isMobile = useOutletContext();
+    const nav = useNavigate();
+    const [msg, setMsg] = useState(false);
+
+    const [uploadFiles, setUploadFiles] = useState([]);
+    const [changedName, setChangedName] = useState([]);
 
 
 
@@ -16,20 +24,44 @@ const ForumCreate = () => {
 
 
     const registForum = async() => {
-        const res = await api.post(`/forum`, newForum);
-        console.log(res.data);
         
+        try{
+            if(window.confirm("게시글을 등록하시겠습니까? \n(등록 후 수정이 불가합니다.)")){
+                const res = await api.post(`/forum`, newForum);
+                console.log(res.data);
+                nav(-1);
+            }
+    
+        }catch(err){
+            console.log(err);
+            
+        }
     }
 
+
+    // const registFiles = useCallback(async() => {
+
+    //     const res = await api.post(`/upload`, {files : uploadFiles});
+    //     console.log(res.data);
+
+    //     setChangedName(res.data);
+        
+    // }, [uploadFiles]);
+
+    // useEffect(() => {
+
+    //     registFiles();
+
+    // }, [uploadFiles, registFiles]);
 
 
 
 
     return <div className={s.forumCreate}>
-
+        {isMobile&&<MobileHeader title='글 쓰기'/>}
         <div className={s.containerHeader}>
             <h2 className={s.pageTitle}>게시글 작성</h2>
-            <button className={s.submitBtn} onClick={() => registForum()}>제출</button>
+            <button className={s.submitBtn} onClick={() => registForum()}>등록</button>
         </div>
         
         <div className={s.container}>
@@ -37,10 +69,23 @@ const ForumCreate = () => {
             <div style={{marginBottom: "2.5em"}}>
                 <div className={s.itemTitle}>제목</div>
                 <input name="title" placeholder="" value={newForum.title}
-                    onChange={(e) => setNewForum((prev) => ({
-                        ...prev,
-                        title: e.target.value
-                    }))}/>
+                    onChange={(e) => {
+
+                    if(e.target.value.length <= 70){
+                        setNewForum((prev) => ({
+                            ...prev,
+                            title: e.target.value
+                        }));
+                    }
+
+                    setMsg(e.target.value.length > 70);
+                
+                }}/>
+
+                <div className={s.letterLength}>
+                    {msg ? <div>제목은 70자까지 작성할 수 있어요!</div> : <div></div>}
+                    <div><span>{newForum.title.length}</span> / 70</div>
+                </div>
             </div>
 
             <div className={s.itemTitle}>내용</div>
@@ -48,6 +93,16 @@ const ForumCreate = () => {
             <div className={s.containerContent}>
                 <QuillEditor newForum={newForum} setNewForum={setNewForum}/>
             </div>
+
+            {/* <div style={{marginTop: "2em"}}>
+                <div className={s.itemTitle}>첨부 파일을 업로드 하세요.</div>
+                <label className={s.fileUploadBtn} htmlFor="uploadInput">파일 업로드</label>
+                <input type="file" id="uploadInput" name="files" multiple onChange={(e) => {
+                   setUploadFiles(e.target.files);
+                }
+                }/>
+
+            </div> */}
 
         </div>
 

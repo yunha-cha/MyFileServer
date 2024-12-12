@@ -35,7 +35,7 @@
 
   .item {
     position: relative;
-    /* width: 80%; */
+    width: 40%;
     min-width: 400px;
     margin: 2.5rem 0;
     padding: 1.5rem 2rem;
@@ -107,5 +107,28 @@
 
 .loader{
   opacity: 0;
+}
+@media screen and (max-width: 768px) {
+  .container{
+    padding-left: 0;
+    width: 100vw;
+  }
+  .container h2{
+    display: none;
+  }
+  .forum {
+    padding-left: 1rem;
+  }
+  .item {
+    min-width: 85vw;
+    margin: 1.5rem 0;
+    padding: 1rem;
+  }
+  .item::before {
+    width: 7px;
+    height: 7px;
+  }
+  
+
 }
 
