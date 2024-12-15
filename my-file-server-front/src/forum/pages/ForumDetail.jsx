@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import api from "../../common/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import s from "./ForumDetail.module.css"
 import { useSelector } from "react-redux";
 import DOMPurify from 'dompurify';
@@ -11,6 +11,7 @@ const ForumDetail = () => {
     const isMobile = useOutletContext();
     const {code} = useParams();
     const nav = useNavigate();
+    
 
     const {data} = useSelector((state) => state.user);
 
@@ -35,31 +36,29 @@ const ForumDetail = () => {
             ...prev,
             content: e.target.value
         }));
-        console.log("댓글 작성중.. ",newComment);
 
         
     }
 
-    const getForumDetail = async() => {
+    const getForumDetail = useCallback(async() => {
         const res = await api.get(`/forum/${code}`);
         setForum(res.data);
-    }
+    },[code]);
     
 
-    const countViews = async() => {
+    // const countViews = async() => {
 
-        try{
-            const res = await api.post(`/views/${code}`);
-            console.log("countviews: ", res.data);
+    //     try{
+    //         const res = await api.post(`/views/${code}`);
 
-        }catch(err){
-            console.log(err.message);
-            console.log(err.response);
+    //     }catch(err){
+    //         console.log(err.message);
+    //         console.log(err.response);
 
             
-        }
+    //     }
         
-    }
+    // }
 
 
     const deleteForum = async() => {
@@ -77,17 +76,15 @@ const ForumDetail = () => {
     }
 
 
-    const getCommentList = async() => {
+    const getCommentList = useCallback(async() => {
         const res = await api.get(`/comment/${code}?page=0`);
         setComments(res.data.content);
-
-    }
+    },[code])
 
 
     const registComment = async() => {
         try{
             await api.post(`/comment/${code}`, newComment);
-            alert("댓글이 등록되었습니다!🎉");
             setNewComment({
                 content: "",
                 ip_address: ""
@@ -119,11 +116,10 @@ const ForumDetail = () => {
             // countViews(); 조회수
             getForumDetail();
             getCommentList();
-            console.log("data user: ", data);
             
         }
         
-    }, [])
+    }, [code,getCommentList,getForumDetail])
 
 
 
@@ -219,7 +215,7 @@ const ForumDetail = () => {
 
 
                 {comments.map((comment, idx) => (
-                    <div className={s.comment}>
+                    <div className={s.comment} key={idx}>
                         <div className={s.commentHeader}>
                             <div>{comment.user.id}</div>
                             <div style={{marginLeft:"0.5em", marginRight:"0.5em"}}>•</div>

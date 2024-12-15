@@ -1,5 +1,4 @@
 import React from 'react';
-import { PiNotePencil } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import s from './WritePostButton.module.css'
 

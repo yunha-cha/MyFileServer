@@ -11,6 +11,7 @@ import ForumCreate from "./forum/pages/ForumCreate";
 // import PCMainPublic from "./main/PC/PCMainPublic";
 import NotFound from "./common/NotFound";
 import MobilePublicMain from "./main/Mobile/mobilePublic/MobilePublicMain";
+import TestPage from "./admin/TestPage";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
           <Route path="/forum/write" element={<ForumCreate />} />
+          <Route path="/test" element={<TestPage/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

@@ -6,6 +6,7 @@ import { calcFileSize, canOpenFile, deleteFile, downloadFile, formattedDateTime 
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
 
 function PCMainPublic() {
 
@@ -110,6 +111,10 @@ function PCMainPublic() {
                     }
 
                 </div>
+                <div>
+
+      <Tooltip id="tooltip" />
+    </div>
             </div>
             <table className={s.table}>
                 <thead>
@@ -127,8 +132,8 @@ function PCMainPublic() {
                     {
                         files.map((file)=>(
                             <tr key={file.fileCode}>
-                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button className={s.delete} onClick={()=>deleteSelectedFile(file)}><FaTrashAlt size={15} color="#ff2020" style={{alignSelf:'center'}}/></button>:file.fileCode}</td>
-                                <td style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
+                                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button className={s.delete} onClick={()=>deleteSelectedFile(file)}><FaTrashAlt size={15} color="#ff2020" style={{alignSelf:'center'}}/></button>:file.fileCode}</td>
+                                <td data-tooltip-id='tooltip' data-tooltip-content={file.description} style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
                                 <td style={{flex:1}} className={s.center}><div onClick={()=>selectUser(file.uploadedByUser)} className={s.uploaderData}>{file.uploadedByUser.id}</div></td>
                                 <td style={{flex:1}} className={s.timeData}>{formattedDateTime(file.uploadedAt)}</td>
                                 <td style={{flex:1}} className={s.center}>{file.download_count}</td>
@@ -146,7 +151,7 @@ function PCMainPublic() {
                 totalItemsCount={totalElements}
                 onChange={(page)=>setPage(page-1)}/>
             </div>
-
+        
         </div>
     );
 }

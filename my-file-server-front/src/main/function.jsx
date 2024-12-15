@@ -86,20 +86,24 @@ export const formattedDateTime = (createAt) => {
 }
 //클릭해서 열 수 있는 파일인지 체크하는 함수
 export const canOpenFile = (file) => {
-  const extention = file.description.split('.').pop();
-  switch(extention){
-    case 'jpg':
-    case 'png':
-    case 'jpeg':
-    case 'gif':
-    case 'webp':
-        return true;
-    default:
-      return false;
+  try{
+    const extention = file.description.split('.').pop();
+    switch(extention){
+      case 'jpg':
+      case 'png':
+      case 'jpeg':
+      case 'gif':
+      case 'webp':
+          return true;
+      default:
+        return false;
+    }
+  } catch(e){
+    return false;
   }
 }
 //확장자에 따라서 아이콘 정해주는 함수
-export const getFileIconByExtension = (fileFullPath) =>{
+export const getFileIconByExtension = (fileFullPath) =>{  
   let extention = fileFullPath.split('.').pop();
   switch(extention){
     case 'jpg':

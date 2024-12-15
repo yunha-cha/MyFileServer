@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Sidebar from '../Component/Sidebar';
 import s from './MobileMainComponent.module.css';
 import api from '../../../common/api';
 import Pagination from 'react-js-pagination';

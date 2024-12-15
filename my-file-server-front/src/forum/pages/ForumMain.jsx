@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./ForumMain.module.css"
 import api from "../../common/api";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import DOMPurify from 'dompurify';
 import GoToTopButton from "./GoToTopButton";
 import WritePostButton from "./WritePostButton";
 import MobileHeader from "../../main/Mobile/Component/MobileHeader";
