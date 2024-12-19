@@ -94,6 +94,8 @@ export const canOpenFile = (file) => {
       case 'jpeg':
       case 'gif':
       case 'webp':
+      case 'mp3':
+      case 'mp4':
           return true;
       default:
         return false;

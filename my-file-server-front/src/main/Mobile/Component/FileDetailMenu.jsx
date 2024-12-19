@@ -1,9 +1,9 @@
 import React from 'react';
 import { calcFileSize, formattedDateTime, getFileIconByExtension, truncateString } from '../../function';
 import s from './FileDetailMenu.module.css';
-import { download } from '../../apiFunction';
+import { deleteFile, download } from '../../apiFunction';
 
-function FileDetailMenu({ file, setClose, state }) {
+function FileDetailMenu({ file, setClose, state,getData }) {
     return (
         <aside className={s.fileDetailMenu} style={state ? { bottom: 0 } : { bottom: '-400px' }}>
             <button className={s.closeFileDetailMenu} onClick={() => setClose(false)}><img className={s.downImg} src='/down-icon.png' alt='Error'/></button>
@@ -16,7 +16,8 @@ function FileDetailMenu({ file, setClose, state }) {
                     <div><b>원본</b> : {file.fileCode&&truncateString(file.originalName, 12)}</div>
                 </div>
             </div>
-            <div>
+            <div className={s.buttonContainer}>
+                <button onClick={()=>{deleteFile(file.fileCode,()=>getData());setClose(false)}} className={s.download}>삭제</button>
                 <button onClick={()=>download(file)} className={s.download}>다운로드</button>
             </div>
         </aside>

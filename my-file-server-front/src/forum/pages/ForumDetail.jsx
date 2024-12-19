@@ -217,7 +217,7 @@ const ForumDetail = () => {
                 {comments.map((comment, idx) => (
                     <div className={s.comment} key={idx}>
                         <div className={s.commentHeader}>
-                            <div>{comment.user.id}</div>
+                            <div style={comment.user.id==='관리자'&&{color:'red'}}>{comment.user.id}</div>
                             <div style={{marginLeft:"0.5em", marginRight:"0.5em"}}>•</div>
                             <div className={s.commentDate}> {comment.createAt && formattedDate(comment.createAt)}</div>
                             

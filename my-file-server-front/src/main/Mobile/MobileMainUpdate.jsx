@@ -99,7 +99,7 @@ const MobileMainUpdate = ({ user }) => {
             {/* 사이드 바 */}
             <Sidebar state={menuOpen}/>
             {/* 하단 파일 누르면 나오는 디테일 */}
-            <FileDetailMenu file={selectedFile} setClose={setFileMenuOpen} state={fileMenuOpen}/>
+            <FileDetailMenu file={selectedFile} setClose={setFileMenuOpen} state={fileMenuOpen} getData={getMyFileData}/>
             {/* 반투명 오버레이 */}
             {menuOpen && <div style={background?{opacity:1}:{opacity:0}} className={s.overlay} onClick={() => {setMenuOpen(false)}}></div>}
         </div>
