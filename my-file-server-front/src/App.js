@@ -13,6 +13,7 @@ import UserManagement from "./admin/UserManagement/UserManagement";
 import GroupCreate from "./group/groupCreate/GroupCreate";
 import GroupSelect from "./group/groupSelect/GroupSelect";
 import Group from "./group/group/Group";
+import { GroupManagement } from "./group/groupManagement/GroupManagement";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/group/create" element={<GroupCreate/>}/>
           <Route path="/group/select" element={<GroupSelect/>}/>
           <Route path="/group/:code" element={<Group/>}/>
+          <Route path="/group/management/:code" element={<GroupManagement/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

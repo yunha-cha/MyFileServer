@@ -74,6 +74,7 @@ const Join = () => {
             <BackButton moveTo='/'/>
             <div className="login-input-text" style={{marginTop:30}}>Join</div>
             <div>사용하실 아이디, 비밀번호를 입력해주세요.</div>
+            <div style={{fontSize:'0.7em',padding:10,color:'red'}}>같은 학교 관계자, 학생이거나, 저의 친구인 경우 <br/>회원 가입 후 카카오톡 <b>roseia8482</b>로 문의주세요.</div>
             <div style={{color:id.status?'green':'red',fontSize:12,paddingTop:7}}>{id.idMsg}</div>
             <input className="login-id" placeholder="아이디" value={id.value} onChange={(e)=>setId({...id, value:e.target.value})}/>
             <div style={{color:pw.status?'green':'red',fontSize:12,paddingTop:7}}>{pw.pwMsg}</div>

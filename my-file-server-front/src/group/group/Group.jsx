@@ -5,21 +5,25 @@ import { deleteFile } from '../../main/function';
 import ShowDatas from '../../main/PC/ShowDatas';
 import s from './Group.module.css';
 import Filedetail from '../../main/PC/Components/FileDetail/FileDetail';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { groupDeleteGroup, groupGetThisGroup } from '../apiGroupFunction';
+import { useSelector } from 'react-redux';
 
 function Group() {
     const {code} = useParams();
     const [history, setHistory] = useState([]);
+    const nav = useNavigate();
+    const {data} = useSelector((state)=>state.user);
     const [folderCode, setFolderCode] = useState(null);
     const [isShowFileDetail, setIsShowFileDetail] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [selectedMenuFolderCode, setSelectedMenuFolderCode] = useState(null);
+    const [group, setGroup] = useState({});
 
     //지금 현재 화면에 렌더링하는 데이터 state
     const [files, setFiles] = useState(null);
-    //뒤로가기를 위한 이전 데이터 저장 state
 
     //파일 업로드 관련 state
     const [file, setFile] = useState(null);
@@ -27,13 +31,9 @@ function Group() {
     const [uploadFolderCode, setUploadFolderCode] = useState(null);
     /**모달 관리 state*/
     const [percent, setPercent] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-    const [isDeleteModal, setIsDeleteModal] = useState(false);
-    const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-    const [isRenameFolderModalOpen, setIsRenameFolderModalOpen] = useState(false);
+    const [modalOpenStatus, setModalOpenStatus] = useState({isUploadModalOpen: false, isDeleteModalOpen: false, isCreateFolderModalOpen: false, isRenameFolderModalOpen: false, isGroupDeleteModalOpen: false,});
     //파일 업로드 모달
     const handleFormSubmit = useCallback(async (fileName) => {
-        //수정 필요
         const res = await api.post('/main/upload', { file: file, description: fileName, isPrivate: false, folderCode: uploadFolderCode }, {
             onUploadProgress: (e) => {
                 const p = Math.round((e.loaded * 100) / e.total);
@@ -41,20 +41,17 @@ function Group() {
             }
         });
         setFiles(prev => ({ ...prev, files: [...prev.files, res.data] }))
-        setIsModalOpen(false); setPercent(0);
+        setModalOpenStatus({...modalOpenStatus, isUploadModalOpen: false}); setPercent(0);
     },[file,uploadFolderCode]);
-    const closeModal = useCallback(()=>setIsModalOpen(false),[]);
     //삭제 모달
     const handleDeleteFormSubmit = useCallback(async () => {
         await deleteFile(deleteFileCode);
         setFiles((prev) => ({ ...prev, files: prev.files.filter(file => file.fileCode !== deleteFileCode), }));
-        setIsDeleteModal(false);
+        setModalOpenStatus({...modalOpenStatus,isDeleteModalOpen:false});
         setIsShowFileDetail(false);
     },[deleteFileCode]);
-    const closeDeleteModal = useCallback(()=>setIsDeleteModal(false),[]);
-    const openDeleteModal = useCallback((fileCode) => { setIsDeleteModal(true); setDeleteFileCode(fileCode)},[]);
+    const openDeleteModal = useCallback((fileCode) => { setModalOpenStatus({...modalOpenStatus,isDeleteModalOpen:true}); setDeleteFileCode(fileCode)},[]);
     //폴더 이름 바꾸기 모달
-    
     const handleRenameFormSubmit = useCallback(async (data) => {
         await api.post('/main/folder-name', { folderCode: selectedMenuFolderCode, description: data });
         setFiles((prevState) => ({
@@ -62,25 +59,33 @@ function Group() {
             folders: prevState.folders.map((folder) =>
                 folder.folderCode === selectedMenuFolderCode
                     ? { ...folder, folderName: data }
-                    : folder
-            )
-        }));
-        setIsRenameFolderModalOpen(false);
+                    : folder)}));
+        setModalOpenStatus({...modalOpenStatus,isRenameFolderModalOpen:false});
     },[selectedMenuFolderCode]);
-    const closeRenameFolderModal = useCallback(()=>setIsRenameFolderModalOpen(false),[]);
-
-
-    const handleCreateFolderModalSubmit = async (folderName) => {    //새 폴더 모달 제출 후
+    //새 폴더 모달
+    const handleCreateFolderModalSubmit = async (folderName) => {
         const res = await api.post('/group/folder', { groupCode:code,folderName: folderName, folderCode: folderCode });
         setFiles(prev => ({ ...prev, folders: [...prev.folders, res.data] }));
-        setIsCreateFolderModalOpen(false);
+        setModalOpenStatus({...modalOpenStatus,isCreateFolderModalOpen:false});
     }
-    /**모달을 출력하는 함수*/
+    //파일 업로드 모달
     const openUploadModal = (e) => {
         setFile(e.target.files[0]);
         e.target.value = null;
-        setIsModalOpen(true);
+        setModalOpenStatus({...modalOpenStatus, isUploadModalOpen: true});
     }
+    //그룹 삭제 모달
+    const deleteGroup = async (text) => {
+        if(text==="삭제한다"){
+            groupDeleteGroup(code,(r)=>{
+                r?nav('/group/select'):console.log('실패함');
+            });
+        }else{
+            return;
+        }
+        setModalOpenStatus({...modalOpenStatus,isGroupDeleteModalOpen:false});
+    }
+
 
     //폴더안에 있는 폴더,파일을 가져오는 함수
     const getMyFileData = useCallback(async (folderCode) => {
@@ -102,10 +107,8 @@ function Group() {
 
 
     //폴더 내부로 들어갈 때 호출되는 함수
-    const intoFolder = (folderCode) => {
-        setHistory((prev) => [...prev, folderCode]);
-        setIsShowFileDetail(false);
-    }
+    const intoFolder = (folderCode) => {setHistory((prev) => [...prev, folderCode]);setIsShowFileDetail(false);}
+    //뒤로가기
     const back = () => {
         setIsMenuVisible(false);
         setIsShowFileDetail(false);
@@ -124,7 +127,6 @@ function Group() {
             getMyFileData();
         }
     }, [history, getMyFileData])
-    //파일 클릭했을 때 디테일 표시하게
     const showDetailOfFile = (file) => {
         setIsShowFileDetail(true);
         setSelectedFile(file);
@@ -132,7 +134,7 @@ function Group() {
 
     const handleContextMenu = (event, folderCode) => {
         setSelectedMenuFolderCode(folderCode);
-        event.preventDefault(); // 기본 브라우저 컨텍스트 메뉴를 비활성화
+        event.preventDefault();
         setMenuPosition({ x: event.clientX, y: event.clientY });
         setIsMenuVisible(true);
     };
@@ -146,11 +148,11 @@ function Group() {
         } catch (e) {
             alert('안에 있는 폴더부터 삭제해주세요.');
         }
-
     }
-
     useEffect(() => {
         getMyFileData();
+        //그룹 권한 체크해야 함
+        groupGetThisGroup(code,(r)=>{setGroup(r)});
     }, [getMyFileData]);
 
     return (
@@ -159,14 +161,16 @@ function Group() {
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
                 <div className={s.container}>
                     <div>
-                        <h1>그륩 클라우드</h1>
-                        <h5>누구도 볼 수 없습니다.<br /></h5>
+                        <h1>{group.name}</h1>
+                        <h5>{group.description}<br /></h5>
                     </div>
                     <div className={s.customFileUpload}>
                         <label htmlFor="fileInput" className={s.customUploadButton}>파일 업로드</label>
                         <input id="fileInput" type="file" onChange={openUploadModal} />
-                        <button onClick={() => setIsCreateFolderModalOpen(true)}>새 폴더</button>
+                        <button onClick={() => setModalOpenStatus({...modalOpenStatus,isCreateFolderModalOpen:true})}>새 폴더</button>
                         {history.length !== 0 && <button onClick={back}>뒤로가기</button>}
+                        {group.manager===data?.userCode&&<button onClick={()=>setModalOpenStatus({...modalOpenStatus,isGroupDeleteModalOpen:true})}>그룹 삭제하기</button>}
+                        {group.manager===data?.userCode&&<button onClick={()=>nav(`/group/management/${code}`)}>그룹 관리하기</button>}
                     </div>
                     <div className={s.hr}></div>
                     <div className={s.allFilesContainer}>
@@ -204,38 +208,50 @@ function Group() {
                     <div className={s.menuContainer} style={{ top: menuPosition.y, left: menuPosition.x, }}>
                         <ul className={s.menu}>
                             <li onClick={deleteFolder}>삭제하기</li>
-                            <li onClick={() => setIsRenameFolderModalOpen(true)}>이름 변경하기</li>
+                            <li onClick={() => setModalOpenStatus({...modalOpenStatus,isRenameFolderModalOpen:true})}>이름 변경하기</li>
                         </ul>
                     </div>
                 )}
             </div>
-            {isModalOpen&&<CustomModal
-                message="파일 이름을 입력하세요."
-                isOpen={isModalOpen}
-                onClose={closeModal}
+            {modalOpenStatus.isUploadModalOpen&&<CustomModal
+                message="업로드 할 파일 이름을 입력하세요."
+                isOpen={modalOpenStatus.isUploadModalOpen}
+                onClose={()=>setModalOpenStatus({...modalOpenStatus, isUploadModalOpen: false})}
                 onSubmit={handleFormSubmit}
                 isInput={true}
                 percent={percent}
             />}
-            {isDeleteModal&&<CustomModal
+            {modalOpenStatus.isDeleteModalOpen&&<CustomModal
                 message="삭제하시겠습니까?"
-                isOpen={isDeleteModal}
-                onClose={closeDeleteModal}
+                isOpen={modalOpenStatus.isDeleteModalOpen}
+                onClose={()=>setModalOpenStatus({...modalOpenStatus,isDeleteModalOpen:false})}
                 onSubmit={handleDeleteFormSubmit}
+                submitMessage="예"
+                closeMessage="아니오"
                 isInput={false}
             />}
-            {isCreateFolderModalOpen&&<CustomModal
+            {modalOpenStatus.isCreateFolderModalOpen&&<CustomModal
                 message="폴더 이름을 입력하세요."
-                isOpen={isCreateFolderModalOpen}
-                onClose={() => setIsCreateFolderModalOpen(false)}
+                isOpen={modalOpenStatus.isCreateFolderModalOpen}
+                onClose={() => setModalOpenStatus({...modalOpenStatus,isCreateFolderModalOpen:false})}
                 onSubmit={handleCreateFolderModalSubmit}
                 isInput={true}
             />}
-            {isRenameFolderModalOpen&&<CustomModal
+            {modalOpenStatus.isRenameFolderModalOpen&&<CustomModal
                 message="변경할 폴더 이름을 입력하세요."
-                isOpen={isRenameFolderModalOpen}
-                onClose={closeRenameFolderModal}
+                isOpen={modalOpenStatus.isRenameFolderModalOpen}
+                onClose={()=>setModalOpenStatus({...modalOpenStatus,isRenameFolderModalOpen:false})}
                 onSubmit={handleRenameFormSubmit}
+                isInput={true}
+            />}
+            {modalOpenStatus.isGroupDeleteModalOpen&&<CustomModal
+                message={"이 그룹을 제거하려면 '삭제한다'를 입력해주세요."}
+                isOpen={modalOpenStatus.isGroupDeleteModalOpen}
+                onClose={()=>setModalOpenStatus({...modalOpenStatus,isGroupDeleteModalOpen:false})}
+                onSubmit={deleteGroup}
+                submitMessage="제거하기"
+                closeMessage="취소"
+                placeholder="그룹을 제거하려면 삭제한다를 입력해주세요."
                 isInput={true}
             />}
         </>

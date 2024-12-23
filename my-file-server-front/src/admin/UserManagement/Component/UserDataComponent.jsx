@@ -5,10 +5,7 @@ import { truncateString } from '../../../main/function';
 
 const UserDataComponent = ({user, setUsers }) => {
     const nav = useNavigate();
-    // const deleteUser = (userCode) => {
-    //     console.log(userCode);
-        
-    // }
+
     const disableUser = (userCode) => {
         adminDisableUser(userCode,()=>{
             setUsers((users) => users.map((user)=>user.userCode === userCode?{...user, enable:false}:user));

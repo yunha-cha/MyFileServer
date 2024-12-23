@@ -9,6 +9,7 @@ const GroupCreate = () => {
     const [inputs, setInputs] = useState({              //입력 값 핸들
         searchParam: '',
         groupName: '',
+        description: '',
     });
     const handleOnChange = (e) => {
         setInputs({
@@ -26,11 +27,12 @@ const GroupCreate = () => {
         setInvitedUser(users => users.filter(user => user.userCode !== canceledUser.userCode ? user : null))
     }
     const createGroup = () => {
-        groupCreateGroup(invitedUser,inputs.groupName, ()=>{});
+        groupCreateGroup(invitedUser,inputs.groupName,inputs.description, ()=>{});
     }
     return (
         <div>
             <input name='groupName' value={inputs.groupName} onChange={handleOnChange} placeholder='그룹 이름을 입력'/>
+            <input name='description' value={inputs.description} onChange={handleOnChange} placeholder='그룹 설명을 입력'/>
 
             <div>
                 <div>

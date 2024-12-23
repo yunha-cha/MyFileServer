@@ -48,7 +48,7 @@ public class GroupService {
 
     @Transactional
     public void createGroup(GroupCreateDTO groupCreateDTO, Long userCode) {
-        Group group = new Group(groupCreateDTO.getGroupName(), LocalDate.now());
+        Group group = new Group(groupCreateDTO.getGroupName(), LocalDate.now(),groupCreateDTO.getDescription(),userCode);
         Group newGroup = groupRepository.save(group);
         List<GroupMember> groupMembers = new ArrayList<>();
         for(Long g : groupCreateDTO.getUserCodes()){
@@ -85,6 +85,7 @@ public class GroupService {
         }
     }
 
+    @Transactional
     public FolderEntity createGroupFolder(Long groupCode, String folderName, Long folderCode) {
         FolderEntity folder = new FolderEntity();
         if(folderName == null || folderName.equalsIgnoreCase("null") || folderName.length() > 10 || folderName.isBlank()){
@@ -96,4 +97,23 @@ public class GroupService {
         return folderRepository.save(folder);
     }
 
+    public Group getMyGroup(Long groupCode) {
+        return groupRepository.findById(groupCode).orElseThrow();
+    }
+
+    @Transactional
+    public boolean deleteGroup(Long groupCode) {
+        try {
+            //그룹 cascade 되어있어서 한 번에 다 삭제됨 서버의 파일 지워야 함
+            List<FolderEntity> folders = folderRepository.findAllByGroupCode(groupCode);
+            List<FileEntity> fileEntities = fileRepository.findAllByFolderIn(folders);
+            for (FileEntity f : fileEntities) {
+                tool.deleteFile(f.getChangedName());
+            }
+            groupRepository.deleteById(groupCode);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

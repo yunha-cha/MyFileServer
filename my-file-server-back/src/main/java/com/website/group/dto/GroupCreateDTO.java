@@ -13,4 +13,5 @@ import java.util.List;
 public class GroupCreateDTO {
     private List<Long> userCodes;
     private String groupName;
+    private String description;
 }

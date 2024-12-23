@@ -22,8 +22,15 @@ public class Group {
     private String name;
     @Column(name = "create_at")
     private LocalDate createAt;
-    public Group(String name, LocalDate createAt) {
+    @Column(name = "description")
+    private String description;
+    @Column(name = "manager")
+    private Long manager;
+
+    public Group(String name, LocalDate createAt, String description, Long manager) {
         this.name = name;
         this.createAt = createAt;
+        this.description = description;
+        this.manager = manager;
     }
 }
