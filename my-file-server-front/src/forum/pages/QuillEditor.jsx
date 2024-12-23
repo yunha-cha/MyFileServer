@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; // 기본 테마
 import './QuillEditor.css';
@@ -8,7 +8,7 @@ import api from "../../common/api";
 const QuillEditor = ({newForum, setNewForum}) => {
 
 
-  const [content, setContent] = useState();
+  // const [content, setContent] = useState();
   const quillRef = useRef(null);
 
 

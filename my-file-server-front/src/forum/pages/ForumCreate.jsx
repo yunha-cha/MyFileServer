@@ -1,6 +1,6 @@
 import QuillEditor from "./QuillEditor"
 import s from "./ForumCreate.module.css";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../common/api";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import MobileHeader from "../../main/Mobile/Component/MobileHeader";
@@ -11,8 +11,8 @@ const ForumCreate = () => {
     const nav = useNavigate();
     const [msg, setMsg] = useState(false);
 
-    const [uploadFiles, setUploadFiles] = useState([]);
-    const [changedName, setChangedName] = useState([]);
+    // const [uploadFiles, setUploadFiles] = useState([]);
+    // const [changedName, setChangedName] = useState([]);
 
 
 
@@ -27,8 +27,7 @@ const ForumCreate = () => {
         
         try{
             if(window.confirm("게시글을 등록하시겠습니까? \n(등록 후 수정이 불가합니다.)")){
-                const res = await api.post(`/forum`, newForum);
-                console.log(res.data);
+                await api.post(`/forum`, newForum);
                 nav(-1);
             }
     

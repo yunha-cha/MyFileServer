@@ -5,7 +5,7 @@ function File({ file, onClick }) {
     return (
         <div>
             <div onClick={()=>onClick(file)} className={s.container}>
-                <img className={s.icon} height={50} src={getFileIconByExtension(file.fileFullPath)} />
+                <img className={s.icon} height={50} src={getFileIconByExtension(file.fileFullPath)} alt='Error'/>
                 <div>
                     <div className={s.name}>{file.description}</div>
                 </div>

@@ -13,7 +13,7 @@ function Sidebar({state}) {
     return (
         <aside style={state ? { right: 0 } : { right: -1000 }} className={s.sideMenu}>
             <div style={{display:'flex',paddingTop:20}}>
-                <img height={60} width={70} src='/icon.png'/>
+                <img height={60} width={70} src='/icon.png' alt='Error'/>
                 <h3 style={{paddingLeft:10}}>파일 클라우드</h3>
             </div>
             <ol>
