@@ -101,7 +101,6 @@ public class MainPageController {
     public ResponseEntity<UserUploadFileDTO> uploadFile(@AuthenticationPrincipal CustomUserDetails user,
                                                         @RequestParam("file") MultipartFile file,
                                                         String description,
-                                                        boolean isPrivate,
                                                         Long folderCode)
     {
         if (!file.isEmpty()) {
@@ -121,6 +120,10 @@ public class MainPageController {
     public ResponseEntity<?> modifyFolderName(@RequestParam("folderCode") Long folderCode,@RequestParam("description") String description){
         mainService.modifyFolderName(folderCode,description);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/users")
+    private ResponseEntity<List<MainUserEntity>> getUsers(@RequestParam String id){
+        return ResponseEntity.ok().body(mainService.getUsers(id));
     }
 
 }

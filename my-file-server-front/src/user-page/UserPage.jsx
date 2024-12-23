@@ -63,7 +63,7 @@ function UserPage() {
                 </div>
               </div>
             </div>
-            {isMe()?  // 내 마이페이지면?
+            {isMe()||data.userRole==='ROLE_ADMIN'?  // 내 마이페이지면?
             <div className={s.settingsSection}>
               <h3>설정</h3>
               {

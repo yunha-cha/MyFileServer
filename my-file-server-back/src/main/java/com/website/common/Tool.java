@@ -1,5 +1,7 @@
 package com.website.common;
 
+import com.website.mainpage.dto.UserUploadFileDTO;
+import com.website.mainpage.entity.FileEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -70,5 +72,31 @@ public class Tool {
             System.err.println("유효하지 않은 파일 이름입니다.");
         }
         return false;
+    }
+    public String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            return "";
+        }
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex == -1 || dotIndex == originalFilename.length() - 1) {
+            return "";
+        }
+        return originalFilename.substring(dotIndex + 1);
+    }
+    public UserUploadFileDTO convertFileEntity(FileEntity savedEntity){
+        return new UserUploadFileDTO(
+                savedEntity.getFileCode(),
+                savedEntity.getChangedName(),
+                savedEntity.getUploadedAt(),
+                savedEntity.getDescription(),
+                savedEntity.getFileFullPath(),
+                savedEntity.getDownload_count(),
+                savedEntity.getOriginalName(),
+                savedEntity.getSize(),
+                savedEntity.isPrivate(),
+                savedEntity.getFolder().getFolderCode(),
+                "업로드 성공!"
+        );
     }
 }

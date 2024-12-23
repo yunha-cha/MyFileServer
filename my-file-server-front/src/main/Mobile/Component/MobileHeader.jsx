@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import s from './MobileHeader.module.css';
 import Sidebar from './Sidebar';
-const MobileHeader = ({title,handleOpen}) => {
+const MobileHeader = ({title,handleOpen=null}) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [background,setBackground] = useState(true);
     useEffect(()=>{
@@ -24,8 +24,5 @@ const MobileHeader = ({title,handleOpen}) => {
     );
 };
 
-MobileHeader.defaultProps = {
-    handleOpen: null
-}
 
 export default MobileHeader;

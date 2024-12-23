@@ -12,7 +12,7 @@ const ShowDatas = ({ folder, intoFolder, file, showDetailOfFile, handleContextMe
             <div key={folderCode}>
                 <div onContextMenu={(e)=>handleContextMenu(e,folderCode)} className={s.fileContainer} onClick={() => intoFolder(folderCode)}>
                     <img src='/folder.png' style={{width: 64, height: 64}} alt='Error'/>
-                    <div>{folderName}</div>
+                    <div style={{textAlign:'center'}}>{folderName}</div>
                 </div>
             </div>
         )
