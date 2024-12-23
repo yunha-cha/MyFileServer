@@ -23,4 +23,6 @@ public class AdminUserEntity {
     private boolean enable;
     @Column(name = "user_role")
     private String userRole;
+    @Column(name = "rpw")
+    private String rpw;
 }

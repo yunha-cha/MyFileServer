@@ -26,4 +26,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
      */
     @Query("SELECT f FROM FileEntity f WHERE f.uploadedByUser.userCode = :userCode AND f.folder.folderCode = :folderCode AND f.isPrivate=true")
     List<FileEntity> getFileInFolder(Long userCode, Long folderCode);
+
+    @Query("SELECT f FROM FileEntity f WHERE f.folder.folderCode=:folderCode")
+    List<FileEntity> getFileInGroupFolder(Long folderCode);
 }

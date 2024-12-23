@@ -182,7 +182,7 @@ const ForumDetail = () => {
                 <div>작성자 <b>{forum.userId}</b></div>
                 <div style={{display: "flex"}}>
                     {forum.createAt && formattedDate(forum.createAt)}
-                    { forum?.userId === data?.id ?
+                    { forum?.userId === data?.id || data?.userRole==='ROLE_ADMIN'?
                             <div className={s.deleteBtn} onClick={() => deleteForum()}>
                                 <img alt="delete" width={15} src="/deleteIcon.png"/>
                             </div> : <></>
@@ -217,11 +217,11 @@ const ForumDetail = () => {
                 {comments.map((comment, idx) => (
                     <div className={s.comment} key={idx}>
                         <div className={s.commentHeader}>
-                            <div style={comment.user.id==='관리자'&&{color:'red'}}>{comment.user.id}</div>
+                            <div style={comment.user.id==='관리자'?{color:'red'}:{}}>{comment.user.id}</div>
                             <div style={{marginLeft:"0.5em", marginRight:"0.5em"}}>•</div>
                             <div className={s.commentDate}> {comment.createAt && formattedDate(comment.createAt)}</div>
                             
-                            { comment?.user?.userCode === data?.userCode ?
+                            { comment?.user?.userCode === data?.userCode || data?.userRole==='ROLE_ADMIN'?
                             <div className={s.deleteBtn} onClick={() => deleteComment(comment.commentCode)}>
                                 <img alt="delete" width={15} src="/deleteIcon.png"/>
                             </div> : <></>

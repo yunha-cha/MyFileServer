@@ -20,6 +20,7 @@ function Sidebar({state}) {
                 <li onClick={()=>nav('/main/public')}>공용 클라우드</li>
                 <li onClick={()=>nav('/main')}>개인 클라우드</li>
                 <li onClick={()=>nav('/forum')}>게시판</li>
+                {data&&data.userRole==="ROLE_ADMIN"&&<li onClick={()=>nav('/admin/user')}>관리자</li>}
             </ol>
             <div className={s.userButton}>
                 <button onClick={()=>nav(`/user/${data.userCode}`)}>마이페이지</button>

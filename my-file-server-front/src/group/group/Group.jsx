@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import api from '../../common/api';
-import ShowDatas from './ShowDatas';
-import s from './PCMainUpdate.module.css';
-import { deleteFile } from '../function';
 import CustomModal from '../../common/CustomModal';
-import Filedetail from './Components/FileDetail/FileDetail';
+import api from '../../common/api';
+import { deleteFile } from '../../main/function';
+import ShowDatas from '../../main/PC/ShowDatas';
+import s from './Group.module.css';
+import Filedetail from '../../main/PC/Components/FileDetail/FileDetail';
+import { useParams } from 'react-router-dom';
 
-function PCMainUpdate() {
-    
+function Group() {
+    const {code} = useParams();
     const [history, setHistory] = useState([]);
     const [folderCode, setFolderCode] = useState(null);
     const [isShowFileDetail, setIsShowFileDetail] = useState(false);
@@ -32,6 +33,7 @@ function PCMainUpdate() {
     const [isRenameFolderModalOpen, setIsRenameFolderModalOpen] = useState(false);
     //파일 업로드 모달
     const handleFormSubmit = useCallback(async (fileName) => {
+        //수정 필요
         const res = await api.post('/main/upload', { file: file, description: fileName, isPrivate: false, folderCode: uploadFolderCode }, {
             onUploadProgress: (e) => {
                 const p = Math.round((e.loaded * 100) / e.total);
@@ -69,7 +71,7 @@ function PCMainUpdate() {
 
 
     const handleCreateFolderModalSubmit = async (folderName) => {    //새 폴더 모달 제출 후
-        const res = await api.post('/main/folder', { folderName: folderName, folderCode: folderCode });
+        const res = await api.post('/group/folder', { groupCode:code,folderName: folderName, folderCode: folderCode });
         setFiles(prev => ({ ...prev, folders: [...prev.folders, res.data] }));
         setIsCreateFolderModalOpen(false);
     }
@@ -85,13 +87,13 @@ function PCMainUpdate() {
         //만약 폴더 코드를 인자로 주지 않았다면?
         if (!folderCode) {
             //최상단 폴더 조회하기
-            const { data } = await api.get('/main/root-folder');
+            const { data } = await api.get(`/group-root-folder?groupCode=${code}`);
             folderCode = data;
             setFolderCode(data.folderCode);
             setUploadFolderCode(data.folderCode);
         }
         //화면에 렌더링할 파일, 폴더 가져오기
-        const myFiles = await api.get(`/main/folder?folderCode=${folderCode}`);
+        const myFiles = await api.get(`/group/file?folderCode=${folderCode}&groupCode=${code}`);
         setFolderCode(myFiles.data.folderCode);
         setFiles(myFiles.data);
         setUploadFolderCode(myFiles.data.folderCode);
@@ -157,7 +159,7 @@ function PCMainUpdate() {
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
                 <div className={s.container}>
                     <div>
-                        <h1>개인 클라우드</h1>
+                        <h1>그륩 클라우드</h1>
                         <h5>누구도 볼 수 없습니다.<br /></h5>
                     </div>
                     <div className={s.customFileUpload}>
@@ -240,4 +242,4 @@ function PCMainUpdate() {
     );
 }
 
-export default PCMainUpdate;
+export default Group;

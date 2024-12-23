@@ -115,5 +115,9 @@ public class MainPageController {
         mainService.modifyFolderName(folderCode,description);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/users")
+    private ResponseEntity<List<MainUserEntity>> getUsers(@RequestParam String id){
+        return ResponseEntity.ok().body(mainService.getUsers(id));
+    }
 
 }

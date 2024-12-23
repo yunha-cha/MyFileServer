@@ -5,12 +5,14 @@ import SideBar from "./common/SideBar";
 import ForumMain from "./forum/pages/ForumMain";
 import UserPage from "./user-page/UserPage";
 import ForumDetail from "./forum/pages/ForumDetail";
-import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
 import NotFound from "./common/NotFound";
 import MobilePublicMain from "./main/Mobile/mobilePublic/MobilePublicMain";
-import TestPage from "./admin/TestPage";
+import UserManagement from "./admin/UserManagement/UserManagement";
+import GroupCreate from "./group/groupCreate/GroupCreate";
+import GroupSelect from "./group/groupSelect/GroupSelect";
+import Group from "./group/group/Group";
 
 
 function App() {
@@ -23,11 +25,14 @@ function App() {
           <Route path="main" element={<Main/>}/>
           <Route path="/main/public" element={<MobilePublicMain/>}/>
           <Route path="user/:id" element={<UserPage/>}/>
-          <Route path="admin" element={<JoinMember/>}/>
+          <Route path="admin/user" element={<UserManagement/>}/>
           <Route path="/forum" element={<ForumMain/>} />
           <Route path="/forum/:code" element={<ForumDetail/>} />
           <Route path="/forum/write" element={<ForumCreate />} />
-          <Route path="/test" element={<TestPage/>}/>
+
+          <Route path="/group/create" element={<GroupCreate/>}/>
+          <Route path="/group/select" element={<GroupSelect/>}/>
+          <Route path="/group/:code" element={<Group/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

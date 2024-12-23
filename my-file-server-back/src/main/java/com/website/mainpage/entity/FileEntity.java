@@ -15,6 +15,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Setter@Getter
 public class FileEntity {
+    public FileEntity(String changedName, LocalDateTime uploadedAt, String description, MainUserEntity uploadedByUser, int download_count, long size, boolean isPrivate, FolderEntity folder) {
+        this.changedName = changedName;
+        this.uploadedAt = uploadedAt;
+        this.description = description;
+        this.uploadedByUser = uploadedByUser;
+        this.download_count = download_count;
+        this.size = size;
+        this.isPrivate = isPrivate;
+        this.folder = folder;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_code")
