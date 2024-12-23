@@ -95,5 +95,6 @@
     }
     .login-id, .login-pw, .join-nickname{
       width: 70vw;
+      color: #868686;
     }
   }

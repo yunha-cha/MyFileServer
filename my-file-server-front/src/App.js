@@ -8,7 +8,6 @@ import ForumDetail from "./forum/pages/ForumDetail";
 import JoinMember from "./admin/JoinMember";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
-// import PCMainPublic from "./main/PC/PCMainPublic";
 import NotFound from "./common/NotFound";
 import MobilePublicMain from "./main/Mobile/mobilePublic/MobilePublicMain";
 import TestPage from "./admin/TestPage";
