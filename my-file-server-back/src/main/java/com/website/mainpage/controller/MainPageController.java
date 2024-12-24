@@ -7,23 +7,34 @@ import com.website.mainpage.entity.FolderEntity;
 import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.service.MainPageService;
 import com.website.security.dto.CustomUserDetails;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/main")
 public class MainPageController {
+    @Value("${file.upload-dir}")
+    private String uploadDir;
     private final MainPageService mainService;
 
     public MainPageController(MainPageService mainService) {
@@ -109,6 +120,58 @@ public class MainPageController {
     public ResponseEntity<UserUploadFileDTO> uploadPublicFile(@AuthenticationPrincipal CustomUserDetails user, @RequestParam("file") MultipartFile file, String description){
         mainService.uploadPublicFile(file,description,user);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/chunk")
+    public ResponseEntity<?> uploadChunk(
+            @RequestParam("chunk") MultipartFile chunk,
+            @RequestParam("chunkIndex") int chunkIndex,
+            @RequestParam("totalChunks") int totalChunks,
+            @RequestParam("originalFileName") String originalFileName,
+            @RequestParam("description") String description,
+            @RequestParam("fileSize") long fileSize,
+            @RequestParam("folderCode") Long folderCode,
+            @AuthenticationPrincipal CustomUserDetails user) {
+
+        try {
+            String tempFileDir = uploadDir + "/" + user.getUserCode() + "/";
+            Files.createDirectories(Paths.get(tempFileDir));
+
+            // 청크 저장
+            Path chunkPath = Paths.get(tempFileDir, "chunk-" + chunkIndex);
+            Files.write(chunkPath, chunk.getBytes(), StandardOpenOption.CREATE);
+
+            // 모든 청크 업로드 완료 시 병합 실행
+            if (chunkIndex == totalChunks - 1) {
+                System.out.println("파일정보 생성..");
+                String finalFileName = UUID.randomUUID() + "-" + originalFileName;
+                String finalFilePath = uploadDir+ "/" + finalFileName;
+                System.out.println("청크 병합 중..");
+                // 청크 병합
+                mergeChunks(totalChunks, tempFileDir, finalFilePath);
+                System.out.println("청크 병합 완료");
+                System.out.println(finalFilePath+"에 저장했습니다.");
+                UserUploadFileDTO r = mainService.uploadChunk(originalFileName, finalFileName, description, fileSize, user,folderCode);
+
+                // 메타데이터 반환
+                return ResponseEntity.ok(r);
+            }
+
+            return ResponseEntity.ok(new UserUploadFileDTO("Chunk " + chunkIndex + " uploaded"));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Chunk upload failed");
+        }
+    }
+    private void mergeChunks(int totalChunks, String tempFileDir, String finalFilePath) throws IOException {
+        try (OutputStream outputStream = new FileOutputStream(finalFilePath)) {
+            for (int i = 0; i < totalChunks; i++) {
+                Path chunkPath = Paths.get(tempFileDir, "chunk-" + i);
+                Files.copy(chunkPath, outputStream);
+                Files.delete(chunkPath); // 청크 삭제
+                System.out.println("청크 "+i+" 작업 완료, 청크 삭제 완료");
+            }
+        }
+        System.out.println("임시 디렉토리 삭제 = " + tempFileDir);
+        Files.delete(Paths.get(tempFileDir)); // 임시 디렉토리 삭제
     }
     @PostMapping("/folder-name")
     public ResponseEntity<?> modifyFolderName(@RequestParam("folderCode") Long folderCode,@RequestParam("description") String description){

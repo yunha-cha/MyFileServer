@@ -36,7 +36,8 @@ const UserManagement = () => {
         setIsSearch(false);
     }, [pageStatus.page]);
 
-    useEffect(() => {getAllUsers();}, [pageStatus.page, getAllUsers]);
+    useEffect(() => {getAllUsers();console.log(pageStatus.page)
+    }, [pageStatus.page, getAllUsers]);
     useEffect(()=>{if(data &&typeof data==='object'){ data.userRole!=="ROLE_ADMIN"&&nav('/'); }},[data,nav]);
 
     return (
@@ -73,7 +74,7 @@ const UserManagement = () => {
                 activePage={pageStatus.page}
                 itemsCountPerPage={10}
                 totalItemsCount={pageStatus.totalElements}
-                onChange={(page)=>setPageStatus({...pageStatus, page:page})}/>
+                onChange={(page)=>setPageStatus({...pageStatus, page:page-1})}/>
             </div>
             }
         </div>

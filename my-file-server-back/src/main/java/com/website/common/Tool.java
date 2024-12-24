@@ -48,6 +48,7 @@ public class Tool {
         }
         return null;
     }
+
     /**
      * 파일을 삭제하는 메서드.
      * @param fileName 삭제할 파일 이름
@@ -83,6 +84,16 @@ public class Tool {
             return "";
         }
         return originalFilename.substring(dotIndex + 1);
+    }
+    public String getFileEx(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return "";
+        }
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1 || dotIndex == fileName.length() - 1) {
+            return "";
+        }
+        return fileName.substring(dotIndex + 1);
     }
     public UserUploadFileDTO convertFileEntity(FileEntity savedEntity){
         return new UserUploadFileDTO(

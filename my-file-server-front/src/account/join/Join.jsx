@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../../common/BackButton';
+import api from '../../common/api';
 
 function containsStringAndNumber(input) {
     const hasString = /[a-zA-Z]/.test(input);
@@ -18,19 +18,17 @@ function containsStringNumberAndSpecial(input) {
     return check && hasSpecial;
 }
 const Join = () => {
+    console.log('무한반복 체크');
+    
     const nav = useNavigate();
     const [id,setId] = useState({value:'',idMsg:'',status:false});
     const [pw, setPw] = useState({value:'',confirmValue:'',pwMsg:'',confirmValueMsg:'',status:false, confirm:false});
   
     const join = async () => {
         if(id.value&&id.status&&pw.value&&pw.confirmValue&&pw.status&&pw.confirm){
-            const formData = new FormData();
-            formData.append('id', id);
-            formData.append('password', pw);
             try{
-                // const res = await axios.post(`/api/join`, formData);
-                // const res = await axios.post(`http://localhost:8080/join`, formData);
-                // nav('/',{state:{message:res.data}})
+                const res = await api.post(`/join`,{id:id.value,password:pw.value});
+                nav('/',{state:{message:res.data}})
                 console.log('ss');
                 
             } catch(err){
@@ -44,8 +42,8 @@ const Join = () => {
     useEffect(()=>{
         if(id.value){
             containsStringAndNumber(id.value)?
-                setId({...id,status:true,idMsg:'사용가능한 아이디입니다.'})
-            :setId({...id, status:false,idMsg:'8자 이상, 영어, 숫자를 포함해야합니다.'})
+                setId(i=>({...i,status:true,idMsg:'사용가능한 아이디입니다.'}))
+            :setId(i=>({...i, status:false,idMsg:'8자 이상, 영어, 숫자를 포함해야합니다.'}))
         } else {
             setId({value:'',idMsg:'',status:false});
         }
@@ -54,17 +52,17 @@ const Join = () => {
     useEffect(()=>{
         if(pw.value){
             containsStringNumberAndSpecial(pw.value)?
-                setPw({...pw, status:true,pwMsg:'사용 가능한 비밀번호입니다.',confirm:false})
-            :setPw({...pw,status:false,pwMsg:'8자 이상, 영어, 숫자, 특수문자를 포함해야합니다.',confirm:false});
+                setPw(p=>({...p, status:true,pwMsg:'사용 가능한 비밀번호입니다.',confirm:false}))
+            :setPw(p=>({...p,status:false,pwMsg:'8자 이상, 영어, 숫자, 특수문자를 포함해야합니다.',confirm:false}));
         } else {
             setPw({value:'',confirmValue:'',pwMsg:'',confirmValueMsg:'',status:false, confirm:false})
         }
     },[pw.value,pw.confirmValue]);
     useEffect(()=>{
         if(pw.value&&pw.confirmValue){
-            pw.value===pw.confirmValue?setPw({...pw,confirm:true,confirmValueMsg:'비밀번호가 일치합니다.'}):setPw({...pw,confirm:false});
+            pw.value===pw.confirmValue?setPw(p=>({...p,confirm:true,confirmValueMsg:'비밀번호가 일치합니다.'})):setPw(p=>({...p,confirm:false}));
         }
-    },[pw.confirmValue])
+    },[pw.confirmValue, pw.value])
 
 
     return(
@@ -78,9 +76,9 @@ const Join = () => {
             <div style={{color:id.status?'green':'red',fontSize:12,paddingTop:7}}>{id.idMsg}</div>
             <input className="login-id" placeholder="아이디" value={id.value} onChange={(e)=>setId({...id, value:e.target.value})}/>
             <div style={{color:pw.status?'green':'red',fontSize:12,paddingTop:7}}>{pw.pwMsg}</div>
-            <input className="login-pw" placeholder="비밀번호" type="text" value={pw.value} onChange={(e)=>{setPw({...pw,value:e.target.value}); }}/>
+            <input className="login-pw" placeholder="비밀번호" type="password" value={pw.value} onChange={(e)=>{setPw({...pw,value:e.target.value}); }}/>
             <div style={{color:pw.confirm?'green':'red',fontSize:12,paddingTop:7}}>{pw.confirmValueMsg}</div>
-            {pw.status ? <input className='login-pw' placeholder='비밀번호 확인' type='text' value={pw.confirmValue} onChange={(e)=>setPw({...pw,confirmValue: e.target.value})}/> : <></>}
+            {pw.status ? <input className='login-pw' placeholder='비밀번호 확인' type='password' value={pw.confirmValue} onChange={(e)=>setPw({...pw,confirmValue: e.target.value})}/> : <></>}
 
             {id.value&&id.status&&pw.value&&pw.confirmValue&&pw.status&&pw.confirm && <button onClick={join} className="join-button">가입 신청하기</button>}
           </div>

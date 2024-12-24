@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { groupCreateGroup, groupFindUser } from '../apiGroupFunction';
-import { useNavigate } from 'react-router-dom';
 
 const GroupCreate = () => {
     const [invitedUser, setInvitedUser] = useState([]); //초대 목록
     const [findedUsers, setFindedUsers] = useState([]); //찾은 유저
-    const nav = useNavigate();
     const [inputs, setInputs] = useState({              //입력 값 핸들
         searchParam: '',
         groupName: '',

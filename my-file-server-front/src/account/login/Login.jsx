@@ -1,9 +1,9 @@
-import axios from 'axios';
 import './Login.css';
 import React, { useEffect, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../../reducer/UserDataSlice';
+import api from '../../common/api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,13 +15,13 @@ const Login = () => {
   const login = async (e) => {
     if(e.key === 'Enter' || e.type === 'click'){
 
-        const formData = new FormData();
-        formData.append('username', id);
-        formData.append('password', pw);
+        // const formData = new FormData();
+        // formData.append('username', id);
+        // formData.append('password', pw);
 
         try{
-            // const response = await axios.post('/api/login', formData);
-            const response = await axios.post('http://localhost:8080/login', formData);
+            const response = await api.post('/login', {username:id,password:pw});
+            // const response = await axios.post('http://localhost:8080/login', formData);
             localStorage.setItem('token', response.headers.get("Authorization"));
             dispatch(getUser());
             navigate('/main');

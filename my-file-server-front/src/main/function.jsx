@@ -22,7 +22,11 @@ export const deleteFile = async (fileCode) => {
 }
 
 //파일 다운로드 하는 함수임
-export const downloadFile = async (file) => {      
+export const downloadFile = async (file) => {    
+    if(file.size > (100 * 1024 * 1024)){
+      window.open(file.fileFullPath, '_blank');
+      return;
+    }  
     await api.post(`/main/download-count/${file.fileCode}`);
     const fileFullPath = file.fileFullPath;
     

@@ -76,7 +76,6 @@ public class GroupService {
     }
     public UserFolderDTO getDataInGroupFolder(Long folderCode, Long groupCode) throws Exception {
         try {
-            System.out.println("=========================="+folderCode);
             List<FolderEntity> folders = folderRepository.getFolderInFolderGroup(folderCode,groupCode);
             List<FileEntity> files = fileRepository.getFileInGroupFolder(folderCode);
             return new UserFolderDTO(folderCode, folders, files, "success");

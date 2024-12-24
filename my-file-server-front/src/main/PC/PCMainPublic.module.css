@@ -50,6 +50,7 @@ border-collapse: collapse;
     background-color: rgb(192, 216, 255);
     border-top: 3px solid rgb(139, 184, 255);
     color: white;
+    white-space: nowrap;
 }
 .table thead tr th,.table tbody tr td {
 border-bottom: 1px solid #d3d3d3;
@@ -73,6 +74,7 @@ padding: 10px;
 }
 .downloadButton{
     cursor: pointer;
+    white-space: nowrap;
     padding: 10px 20px;
     background-color: rgb(192, 216, 255);
     color: white;

@@ -6,7 +6,7 @@ import ShowDatas from '../../main/PC/ShowDatas';
 import s from './Group.module.css';
 import Filedetail from '../../main/PC/Components/FileDetail/FileDetail';
 import { useNavigate, useParams } from 'react-router-dom';
-import { groupDeleteGroup, groupGetThisGroup } from '../apiGroupFunction';
+import { groupDeleteGroup, groupGetThisGroup, groupUploadChunk } from '../apiGroupFunction';
 import { useSelector } from 'react-redux';
 
 function Group() {
@@ -31,26 +31,42 @@ function Group() {
     const [uploadFolderCode, setUploadFolderCode] = useState(null);
     /**모달 관리 state*/
     const [percent, setPercent] = useState(0);
+    const [bigFilePercent, setBigFilePercent] = useState(0);
     const [modalOpenStatus, setModalOpenStatus] = useState({isUploadModalOpen: false, isDeleteModalOpen: false, isCreateFolderModalOpen: false, isRenameFolderModalOpen: false, isGroupDeleteModalOpen: false,});
     //파일 업로드 모달
     const handleFormSubmit = useCallback(async (fileName) => {
-        const res = await api.post('/main/upload', { file: file, description: fileName, isPrivate: false, folderCode: uploadFolderCode }, {
+
+        if(file.size>(100 * 1024 * 1024)){
+            groupUploadChunk(file, fileName, folderCode, (res)=>{
+                setFiles(prev => ({ ...prev, files: [...prev.files, res] }));
+                setBigFilePercent(0);
+            },setBigFilePercent);
+            setModalOpenStatus(m=>({...m, isUploadModalOpen: false}));
+            alert('파일 용량이 커 비동기로 전환합니다. 페이지를 전환하지 마세요.');
+        } else {
+            const res = await api.post('/main/upload', { file: file, description: fileName, isPrivate: false, folderCode: uploadFolderCode }, {
             onUploadProgress: (e) => {
                 const p = Math.round((e.loaded * 100) / e.total);
                 setPercent(p);
             }
-        });
-        setFiles(prev => ({ ...prev, files: [...prev.files, res.data] }))
-        setModalOpenStatus({...modalOpenStatus, isUploadModalOpen: false}); setPercent(0);
+            });
+            setFiles(prev => ({ ...prev, files: [...prev.files, res.data] }))
+            setModalOpenStatus(m=>({...m, isUploadModalOpen: false})); setPercent(0);
+        }
+        
+        
+
+
+
     },[file,uploadFolderCode]);
     //삭제 모달
     const handleDeleteFormSubmit = useCallback(async () => {
         await deleteFile(deleteFileCode);
         setFiles((prev) => ({ ...prev, files: prev.files.filter(file => file.fileCode !== deleteFileCode), }));
-        setModalOpenStatus({...modalOpenStatus,isDeleteModalOpen:false});
+        setModalOpenStatus(m=>({...m,isDeleteModalOpen:false}));
         setIsShowFileDetail(false);
     },[deleteFileCode]);
-    const openDeleteModal = useCallback((fileCode) => { setModalOpenStatus({...modalOpenStatus,isDeleteModalOpen:true}); setDeleteFileCode(fileCode)},[]);
+    const openDeleteModal = useCallback((fileCode) => { setModalOpenStatus(m=>({...m,isDeleteModalOpen:true})); setDeleteFileCode(fileCode)},[]);
     //폴더 이름 바꾸기 모달
     const handleRenameFormSubmit = useCallback(async (data) => {
         await api.post('/main/folder-name', { folderCode: selectedMenuFolderCode, description: data });
@@ -60,7 +76,7 @@ function Group() {
                 folder.folderCode === selectedMenuFolderCode
                     ? { ...folder, folderName: data }
                     : folder)}));
-        setModalOpenStatus({...modalOpenStatus,isRenameFolderModalOpen:false});
+        setModalOpenStatus(m=>({...m,isRenameFolderModalOpen:false}));
     },[selectedMenuFolderCode]);
     //새 폴더 모달
     const handleCreateFolderModalSubmit = async (folderName) => {
@@ -103,7 +119,7 @@ function Group() {
         setFiles(myFiles.data);
         setUploadFolderCode(myFiles.data.folderCode);
 
-    }, []);
+    }, [code]);
 
 
     //폴더 내부로 들어갈 때 호출되는 함수
@@ -153,12 +169,12 @@ function Group() {
         getMyFileData();
         //그룹 권한 체크해야 함
         groupGetThisGroup(code,(r)=>{setGroup(r)});
-    }, [getMyFileData]);
-
+    }, [getMyFileData,code]);
     return (
         <>
 
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
+                {bigFilePercent!==0&&<h1 style={{position:'absolute',  right:50, top: 50}}>{bigFilePercent}</h1>}
                 <div className={s.container}>
                     <div>
                         <h1>{group.name}</h1>
