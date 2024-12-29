@@ -48,7 +48,7 @@ public class GroupService {
 
     @Transactional
     public void createGroup(GroupCreateDTO groupCreateDTO, Long userCode) {
-        Group group = new Group(groupCreateDTO.getGroupName(), LocalDate.now());
+        Group group = new Group(groupCreateDTO.getGroupName(), LocalDate.now(), userCode);
         Group newGroup = groupRepository.save(group);
         List<GroupMember> groupMembers = new ArrayList<>();
         for(Long g : groupCreateDTO.getUserCodes()){

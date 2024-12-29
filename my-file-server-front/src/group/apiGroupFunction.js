@@ -4,11 +4,11 @@ export const groupFindUser = async (id, callBack) => {
     const res = await api.get(`/main/users?id=${id}`);
     callBack(res.data);
 }
-export const groupCreateGroup = async (users, name, callBack) => {
+export const groupCreateGroup = async (users, name, description, callBack) => {
     const userCodeValues = users
     .filter(user => user.userCode)
     .map(user => user.userCode);
-    const res = await api.post('/group',{userCodes:userCodeValues,groupName:name});    
+    const res = await api.post('/group',{userCodes:userCodeValues,groupName:name,description:description});    
     callBack(res.data);
 }
 export const groupGetMyGroup = async (callBack) => {
