@@ -28,19 +28,25 @@ const GroupSelect = () => {
         
     },[groups])
     return (
-        <div className={s.container}>
-            <h1>그룹 클라우드</h1>
+        <div className={s.mainContainer}>
+            <div>
+            <div>
+                <h1>그룹 클라우드</h1>
+                <h5>팀을 만들어 파일을 공유하세요.<br /></h5>
+            </div>
             <div className={s.buttonContainer}>
                 <button onClick={()=>nav('/group/create')}>그룹 만들기</button>
             </div>
+            <div className={s.hr}></div>
             <div className={s.content}>
             {groups.length>0?groups?.map(group=>(
                 <div className={s.group} onClick={()=>nav(`/group/${group.groupCode}`)} key={group.groupCode}>
                     <h3 className={s.groupName}>{group.name}</h3>
                     <div className={s.groupDate}>{group.createAt}</div>
                 </div>
-            )):<div>그룹을 만들어보세요.</div>}
+            )):<div className={s.makeGroupText}>팀을 만들어보세요.</div>}
             </div>
+        </div>
         </div>
     );
 };

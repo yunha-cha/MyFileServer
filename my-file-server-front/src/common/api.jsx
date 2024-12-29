@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    // baseURL: '/api',  // 리버스 프록시 경로 설정
-    baseURL: 'http://localhost:8080'
+    baseURL: '/api',  // 리버스 프록시 경로 설정
+    // baseURL: 'http://localhost:8080'
 });
 
 // 요청 인터셉터 설정
@@ -12,6 +12,9 @@ api.interceptors.request.use(
         if (token) {
             // 토큰이 있으면 헤더에 추가
             config.headers.Authorization = token;
+        }
+        if(config.headers.ignoreTimeout){
+            config.timeout = 0;
         }
         config.credentials = 'include';
 

@@ -8,10 +8,7 @@ import com.website.mainpage.entity.FolderEntity;
 import com.website.security.dto.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,9 +20,13 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @GetMapping("/group")
-    public ResponseEntity<List<Group>> getMyGroup(@AuthenticationPrincipal CustomUserDetails user){
+    @GetMapping("/my-group")
+    public ResponseEntity<List<Group>> getMyGroups(@AuthenticationPrincipal CustomUserDetails user){
         return ResponseEntity.ok().body(groupService.getMyGroup(user));
+    }
+    @GetMapping("/group")
+    public ResponseEntity<Group> getGroup(@RequestParam Long groupCode, @AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(groupService.getMyGroup(groupCode));
     }
     @PostMapping("/group")
     public ResponseEntity<?> createGroup(GroupCreateDTO groupCreateDTO, @AuthenticationPrincipal CustomUserDetails user){
@@ -48,5 +49,9 @@ public class GroupController {
     @PostMapping("/group/folder")
     public ResponseEntity<FolderEntity> createGroupFolder(@RequestParam Long groupCode, @RequestParam String folderName, @RequestParam Long folderCode){
         return ResponseEntity.ok().body(groupService.createGroupFolder(groupCode,folderName,folderCode));
+    }
+    @DeleteMapping("/group")
+    public ResponseEntity<?> deleteGroup(@RequestParam Long groupCode){
+        return ResponseEntity.ok().body(groupService.deleteGroup(groupCode));
     }
 }

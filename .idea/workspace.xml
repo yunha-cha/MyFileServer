@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3dba497c-ae42-4b10-a12b-107c76ca91e1" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/my-file-server-front/src/account/login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/my-file-server-front/src/account/login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-file-server-front/src/common/api.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/my-file-server-front/src/common/api.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2q6HzOULwMWImFBehPTjXLhUlvG" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="3dba497c-ae42-4b10-a12b-107c76ca91e1" name="변경" comment="" />
+      <created>1733976367095</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1733976367095</updated>
+      <workItem from="1733976369115" duration="1000" />
+    </task>
+    <servers />
+  </component>
+</project>

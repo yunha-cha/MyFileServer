@@ -1,13 +1,14 @@
-.container{
-    min-height: 100vh;
+.mainContainer{
+    display: flex;
+    flex-direction: row;
+    min-width: 80vw;
     overflow: auto;
-}
-.container h1 {
+    justify-content: space-between;
     padding-left: 40px;
+    min-height: 100vh;
+    overflow: auto; 
 }
-.buttonContainer{
-    padding: 40px;
-}
+
 .buttonContainer button{
     cursor: pointer;
     padding: 10px 20px;
@@ -25,28 +26,44 @@
     transform: translateY(-10%);
 }
 .content{
-    padding-left: 40px;
-    min-width: 80vw;
+    margin-top: 2em;
+    min-width: 100%;
+    min-height: 10em;
+    text-align: center;
     display: flex;
     flex-wrap: wrap;
     gap:20px;
 }
 .group{
     cursor: pointer;
+    width: 25%;
+    height: 10em;
     color: white;
     border-radius: 10px;
     background-color: rgb(192, 216, 255);
-    width: 10vw;
-    height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.6s ease;
+    transition: all 0.3s ease;
 }
 .groupDate{
     font-size: 0.8em;
     padding-right: 5%;
     width: 95%;
     text-align: right;
+}
+.hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    min-width: 80vw;
+    height: 4px;
+    background-color: rgb(139, 184, 255);
+    border-radius: 1.5px;
+  }
+.makeGroupText{
+    padding-top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 2em;
 }

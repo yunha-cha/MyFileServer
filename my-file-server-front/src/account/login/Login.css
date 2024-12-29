@@ -12,7 +12,7 @@
     justify-self: center;
     background-color: white;
     width: 450px;
-    height: 450px;
+    height: 500px;
     border-radius: 50px;
     display: flex;
     align-items: center;
@@ -95,5 +95,6 @@
     }
     .login-id, .login-pw, .join-nickname{
       width: 70vw;
+      color: #868686;
     }
   }

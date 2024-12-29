@@ -7,13 +7,13 @@ import UserPage from "./user-page/UserPage";
 import ForumDetail from "./forum/pages/ForumDetail";
 import Join from "./account/join/Join";
 import ForumCreate from "./forum/pages/ForumCreate";
-// import PCMainPublic from "./main/PC/PCMainPublic";
 import NotFound from "./common/NotFound";
 import MobilePublicMain from "./main/Mobile/mobilePublic/MobilePublicMain";
 import UserManagement from "./admin/UserManagement/UserManagement";
 import GroupCreate from "./group/groupCreate/GroupCreate";
 import GroupSelect from "./group/groupSelect/GroupSelect";
 import Group from "./group/group/Group";
+import { GroupManagement } from "./group/groupManagement/GroupManagement";
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
           <Route path="/group/create" element={<GroupCreate/>}/>
           <Route path="/group/select" element={<GroupSelect/>}/>
           <Route path="/group/:code" element={<Group/>}/>
+          <Route path="/group/management/:code" element={<GroupManagement/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

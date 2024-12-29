@@ -78,6 +78,23 @@ public class MainPageService {
         fileEntity.setFolder(folderRepository.findById(folderCode).orElseThrow());
         return tool.convertFileEntity(fileRepository.save(fileEntity));
     }
+    @Transactional
+    public UserUploadFileDTO uploadChunk(String originalFileName, String finalFileName, String description, long fileSize, CustomUserDetails user, Long folderCode) {
+        FileEntity f = new FileEntity();
+        f.setChangedName(finalFileName);
+        f.setUploadedAt(LocalDateTime.now());
+        f.setDescription(description+"."+tool.getFileEx(originalFileName));
+        f.setFileFullPath(downloadUrl+finalFileName);
+        f.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
+        f.setDownload_count(0);
+        f.setOriginalName(originalFileName);
+        f.setSize(fileSize);
+        f.setPrivate(true);
+
+        f.setFolder(folderRepository.findById(folderCode).orElseThrow());
+        return tool.convertFileEntity(fileRepository.save(f));
+
+    }
 
     public Page<FileEntity> getPublicFiles(int page) {
         Pageable pageable = PageRequest.of(page,15,Sort.by("uploadedAt").descending());
@@ -190,4 +207,6 @@ public class MainPageService {
     public List<MainUserEntity> getUsers(String id) {
         return mainUserRepository.findAllByUserId("%"+id+"%");
     }
+
+
 }

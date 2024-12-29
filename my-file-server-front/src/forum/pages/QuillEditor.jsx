@@ -43,7 +43,7 @@ const QuillEditor = ({newForum, setNewForum}) => {
 
         try {
           const {data} = await api.post('/forum/image', {file:file}); 
-          const url = `http://${process.env.REACT_APP_IP}/download/${data}`;
+          const url = `https://www.seopia.online/download/${data}`;
           
           quillRef.current.getEditor().insertEmbed(range.index, "image", url);
         } catch (e) {
