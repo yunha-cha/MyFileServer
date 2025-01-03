@@ -5,13 +5,15 @@ import { deleteFile } from '../../main/function';
 import ShowDatas from '../../main/PC/ShowDatas';
 import s from './Group.module.css';
 import Filedetail from '../../main/PC/Components/FileDetail/FileDetail';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { groupDeleteGroup, groupGetThisGroup, groupUploadChunk } from '../apiGroupFunction';
 import { useSelector } from 'react-redux';
 import { Loading } from '../../common/Loading';
+import MobileHeader from '../../main/Mobile/Component/MobileHeader';
 
 function Group() {
     const {code} = useParams();
+    const isMobile = useOutletContext();
     const [history, setHistory] = useState([]);
     const nav = useNavigate();
     const {data} = useSelector((state)=>state.user);
@@ -176,12 +178,12 @@ function Group() {
     }, [getMyFileData,code]);
     return (
         <>
-
+            {isMobile&&<MobileHeader title={group.name+' (모바일은 완전하지 않을 수 있습니다.)'}/>}
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
                 {bigFilePercent!==0&&<div style={{position:'absolute',  right:50, top: 50,display:'flex'}}><h1>{bigFilePercent}</h1><Loading type='pacman' text=''/></div>}
                 <div className={s.container}>
                     <div>
-                        <h1>{group.name}</h1>
+                        {isMobile?<></>:<h1>{group.name}</h1>}
                         <h5>{group.description}<br /></h5>
                     </div>
                     <div className={s.customFileUpload}>

@@ -29,6 +29,11 @@ body {
 ::-webkit-scrollbar-corner {
   background: #f0f0f0;
 }
+@media screen and (max-width: 768px) {
+  .ReactModal__Content--after-open{
+    width: 80vw!important;
+  }
+}
 
 
 

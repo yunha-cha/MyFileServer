@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { groupGetMyGroup } from '../apiGroupFunction';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import s from './GroupSelect.module.css';
+import MobileHeader from '../../main/Mobile/Component/MobileHeader';
 //사용자의 그룹을 가져오고, 만약 그룹이 없으면
 //그룹을 만들어보세요를 출력한다.
 //그룹이 있다면 그룹을 선택할 수 있게 하고,
@@ -17,37 +18,37 @@ import s from './GroupSelect.module.css';
 
 const GroupSelect = () => {
     const nav = useNavigate();
+    const isMobile = useOutletContext();
     const [groups, setGroups] = useState([]);
     useEffect(()=>{
         groupGetMyGroup((r)=>{
             setGroups(r);
         });
     },[])
-    useEffect(()=>{
-        console.log(groups);
-        
-    },[groups])
     return (
+        <>
+        {isMobile&&<MobileHeader title='그룹 클라우드 (모바일은 완전하지 않을 수 있습니다.)'/>}
         <div className={s.mainContainer}>
             <div>
-            <div>
-                <h1>그룹 클라우드</h1>
-                <h5>팀을 만들어 파일을 공유하세요.<br /></h5>
-            </div>
-            <div className={s.buttonContainer}>
-                <button onClick={()=>nav('/group/create')}>그룹 만들기</button>
-            </div>
-            <div className={s.hr}></div>
-            <div className={s.content}>
-            {groups.length>0?groups?.map(group=>(
-                <div className={s.group} onClick={()=>nav(`/group/${group.groupCode}`)} key={group.groupCode}>
-                    <h3 className={s.groupName}>{group.name}</h3>
-                    <div className={s.groupDate}>{group.createAt}</div>
+                <div>
+                    {!isMobile&&<h1>그룹 클라우드</h1>}
+                    <h5>팀을 만들어 파일을 공유하세요.<br /></h5>
                 </div>
-            )):<div className={s.makeGroupText}>팀을 만들어보세요.</div>}
+                <div className={s.buttonContainer}>
+                    <button onClick={()=>nav('/group/create')}>그룹 만들기</button>
+                </div>
+                <div className={s.hr}/>
+                <div className={s.content}>
+                    {groups.length>0?groups?.map(group=>(
+                        <div className={s.group} onClick={()=>nav(`/group/${group.groupCode}`)} key={group.groupCode}>
+                            <h3 className={s.groupName}>{group.name}</h3>
+                            <div className={s.groupDate}>{group.createAt[0]+'-'+group.createAt[1]+'/'+group.createAt[2]}</div>
+                        </div>
+                    )):<div className={s.makeGroupText}>팀을 만들어보세요.</div>}
+                </div>
             </div>
         </div>
-        </div>
+        </>
     );
 };
 

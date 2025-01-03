@@ -71,3 +71,14 @@
   .table tbody tr td{
     padding-bottom: 20px;
   }
+
+  @media screen and (max-width: 768px) {
+    .afterFileDetail{
+      position: fixed;
+      width: 100%;
+      min-height: 100%;
+      background: rgb(225, 232, 239);
+      box-shadow: -1px 0px 9px 0px rgb(187, 187, 187);
+      z-index: 1000;
+    }
+  }

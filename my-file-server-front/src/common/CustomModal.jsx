@@ -31,12 +31,13 @@ const CustomModal = React.memo(({message='Enter Data', isOpen, onClose, onSubmit
     borderRadius:'10px',
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.2)",
 }, buttonStyle={
+    whiteSpace:'nowrap',
     padding:10,
     background:'rgba(161, 197, 255, 0.699)',
     border:'none',
     borderRadius:7,
     color:'white',
-    width:'10vw',
+    width:'40%',
     transition:'all 0.2s ease',
     cursor:'pointer',
 }, percent, timeOut}) => {

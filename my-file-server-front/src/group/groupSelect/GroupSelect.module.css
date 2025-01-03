@@ -67,3 +67,17 @@
     text-align: center;
     font-size: 2em;
 }
+@media screen and (max-width: 768px) {
+    .mainContainer{
+        min-width: 95vw;
+        min-height: 95vh;
+        padding-top: 5vh;
+        padding-left: 5vw;
+    }
+    .hr{min-width: 90vw;}
+    .group{
+        width: 90vw;
+        height: 8em;
+    }
+
+  }
