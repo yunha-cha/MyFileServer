@@ -42,7 +42,7 @@ const GroupCreate = () => {
             setMessage('먼저 사람을 추가해주세요!');
             return;
         }
-        groupCreateGroup(invitedUser,inputs.groupName, inputs.description, ()=>{});
+        groupCreateGroup(invitedUser,inputs.groupName, inputs.description, ()=>{nav('/group/select')});
     }
     return (
         <div className={s.container}>
