@@ -107,7 +107,7 @@ const ForumCreate = () => {
 
 
         {/* 미리보기 */}
-        <div className={s.cloud}></div>
+        {/* <div className={s.cloud}></div> */}
 
     </div>
 
