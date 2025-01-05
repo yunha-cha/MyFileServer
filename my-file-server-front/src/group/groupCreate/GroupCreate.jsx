@@ -48,7 +48,7 @@ const GroupCreate = () => {
     }
     return (
         <>
-            {isMobile && <MobileHeader title={'그룹 만들기 (모바일은 완전하지 않을 수 있습니다.)'} />}ㄴ
+            {isMobile && <MobileHeader title={'그룹 만들기 (모바일은 완전하지 않을 수 있습니다.)'} />}
             <div className={s.container}>
                 {!isMobile&&<h1>그룹 만들기</h1>}
                 <div className={s.groupInformationContainer}>

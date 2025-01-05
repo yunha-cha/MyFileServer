@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MainPageService {
@@ -110,18 +111,19 @@ public class MainPageService {
         fileEntity.setDownload_count(fileEntity.getDownload_count() + 1);
     }
 
-    public boolean deleteFile(Long fileCode) {
-        FileEntity fileEntity = fileRepository.findById(fileCode).orElseThrow();
-        try{
-            if(!tool.deleteFile(fileEntity.getChangedName())){
-                return false;
+    public int deleteFile(Long fileCode) {
+        Optional<FileEntity> fileEntity = fileRepository.findById(fileCode);
+        if(fileEntity.isPresent()){
+            FileEntity file = fileEntity.get();
+            if(tool.deleteFile(file.getChangedName())){
+                fileRepository.deleteById(file.getFileCode());
+                return 200;
+            } else {
+                return 404;
             }
-            fileRepository.deleteById(fileEntity.getFileCode());
-            return true;
-        } catch (Exception e){
-            return false;
+        }else {
+            return 400;
         }
-
     }
 
     public MainUserEntity getUser(CustomUserDetails user) {

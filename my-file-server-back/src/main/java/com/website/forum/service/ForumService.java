@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ForumService {
@@ -81,7 +83,28 @@ public class ForumService {
 
     @Transactional
     public String removeForum(Long forumCode) {
+        Forum forum = forumRepository.findById(forumCode).orElseThrow();
 
+        String regex = "src\\s*=\\s*\"[^\"]*?/download/([^\"]+?)\"";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(forum.getContent());
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        while (matcher.find()) {
+            fileNames.add(matcher.group(1));
+        }
+        String[] result = fileNames.toArray(new String[0]);
+
+        // 결과 출력
+        for (String fileName : result) {
+            System.out.println(fileName);
+            if(tool.deleteFile(fileName)){
+                System.out.println("사진 삭제 성공");
+            } else {
+                System.out.println("사진 삭제 실패");
+            }
+        }
 //        Forum removedForum = forumRepository.findById(forumCode).orElseThrow(() -> new NoSuchElementException("데이터가 없음"));
         // 게시글의 댓글 먼저 삭제
         commentRepository.deleteByForumCode(forumCode);
