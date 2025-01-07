@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -38,8 +39,18 @@ public class Attachment {
     private int downloadCount;
 
     @Column(name = "size")
-    private int size;
+    private long size;
 
-    @Column(name = "upload_date")
-    private LocalDateTime uploadDate;
+    @Column(name = "uploaded_date")
+    private LocalDate uploadDate;
+
+    public Attachment(Long forumCode, String changedName, String originalName, String fileFullPath, int downloadCount, long size, LocalDate uploadDate) {
+        this.forumCode = forumCode;
+        this.changedName = changedName;
+        this.originalName = originalName;
+        this.fileFullPath = fileFullPath;
+        this.downloadCount = downloadCount;
+        this.size = size;
+        this.uploadDate = uploadDate;
+    }
 }

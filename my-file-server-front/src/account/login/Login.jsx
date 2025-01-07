@@ -14,8 +14,8 @@ const Login = () => {
   const [id,setId] = useState('');
   const [pw, setPw] = useState('');
 
-  const login = async (e) => {
-    if(e.key === 'Enter' || e.type === 'click'){
+  const login = async (e) => {    
+    if(e.key === 'Enter' || e.type === 'submit'){
         try{
             const response = await api.post('/login', {username:id,password:pw});            
             localStorage.setItem('token', response.headers.get("Authorization"));

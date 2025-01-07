@@ -36,8 +36,7 @@ const UserManagement = () => {
         setIsSearch(false);
     }, [pageStatus.page]);
 
-    useEffect(() => {getAllUsers();console.log(pageStatus.page)
-    }, [pageStatus.page, getAllUsers]);
+    useEffect(() => {getAllUsers();}, [pageStatus.page, getAllUsers]);
     useEffect(()=>{if(data &&typeof data==='object'){ data.userRole!=="ROLE_ADMIN"&&nav('/'); }},[data,nav]);
 
     return (

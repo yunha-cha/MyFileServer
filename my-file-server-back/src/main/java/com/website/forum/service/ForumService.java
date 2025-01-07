@@ -1,9 +1,11 @@
 package com.website.forum.service;
 
 import com.website.common.Tool;
+import com.website.forum.dto.AttachmentDTO;
 import com.website.forum.dto.ForumDTO;
 import com.website.forum.entity.Attachment;
 import com.website.forum.entity.Forum;
+import com.website.forum.repository.AttachmentRepository;
 import com.website.forum.repository.CommentRepository;
 import com.website.forum.repository.ForumRepository;
 import com.website.security.dto.CustomUserDetails;
@@ -20,6 +22,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +38,14 @@ public class ForumService {
     private final ForumRepository forumRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final AttachmentRepository attachmentRepository;
 
-    public ForumService(Tool tool, ForumRepository forumRepository, CommentRepository commentRepository, UserRepository userRepository) {
+    public ForumService(Tool tool, ForumRepository forumRepository, CommentRepository commentRepository, UserRepository userRepository, AttachmentRepository attachmentRepository) {
         this.tool = tool;
         this.forumRepository = forumRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
 
@@ -53,8 +58,10 @@ public class ForumService {
 
 
     public ForumDTO getForumDetail(Long forumCode) {
-
-        return forumRepository.findByForumCode(forumCode);
+        List<AttachmentDTO> attachmentDTO = attachmentRepository.findAllByForumCode(forumCode);
+        ForumDTO forumDTO = forumRepository.findByForumCode(forumCode);
+        forumDTO.setFile(attachmentDTO);
+        return forumDTO;
     }
 
 
@@ -75,7 +82,24 @@ public class ForumService {
                 "비공개",
                 remoteAddr
         );
-        forumRepository.save(newForum);
+        newForum = forumRepository.save(newForum);
+
+        List<MultipartFile> files = forumDTO.getFiles();
+        List<Attachment> attachments = new ArrayList<>();
+        for (MultipartFile f : files){
+            String changedName = tool.upload(f);
+            Attachment attachment = new Attachment(
+                    newForum.getForumCode(),
+                    changedName,
+                    f.getOriginalFilename(),
+                    downloadUrl+changedName,
+                    0,
+                    f.getSize(),
+                    LocalDate.now()
+                    );
+            attachments.add(attachment);
+        }
+        attachmentRepository.saveAll(attachments);
 
         return "등록 굿";
     }
@@ -114,29 +138,8 @@ public class ForumService {
 
 
     @Transactional
-    public void countView(Long forumCode, String remoteAddr) {
-
-        System.out.println("forumCode = " + forumCode);
-        System.out.println("request = " + remoteAddr);
-
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-
-        String sessionKey = "viewedForum_" + forumCode + "_ip_" + remoteAddr;
-        Boolean hasViewed = (Boolean) session.getAttribute(sessionKey);
-
-
-        if(hasViewed == null || !hasViewed){
-
-            System.out.println("hasViewed = " + hasViewed);
-            System.out.println(session.getAttribute(sessionKey));
-            forumRepository.incrementViewCount(forumCode);
-            session.setAttribute(sessionKey, true);
-        } else{
-            System.out.println("hasViewed = " + hasViewed);
-
-        }
-
+    public void countView(Long forumCode) {
+        forumRepository.incrementViewCount(forumCode);
     }
 
 

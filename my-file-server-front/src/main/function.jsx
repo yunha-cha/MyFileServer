@@ -118,7 +118,13 @@ export const getFileIconByExtension = (fileFullPath) =>{
 }
 
 //문자열 n번 째 다음부터 ...으로 대체 하는 함수
-export const truncateString = (str, n) => {
+export const truncateString = (str, n, showExtenstion) => {
+  if(showExtenstion){
+    if(str.length > n){
+      const extention = str.split('.').pop();
+      return str.slice(0,n - extention.length) + "..." + extention;
+    }
+  }
   if (str.length > n) {
       return str.slice(0, n) + "...";
   }

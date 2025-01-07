@@ -46,6 +46,8 @@ const QuillEditor = ({newForum, setNewForum}) => {
           // const url = `https://www.seopia.online/download/${data}`;
           const url = `http://localhost:8080/download/${data}`;
           quillRef.current.getEditor().insertEmbed(range.index, "image", url);
+          quillRef.current.insertText(range.index + 1, "\n");
+          quillRef.current.setSelection(range.index + 2);
         } catch (e) {
           console.log(e);
           
@@ -66,6 +68,7 @@ const QuillEditor = ({newForum, setNewForum}) => {
 
 
     return (
+      <div style={{cursor:'text'}} onClick={()=>{quillRef.current.focus()}}>
       <ReactQuill
       style={{ overflowY: "unset" }}
       modules={modules}
@@ -77,6 +80,7 @@ const QuillEditor = ({newForum, setNewForum}) => {
       value={newForum.content}
       placeholder="작성해보세요 아무렇게나"
       />
+      </div>
     );
 
 }

@@ -7,7 +7,6 @@ import MobileHeader from "../main/Mobile/Component/MobileHeader";
 
 function UserPage() {
     const isMobile = useOutletContext();
-    console.log(isMobile);
     
     const {id} = useParams();
     const nav = useNavigate();

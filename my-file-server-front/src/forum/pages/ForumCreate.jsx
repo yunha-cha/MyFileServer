@@ -1,9 +1,9 @@
 import QuillEditor from "./QuillEditor"
 import s from "./ForumCreate.module.css";
 import { useState } from "react";
-import api from "../../common/api";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import MobileHeader from "../../main/Mobile/Component/MobileHeader";
+import axios from "axios";
 
 
 const ForumCreate = () => {
@@ -11,15 +11,15 @@ const ForumCreate = () => {
     const nav = useNavigate();
     const [msg, setMsg] = useState(false);
 
-    // const [uploadFiles, setUploadFiles] = useState([]);
-    // const [changedName, setChangedName] = useState([]);
+    const [uploadFiles, setUploadFiles] = useState([]);
 
 
 
     const [newForum, setNewForum] = useState({
         forumCode: 0,
         title: "",
-        content: ""
+        content: "",
+        files: [],
     });
 
 
@@ -27,7 +27,19 @@ const ForumCreate = () => {
         
         try{
             if(window.confirm("게시글을 등록하시겠습니까? \n(등록 후 수정이 불가합니다.)")){
-                await api.post(`/forum`, newForum);
+                
+                const f = new FormData();
+                f.append("title", newForum.title);
+                f.append("content", newForum.content);
+                for(let i=0;i<uploadFiles.length;i++){
+                    f.append("files", uploadFiles[i]);
+                }
+
+                axios.post(`/api`, f, {
+                    headers:{
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 nav(-1);
             }
     
@@ -36,24 +48,6 @@ const ForumCreate = () => {
             
         }
     }
-
-
-    // const registFiles = useCallback(async() => {
-
-    //     const res = await api.post(`/upload`, {files : uploadFiles});
-    //     console.log(res.data);
-
-    //     setChangedName(res.data);
-        
-    // }, [uploadFiles]);
-
-    // useEffect(() => {
-
-    //     registFiles();
-
-    // }, [uploadFiles, registFiles]);
-
-
 
 
     return <div className={s.forumCreate}>
@@ -86,14 +80,7 @@ const ForumCreate = () => {
                     <div><span>{newForum.title.length}</span> / 70</div>
                 </div>
             </div>
-
-            <div className={s.itemTitle}>내용</div>
-            <div className={s.explain}>자유롭게 작성해주세요!🥰</div>
-            <div className={s.containerContent}>
-                <QuillEditor newForum={newForum} setNewForum={setNewForum}/>
-            </div>
-
-            {/* <div style={{marginTop: "2em"}}>
+            <div style={{marginTop: "2em"}}>
                 <div className={s.itemTitle}>첨부 파일을 업로드 하세요.</div>
                 <label className={s.fileUploadBtn} htmlFor="uploadInput">파일 업로드</label>
                 <input type="file" id="uploadInput" name="files" multiple onChange={(e) => {
@@ -101,7 +88,14 @@ const ForumCreate = () => {
                 }
                 }/>
 
-            </div> */}
+            </div>
+            <div className={s.itemTitle}>내용</div>
+            <div className={s.explain}>자유롭게 작성해주세요!🥰</div>
+            <div className={s.containerContent}>
+                <QuillEditor newForum={newForum} setNewForum={setNewForum}/>
+            </div>
+
+
 
         </div>
 

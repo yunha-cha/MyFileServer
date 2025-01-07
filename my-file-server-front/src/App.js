@@ -14,6 +14,7 @@ import GroupCreate from "./group/groupCreate/GroupCreate";
 import GroupSelect from "./group/groupSelect/GroupSelect";
 import Group from "./group/group/Group";
 import { GroupManagement } from "./group/groupManagement/GroupManagement";
+import { Testcomponent } from "./admin/TestFolder/Testcomponent";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/group/select" element={<GroupSelect/>}/>
           <Route path="/group/:code" element={<Group/>}/>
           <Route path="/group/management/:code" element={<GroupManagement/>}/>
+          <Route path="/t" element={<Testcomponent/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

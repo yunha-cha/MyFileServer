@@ -69,10 +69,10 @@ public class ForumController {
 
     /* 조회수 세기 */
     @PostMapping("/views/{forumCode}")
-    public ResponseEntity<?> countView(@PathVariable Long forumCode, HttpServletRequest request){
+    public ResponseEntity<?> countView(@PathVariable Long forumCode){
         try{
 
-            forumService.countView(forumCode, request.getRemoteAddr());
+            forumService.countView(forumCode);
            return ResponseEntity.ok().body("조회수 세기 성공");
         }catch (Exception e){
             e.printStackTrace(); // 예외 내용

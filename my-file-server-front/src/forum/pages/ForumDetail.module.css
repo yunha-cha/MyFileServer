@@ -4,7 +4,6 @@
     background-color: aliceblue;
     width: 100%;
     min-height: 95vh;
-    overflow: auto;
 
     margin-right: 10rem;
     margin-left: 10rem;
@@ -71,27 +70,45 @@
     justify-content: space-between;
     
 }
-
+.attachmentContainer{
+    position: relative;
+    display: flex;
+    gap: 10px;
+}
+.attachmentContainer article{
+    position: absolute;
+    top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color:rgb(108, 108, 255);
+    cursor: pointer;
+    background-color: rgb(219, 233, 255);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px 1px rgb(166, 180, 202);
+}
+.file:hover{
+    color: rgb(60, 60, 150);
+}
 .containerWrite textarea{
     resize: none;
     overflow: hidden;
     border: none;
-    outline: none;
     border-radius: 8px;
     font-family: 'Pretendard-Regular';
     font-size: 16px;
     width: 80%;
     padding: 0.5em;
     padding-bottom: 0em;
-    transition: all 0.3s ease;
+    outline-color: transparent;
+    transition: outline-color 0.5s ease;
     
 }
 
 
 .containerWrite textarea:focus {
-    outline: none;
-    border: 2px solid rgb(161, 197, 255); /* 포커스 시 파란색 테두리 */
-    scale: 1.01;
+    outline-color: rgb(161, 197, 255);
 }
 
 .containerWrite button{
@@ -213,6 +230,8 @@
     }
     .containerWrite textarea{
         min-width: none;
-
+    }
+    .attachmentContainer article{
+        right: 20px;
     }
   }
