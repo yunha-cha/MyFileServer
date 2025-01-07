@@ -68,10 +68,8 @@ public class ForumService {
     @Transactional
     public String registForum(CustomUserDetails user, ForumDTO forumDTO, String remoteAddr) {
 
-        // user entity 조회
         User registUser = userRepository.findById(user.getUsername());
 
-        // 1. 객체 생성해서 save      2. setter 사용
         Forum newForum = new Forum(
                 forumDTO.getForumCode(),
                 forumDTO.getTitle(),
@@ -83,24 +81,24 @@ public class ForumService {
                 remoteAddr
         );
         newForum = forumRepository.save(newForum);
-
         List<MultipartFile> files = forumDTO.getFiles();
-        List<Attachment> attachments = new ArrayList<>();
-        for (MultipartFile f : files){
-            String changedName = tool.upload(f);
-            Attachment attachment = new Attachment(
-                    newForum.getForumCode(),
-                    changedName,
-                    f.getOriginalFilename(),
-                    downloadUrl+changedName,
-                    0,
-                    f.getSize(),
-                    LocalDate.now()
-                    );
-            attachments.add(attachment);
+        if(files != null){
+            List<Attachment> attachments = new ArrayList<>();
+            for (MultipartFile f : files){
+                String changedName = tool.upload(f);
+                Attachment attachment = new Attachment(
+                        newForum.getForumCode(),
+                        changedName,
+                        f.getOriginalFilename(),
+                        downloadUrl+changedName,
+                        0,
+                        f.getSize(),
+                        LocalDate.now()
+                );
+                attachments.add(attachment);
+            }
+            attachmentRepository.saveAll(attachments);
         }
-        attachmentRepository.saveAll(attachments);
-
         return "등록 굿";
     }
 
@@ -129,9 +127,6 @@ public class ForumService {
                 System.out.println("사진 삭제 실패");
             }
         }
-//        Forum removedForum = forumRepository.findById(forumCode).orElseThrow(() -> new NoSuchElementException("데이터가 없음"));
-        // 게시글의 댓글 먼저 삭제
-        commentRepository.deleteByForumCode(forumCode);
         forumRepository.deleteById(forumCode);
         return "게시글 삭제 완료";
     }

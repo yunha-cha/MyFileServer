@@ -1,8 +1,12 @@
 import axios from "axios";
 
+// export const apiUrl = '/api';
+export const apiUrl = 'http://localhost:8080';
+
 const api = axios.create({
+    baseURL: apiUrl,
     // baseURL: '/api',  // 리버스 프록시 경로 설정
-    baseURL: 'http://localhost:8080'
+    // baseURL: 'http://localhost:8080'
 });
 
 // 요청 인터셉터 설정

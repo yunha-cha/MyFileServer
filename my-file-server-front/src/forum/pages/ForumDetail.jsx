@@ -206,7 +206,6 @@ const ForumDetail = () => {
                     {forum.file?.length > 0 &&
                         <div className={s.attachmentContainer}>
                             <div style={{ cursor: 'pointer', userSelect: 'none'}} onClick={() => setIsShowAttachment(!isShowAttachment)}>첨부파일</div>
-                            <Tooltip id="attachment-tooltip" />
                             {
                                 isShowAttachment &&
                                 <article>
@@ -215,8 +214,6 @@ const ForumDetail = () => {
                                             key={f.attachmentCode}
                                             className={s.file}
                                             onClick={() => download(f)}
-                                            data-tooltip-id="attachment-tooltip"
-                                            data-tooltip-content={f.originalName}
                                         >
                                             <div>{truncateString(f.originalName, 10, true)}</div>
                                         </div>
