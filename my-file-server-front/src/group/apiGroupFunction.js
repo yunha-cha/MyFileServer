@@ -23,7 +23,7 @@ export const groupDeleteGroup = async (groupCode, callBack)=>{
     const res = await api.delete(`/group?groupCode=${groupCode}`);
     callBack(res.data);
 }
-export async function groupUploadChunk(file, description, folderCode, code, setPercent, callBack) {
+export async function groupUploadChunk(file, description, folderCode, code, callBack, setPercent, setLoading) {
     const chunkSize = 50 * 1024 * 1024; // 50MB
     const totalChunks = Math.ceil(file.size / chunkSize);
     console.log(setPercent);
@@ -39,6 +39,7 @@ export async function groupUploadChunk(file, description, folderCode, code, setP
         } else if(isMergeChunk){
             setPercent(`병합 작업 중..`);
         } else {
+            setLoading((p)=>({...p, upload: false}));
             setPercent(`업로드 ${Math.floor((chunkIndex/totalChunks) * 100)}% 완료`);
         }
     }

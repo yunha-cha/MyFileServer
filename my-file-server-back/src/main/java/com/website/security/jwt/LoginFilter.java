@@ -108,13 +108,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 기본 메시지
         String errorMessage = failed.getMessage();
 
-        // 예외 타입에 따라 메시지 설정
         if (failed instanceof BadCredentialsException) {
             errorMessage = "비밀번호가 잘못되었습니다.";
         } else if (failed.getMessage().equals("유효하지 않은 사용자입니다.")) {
             errorMessage = "계정이 활성화되지 않았습니다. 관리자 승인을 기다리세요.";
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(900);
         // 실패 메시지 응답 작성
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

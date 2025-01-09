@@ -1,3 +1,9 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: auto;
+}
 .mainContainer{
     display: flex;
     flex-direction: row;
@@ -58,12 +64,7 @@
     background-color: rgb(139, 184, 255);
     border-radius: 1.5px;
   }
-  .container{
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow: auto;
-  }
+
   .foldersContainer{
     display: flex;
     flex-wrap: wrap;
@@ -95,4 +96,21 @@
   }
   .menu li:hover{
     background-color: aliceblue;
+  }
+
+  @media screen and (max-width: 768px) {
+    .container{
+      padding-top: 5vh;
+      min-height: 95vh;
+    }
+    .customUploadButton {
+      padding: 5px 10px;
+      font-size: 0.8em;
+    }
+    .customFileUpload button{
+      margin-left: 5px;
+      padding: 5px 10px;
+      font-size: 0.7em;
+    }
+
   }

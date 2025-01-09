@@ -1,9 +1,8 @@
 .container{
-    padding-top: 10vh;
-    padding-left: 5vw;
+    padding-left: 40px;
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    min-height: 100vh;
     min-width: 70vw;
     overflow: auto;
     white-space:nowrap;
@@ -75,7 +74,7 @@
         display: none;
     }
     .container button{
-        font-size: 1em;
+        font-size: 0.5em;
     }
     .container table{
         min-width: 100vw;

@@ -5,12 +5,15 @@ import { deleteFile } from '../../main/function';
 import ShowDatas from '../../main/PC/ShowDatas';
 import s from './Group.module.css';
 import Filedetail from '../../main/PC/Components/FileDetail/FileDetail';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { groupDeleteGroup, groupGetThisGroup, groupUploadChunk } from '../apiGroupFunction';
 import { useSelector } from 'react-redux';
+import { Loading } from '../../common/Loading';
+import MobileHeader from '../../main/Mobile/Component/MobileHeader';
 
 function Group() {
     const {code} = useParams();
+    const isMobile = useOutletContext();
     const [history, setHistory] = useState([]);
     const nav = useNavigate();
     const {data} = useSelector((state)=>state.user);
@@ -21,6 +24,7 @@ function Group() {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [selectedMenuFolderCode, setSelectedMenuFolderCode] = useState(null);
     const [group, setGroup] = useState({});
+    const [loading, setLoading] = useState({upload:false});
 
     //지금 현재 화면에 렌더링하는 데이터 state
     const [files, setFiles] = useState(null);
@@ -35,16 +39,17 @@ function Group() {
     const [modalOpenStatus, setModalOpenStatus] = useState({isUploadModalOpen: false, isDeleteModalOpen: false, isCreateFolderModalOpen: false, isRenameFolderModalOpen: false, isGroupDeleteModalOpen: false,});
     //파일 업로드 모달
     const handleFormSubmit = useCallback(async (fileName) => {
-
+        setLoading((p)=>({...p, upload: true}));
         if(file.size>(100 * 1024 * 1024)){
-            groupUploadChunk(file, fileName, folderCode,code, setBigFilePercent, (res)=>{
+            groupUploadChunk(file, fileName, folderCode, code, (res)=>{
                 setFiles(prev => ({ ...prev, files: [...prev.files, res] }));
                 setBigFilePercent(0);
-            });
+            },setBigFilePercent,setLoading);
             setModalOpenStatus(m=>({...m, isUploadModalOpen: false}));
-            alert('파일 용량이 커 비동기로 전환합니다. 페이지를 전환하지 마세요.');
+            alert('파일 용량이 커 분할 업로드로 전환합니다. 페이지를 전환하지 마세요.');
         } else {
             const res = await api.post('/main/upload', { file: file, description: fileName, isPrivate: false, folderCode: uploadFolderCode }, {
+            
             onUploadProgress: (e) => {
                 const p = Math.round((e.loaded * 100) / e.total);
                 setPercent(p);
@@ -52,6 +57,7 @@ function Group() {
             });
             setFiles(prev => ({ ...prev, files: [...prev.files, res.data] }))
             setModalOpenStatus(m=>({...m, isUploadModalOpen: false})); setPercent(0);
+            setLoading((p)=>({...p, upload: false}));
         }
         
         
@@ -172,17 +178,17 @@ function Group() {
     }, [getMyFileData,code]);
     return (
         <>
-
+            {isMobile&&<MobileHeader title={group.name+' (모바일은 완전하지 않을 수 있습니다.)'}/>}
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
-                {bigFilePercent!==0&&<h1 style={{position:'absolute',  right:50, top: 50}}>{bigFilePercent}</h1>}
+                {bigFilePercent!==0&&<div style={{position:'absolute',  right:50, top: 50,display:'flex'}}><h1>{bigFilePercent}</h1><Loading type='pacman' text=''/></div>}
                 <div className={s.container}>
                     <div>
-                        <h1>{group.name}</h1>
+                        {isMobile?<></>:<h1>{group.name}</h1>}
                         <h5>{group.description}<br /></h5>
                     </div>
                     <div className={s.customFileUpload}>
-                        <label htmlFor="fileInput" className={s.customUploadButton}>파일 업로드</label>
-                        <input id="fileInput" type="file" onChange={openUploadModal} />
+                        <label htmlFor="fileInput" className={s.customUploadButton}>{loading.upload ? <Loading text='업로드 중..'/>  : '파일 업로드'}</label>
+                        <input disabled={loading.upload} id="fileInput" type="file" onChange={openUploadModal} />
                         <button onClick={() => setModalOpenStatus({...modalOpenStatus,isCreateFolderModalOpen:true})}>새 폴더</button>
                         {history.length !== 0 && <button onClick={back}>뒤로가기</button>}
                         {group.manager===data?.userCode&&<button onClick={()=>setModalOpenStatus({...modalOpenStatus,isGroupDeleteModalOpen:true})}>그룹 삭제하기</button>}

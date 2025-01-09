@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.nio.file.Paths;
@@ -79,9 +78,13 @@ public class MainPageController {
     }
     @DeleteMapping("/file/{fileCode}")
     public ResponseEntity<String> deleteFile(@PathVariable Long fileCode){
-        if(mainService.deleteFile(fileCode)){
-            return ResponseEntity.ok().body("삭제 성공!");
-        } else { return ResponseEntity.badRequest().body("삭제 실패!");}
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        return switch (mainService.deleteFile(fileCode)) {
+            case 200 -> res.build();
+            case 400 -> res.body("파일 데이터가 존재하지 않습니다.");
+            case 404 -> res.body("파일 데이터는 삭제했지만, 실제 파일을 찾을 수 없었습니다.");
+            default -> ResponseEntity.badRequest().build();
+        };
     }
     @GetMapping("/root-folder")
     public ResponseEntity<Long> getUserRootFolder(@AuthenticationPrincipal CustomUserDetails user){

@@ -1,34 +1,43 @@
 import axios from "axios";
 
+// export const apiUrl = '/api';
+export const apiUrl = 'http://localhost:8080';
+
 const api = axios.create({
+    baseURL: apiUrl,
     // baseURL: '/api',  // 리버스 프록시 경로 설정
-    baseURL: 'http://localhost:8080'
+    // baseURL: 'http://localhost:8080'
 });
 
 // 요청 인터셉터 설정
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            // 토큰이 있으면 헤더에 추가
-            config.headers.Authorization = token;
-        }
-        if(config.headers.ignoreTimeout){
-            config.timeout = 0;
-        }
-        config.credentials = 'include';
-
-        if (config.method === 'post' || config.method === 'put') {
-            // POST나 PUT 요청일 경우 FormData 사용
-            const formData = new FormData();
-            for (const key in config.data) {
-                formData.append(key, config.data[key]);
+        try{
+            const token = localStorage.getItem('token');
+            if (token) {
+                // 토큰이 있으면 헤더에 추가
+                config.headers.Authorization = token;
             }
-            config.data = formData;
-            config.headers['Content-Type'] = 'multipart/form-data';
+            if(config.headers.ignoreTimeout){
+                config.timeout = 0;
+            }
+            config.credentials = 'include';
+
+            if (config.method === 'post' || config.method === 'put') {
+                // POST나 PUT 요청일 경우 FormData 사용
+                const formData = new FormData();
+                for (const key in config.data) {
+                    formData.append(key, config.data[key]);
+                }
+                config.data = formData;
+                config.headers['Content-Type'] = 'multipart/form-data';
+                
+            }
+            return config;
+        } catch(e){
+            console.log(e);
             
         }
-        return config;
     },
     (error) => {
         console.log(`요청 중에 에러 발생: ${error}`);
@@ -58,7 +67,9 @@ api.interceptors.response.use(
             }
         } else if (error.request) {
             // 요청 전 에러 발생
-            console.log('요청 전 에러 발생:', error);
+            alert('서버와 통신에 문제가 생겼습니다. 콘솔을 확인하세요.');
+            window.location.href = '/not'
+            console.log('서버와 통신이 불가능합니다. :', error);
         } else {
             // 요청 자체를 못했을 때
             console.error(`요청 자체 실패: ${error}`);
