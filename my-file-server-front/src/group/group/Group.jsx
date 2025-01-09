@@ -25,7 +25,8 @@ function Group() {
     const [selectedMenuFolderCode, setSelectedMenuFolderCode] = useState(null);
     const [group, setGroup] = useState({});
     const [loading, setLoading] = useState({upload:false});
-
+    const [showGroupMember, setShowGroupMember] = useState(false);
+    const [members, setMembers] = useState([]);
     //지금 현재 화면에 렌더링하는 데이터 state
     const [files, setFiles] = useState(null);
 
@@ -176,9 +177,41 @@ function Group() {
         //그룹 권한 체크해야 함
         groupGetThisGroup(code,(r)=>{setGroup(r)});
     }, [getMyFileData,code]);
+
+    const getGroupMembers = useCallback(async () => {
+        const res = await api.get(`/group/member?groupCode=${code}`);
+        setMembers(res.data);
+    },[code]);
+    const removeMember = (member) => {
+        console.log(member);
+        
+    }   
+    console.log('?');
+    
+    useEffect(()=>{
+        getGroupMembers();
+    },[getGroupMembers]);
     return (
         <>
             {isMobile&&<MobileHeader title={group.name+' (모바일은 완전하지 않을 수 있습니다.)'}/>}
+            <aside style={showGroupMember?
+                {width:'30vw',height:'100vh',top:'0px',right:'0px'}
+                :
+                {width:'50px',bottom:'10%',right:'5%',height:'50px'}
+                    } onClick={()=>setShowGroupMember(true)} className={s.groupMemberContainer}>
+                {!showGroupMember?<div>멤버</div>:
+                <div>
+                    <button onClick={(e)=>{e.stopPropagation();setShowGroupMember(false);}}>닫기</button>
+                    <div>함께하는 가족들입니다.</div>
+                    {members.map((member)=>(
+                        <div key={member.userCode}>
+                            <div>{member.id}</div>
+                            {group.manager===data?.userCode&&<button onClick={()=>removeMember(member)}>추방</button>}
+                        </div>
+                    ))}
+                </div>
+                }
+            </aside>
             <div className={s.mainContainer} onClick={() => setIsMenuVisible(false)}>
                 {bigFilePercent!==0&&<div style={{position:'absolute',  right:50, top: 50,display:'flex'}}><h1>{bigFilePercent}</h1><Loading type='pacman' text=''/></div>}
                 <div className={s.container}>

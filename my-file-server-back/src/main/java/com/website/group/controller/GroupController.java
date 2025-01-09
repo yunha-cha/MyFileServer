@@ -5,6 +5,7 @@ import com.website.group.entity.Group;
 import com.website.group.service.GroupService;
 import com.website.mainpage.dto.UserFolderDTO;
 import com.website.mainpage.entity.FolderEntity;
+import com.website.mainpage.entity.MainUserEntity;
 import com.website.security.dto.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,10 +55,14 @@ public class GroupController {
     public ResponseEntity<?> deleteGroup(@RequestParam Long groupCode){
         return ResponseEntity.ok().body(groupService.deleteGroup(groupCode));
     }
+    @GetMapping("/group/member")
+    public ResponseEntity<List<MainUserEntity>> getMembers(@RequestParam Long groupCode){
+        return ResponseEntity.ok().body(groupService.getGroupMembers(groupCode));
+    }
 
-    @GetMapping("/group/management")
-    public ResponseEntity<?> getGroupAllData(){
-
+    @GetMapping("/group/management/{groupCode}")
+    public ResponseEntity<?> getGroupAllData(@PathVariable Long groupCode){
+        System.out.println(groupCode);
         return ResponseEntity.ok().build();
     }
 

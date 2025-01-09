@@ -7,9 +7,9 @@ import com.website.group.entity.GroupMember;
 import com.website.group.repository.GroupMemberRepository;
 import com.website.group.repository.GroupRepository;
 import com.website.mainpage.dto.UserFolderDTO;
-import com.website.mainpage.dto.UserUploadFileDTO;
 import com.website.mainpage.entity.FileEntity;
 import com.website.mainpage.entity.FolderEntity;
+import com.website.mainpage.entity.MainUserEntity;
 import com.website.mainpage.repository.FileRepository;
 import com.website.mainpage.repository.FolderRepository;
 import com.website.mainpage.repository.MainUserRepository;
@@ -17,8 +17,6 @@ import com.website.security.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -114,5 +112,15 @@ public class GroupService {
         }catch (Exception e){
             return false;
         }
+    }
+
+    public List<MainUserEntity> getGroupMembers(Long groupCode){
+        List<GroupMember> members = groupMemberRepository.findAllByGroupCode(groupCode);
+        List<Long> userCodes = new ArrayList<>();
+        for(GroupMember g : members){
+            userCodes.add(g.getUserCode());
+        }
+        List<MainUserEntity> users = mainUserRepository.findAllByUserCodeIn(userCodes);
+        return users;
     }
 }

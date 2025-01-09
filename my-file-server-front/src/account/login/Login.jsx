@@ -30,7 +30,7 @@ const Login = () => {
 
   useEffect(() => {
     if(localStorage.getItem('token')){
-        navigate('/main');
+        localStorage.removeItem('token');
     }
   }, [navigate]);
   useEffect(()=>{

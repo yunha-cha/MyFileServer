@@ -43,5 +43,4 @@ export async function groupUploadChunk(file, description, folderCode, code, call
             setPercent(`업로드 ${Math.floor((chunkIndex/totalChunks) * 100)}% 완료`);
         }
     }
-
 }
