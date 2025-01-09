@@ -37,10 +37,10 @@ function Group() {
     const handleFormSubmit = useCallback(async (fileName) => {
 
         if(file.size>(100 * 1024 * 1024)){
-            groupUploadChunk(file, fileName, folderCode, (res)=>{
+            groupUploadChunk(file, fileName, folderCode,code, setBigFilePercent, (res)=>{
                 setFiles(prev => ({ ...prev, files: [...prev.files, res] }));
                 setBigFilePercent(0);
-            },setBigFilePercent);
+            });
             setModalOpenStatus(m=>({...m, isUploadModalOpen: false}));
             alert('파일 용량이 커 비동기로 전환합니다. 페이지를 전환하지 마세요.');
         } else {

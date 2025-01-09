@@ -54,4 +54,11 @@ public class GroupController {
     public ResponseEntity<?> deleteGroup(@RequestParam Long groupCode){
         return ResponseEntity.ok().body(groupService.deleteGroup(groupCode));
     }
+
+    @GetMapping("/group/management")
+    public ResponseEntity<?> getGroupAllData(){
+
+        return ResponseEntity.ok().build();
+    }
+
 }

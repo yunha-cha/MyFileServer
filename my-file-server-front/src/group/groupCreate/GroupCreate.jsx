@@ -42,13 +42,15 @@ const GroupCreate = () => {
             setMessage('먼저 사람을 추가해주세요!');
             return;
         }
-        groupCreateGroup(invitedUser,inputs.groupName, inputs.description, ()=>{});
+        groupCreateGroup(invitedUser,inputs.groupName, inputs.description, ()=>{
+            nav('/group/select');
+        });
     }
     return (
         <div className={s.container}>
             <h1>그룹 만들기</h1>
             <div className={s.groupInformationContainer}>
-                <input name='groupName' value={inputs.groupName} onChange={handleOnChange} placeholder='그룹 이름은 무엇인가요?'/>
+                <input name='groupName' value={inputs.groupName} onChange={handleOnChange} placeholder='이 그룹의 이름은 무엇인가요?'/>
                 <input name='description' value={inputs.description} onChange={handleOnChange} placeholder='그룹에 대한 설명을 입력해주세요.'/>
             </div>
             <div>

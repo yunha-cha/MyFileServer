@@ -23,10 +23,11 @@ export const groupDeleteGroup = async (groupCode, callBack)=>{
     const res = await api.delete(`/group?groupCode=${groupCode}`);
     callBack(res.data);
 }
-export async function groupUploadChunk(file, description, folderCode, code, callBack, setPercent) {
+export async function groupUploadChunk(file, description, folderCode, code, setPercent, callBack) {
     const chunkSize = 50 * 1024 * 1024; // 50MB
     const totalChunks = Math.ceil(file.size / chunkSize);
- 
+    console.log(setPercent);
+    
     for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
         const chunk = file.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
         const isMergeChunk = chunkIndex === totalChunks - 2;
