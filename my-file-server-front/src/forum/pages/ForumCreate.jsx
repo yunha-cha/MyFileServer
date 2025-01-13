@@ -61,7 +61,7 @@ const ForumCreate = () => {
 
         <div className={s.container}>
 
-            <div style={{ marginBottom: "2.5em" }}>
+            <div>
                 <div className={s.itemTitle}>제목</div>
                 <input name="title" placeholder="" value={newForum.title}
                     onChange={(e) => {
@@ -93,7 +93,7 @@ const ForumCreate = () => {
                 {
                     uploadFiles.length > 0 ?
                         <div className={s.fileContainer}>
-                            <div>첨부파일</div>
+                            <div className={s.fileText}>첨부파일</div>
                             <div className={s.files}>
                             {uploadFiles.map((file, i) => (
                                 <div key={i} className={s.file}>

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "user")
 @Getter
@@ -28,4 +30,7 @@ public class User {
 
     @Column(name = "rpw")
     private String rpw;
+
+    @Column(name = "last_login_time")
+    private LocalDateTime lastLoginTime;
 }

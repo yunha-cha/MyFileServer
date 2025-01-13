@@ -15,6 +15,7 @@ import GroupSelect from "./group/groupSelect/GroupSelect";
 import Group from "./group/group/Group";
 import { GroupManagement } from "./group/groupManagement/GroupManagement";
 import { Testcomponent } from "./admin/TestFolder/Testcomponent";
+import Tutorial from "./account/tutorial/Tuturial";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login/>}/>
         <Route path="/join" element={<Join/>}/>
+        <Route path="/tutorial" element={<Tutorial/>}/>
         <Route element={<SideBar/>}>
           <Route path="main" element={<Main/>}/>
           <Route path="/main/public" element={<MobilePublicMain/>}/>

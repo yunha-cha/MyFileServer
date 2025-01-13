@@ -44,6 +44,8 @@ const Login = () => {
         }}>
           <div className="login-input">
             <div className="login-input-text">Login{message? <div className='login-server-message'>{message}</div> :<></>}</div>
+            <button onClick={()=>navigate('/tutorial')} type='button'>어떤 사이트인가요?</button>
+
             <input autoComplete='username' className="login-id" placeholder="아이디" value={id} onChange={(e)=>setId(e.target.value)}/>
             <input autoComplete='current-password' className="login-pw" placeholder="비밀번호" type="password" value={pw} onChange={(e)=>setPw(e.target.value)} onKeyDown={(e)=>login(e)}/>
             <button type='submit' className="login-button">로그인</button>
