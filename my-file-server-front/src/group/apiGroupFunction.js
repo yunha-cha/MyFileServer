@@ -26,7 +26,8 @@ export const groupDeleteGroup = async (groupCode, callBack)=>{
 export async function groupUploadChunk(file, description, folderCode, code, callBack, setPercent, setLoading) {
     const chunkSize = 50 * 1024 * 1024; // 50MB
     const totalChunks = Math.ceil(file.size / chunkSize);
- 
+    console.log(setPercent);
+    
     for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
         const chunk = file.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
         const isMergeChunk = chunkIndex === totalChunks - 2;
@@ -42,5 +43,4 @@ export async function groupUploadChunk(file, description, folderCode, code, call
             setPercent(`업로드 ${Math.floor((chunkIndex/totalChunks) * 100)}% 완료`);
         }
     }
-
 }

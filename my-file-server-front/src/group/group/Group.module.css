@@ -98,6 +98,12 @@
     background-color: aliceblue;
   }
 
+  .groupMemberContainer{
+    position: fixed;
+    background-color: rgb(139, 184, 255);
+    transition: all 0.2s ease-out;
+  }
+
   @media screen and (max-width: 768px) {
     .container{
       padding-top: 5vh;

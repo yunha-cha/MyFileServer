@@ -10,4 +10,5 @@ public interface MainUserRepository extends JpaRepository<MainUserEntity, Long> 
 
     @Query("SELECT u FROM MainUserEntity u WHERE u.id LIKE :id")
     List<MainUserEntity> findAllByUserId(String id);
+    List<MainUserEntity> findAllByUserCodeIn(List<Long> userCodes);
 }
