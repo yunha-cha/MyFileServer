@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./ForumMain.module.css"
 import api from "../../common/api";
-import { useNavigate } from "react-router-dom";
-import DOMPurify from 'dompurify';
+import { useNavigate, useOutletContext } from "react-router-dom";
 import GoToTopButton from "./GoToTopButton";
 import WritePostButton from "./WritePostButton";
+import MobileHeader from "../../main/Mobile/Component/MobileHeader";
 
 const ForumMain = () => {
-
+    const isMobile = useOutletContext();
     const nav = useNavigate();
 
     const [forums, setForums] = useState([]);
@@ -74,9 +74,16 @@ const ForumMain = () => {
         return `${createAt[0]}.${String(createAt[1]).padStart(2, '0')}.${String(createAt[2]).padStart(2, '0')} ${String(createAt[3]).padStart(2, '0')}:${String(createAt[4]).padStart(2, '0')}`;
     }
 
-
+    const enterForum = (forumCode) => {
+        //조회수 API 요청 후 들어가면 변경된 조회수 반영 안되는 문제 있음
+        //awiat로 하기엔 UX 문제 발생
+        //클라이언트 단에서 조회 수 증가
+        api.post(`/views/${forumCode}`)
+        nav(`/forum/${forumCode}`); 
+    }
 
     return <div className={s.container}>
+        {isMobile&&<MobileHeader title='게시판'/>}
         <GoToTopButton/>
         <WritePostButton/>
       <h2 id="forumTitle">자유 게시판</h2>
@@ -86,7 +93,7 @@ const ForumMain = () => {
             <div
             key={forum.forumCode}
             className={s.item}
-            onClick={() => nav(`/forum/${forum.forumCode}`)}
+            onClick={() => {enterForum(forum.forumCode)}}
             >
             <div className={s.date}>{formattedDate(forum.createAt)}</div>
             <div className={s.itemContent}>

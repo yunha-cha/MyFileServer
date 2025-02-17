@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MainPageService {
@@ -48,22 +49,12 @@ public class MainPageService {
         this.commentRepository = commentRepository;
         this.folderRepository = folderRepository;
     }
-    private String getFileExtension(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null || originalFilename.isEmpty()) {
-            return "";
-        }
-        int dotIndex = originalFilename.lastIndexOf('.');
-        if (dotIndex == -1 || dotIndex == originalFilename.length() - 1) {
-            return "";
-        }
-        return originalFilename.substring(dotIndex + 1);
-    }
+
     private FileEntity uploadFile(MultipartFile file, String description, CustomUserDetails user, boolean isPrivate){
         FileEntity fileEntity =  new FileEntity();
         fileEntity.setChangedName(tool.upload(file));
         fileEntity.setUploadedAt(LocalDateTime.now());
-        fileEntity.setDescription(description+"."+this.getFileExtension(file));
+        fileEntity.setDescription(description+"."+tool.getFileExtension(file));
         fileEntity.setPrivate(isPrivate);
         fileEntity.setSize(file.getSize());
         fileEntity.setFileFullPath(downloadUrl+fileEntity.getChangedName());
@@ -76,21 +67,7 @@ public class MainPageService {
         }
         return fileRepository.save(fileEntity);
     }
-    private UserUploadFileDTO convertFileEntity(FileEntity savedEntity){
-        return new UserUploadFileDTO(
-                savedEntity.getFileCode(),
-                savedEntity.getChangedName(),
-                savedEntity.getUploadedAt(),
-                savedEntity.getDescription(),
-                savedEntity.getFileFullPath(),
-                savedEntity.getDownload_count(),
-                savedEntity.getOriginalName(),
-                savedEntity.getSize(),
-                savedEntity.isPrivate(),
-                savedEntity.getFolder().getFolderCode(),
-                "업로드 성공!"
-        );
-    }
+
     @Transactional
     public void uploadPublicFile(MultipartFile file, String description, CustomUserDetails user) {
         FileEntity fileEntity = this.uploadFile(file, description, user, false);
@@ -100,11 +77,28 @@ public class MainPageService {
     public UserUploadFileDTO uploadPrivateFile(MultipartFile file, String description, CustomUserDetails user, Long folderCode) {
         FileEntity fileEntity = this.uploadFile(file, description, user, true);
         fileEntity.setFolder(folderRepository.findById(folderCode).orElseThrow());
-        return convertFileEntity(fileRepository.save(fileEntity));
+        return tool.convertFileEntity(fileRepository.save(fileEntity));
+    }
+    @Transactional
+    public UserUploadFileDTO uploadChunk(String originalFileName, String finalFileName, String description, long fileSize, CustomUserDetails user, Long folderCode) {
+        FileEntity f = new FileEntity();
+        f.setChangedName(finalFileName);
+        f.setUploadedAt(LocalDateTime.now());
+        f.setDescription(description+"."+tool.getFileEx(originalFileName));
+        f.setFileFullPath(downloadUrl+finalFileName);
+        f.setUploadedByUser(mainUserRepository.findById(user.getUserCode()).orElseThrow());
+        f.setDownload_count(0);
+        f.setOriginalName(originalFileName);
+        f.setSize(fileSize);
+        f.setPrivate(true);
+
+        f.setFolder(folderRepository.findById(folderCode).orElseThrow());
+        return tool.convertFileEntity(fileRepository.save(f));
+
     }
 
     public Page<FileEntity> getPublicFiles(int page) {
-        Pageable pageable = PageRequest.of(page,10,Sort.by("uploadedAt").descending());
+        Pageable pageable = PageRequest.of(page,15,Sort.by("uploadedAt").descending());
         return fileRepository.getPublicFile(pageable);
     }
     public Page<FileEntity> getMyFile(CustomUserDetails user, int page) {
@@ -117,18 +111,19 @@ public class MainPageService {
         fileEntity.setDownload_count(fileEntity.getDownload_count() + 1);
     }
 
-    public boolean deleteFile(Long fileCode) {
-        FileEntity fileEntity = fileRepository.findById(fileCode).orElseThrow();
-        try{
-            if(!tool.deleteFile(fileEntity.getChangedName())){
-                return false;
+    public int deleteFile(Long fileCode) {
+        Optional<FileEntity> fileEntity = fileRepository.findById(fileCode);
+        if(fileEntity.isPresent()){
+            FileEntity file = fileEntity.get();
+            if(tool.deleteFile(file.getChangedName())){
+                fileRepository.deleteById(file.getFileCode());
+                return 200;
+            } else {
+                return 404;
             }
-            fileRepository.deleteById(fileEntity.getFileCode());
-            return true;
-        } catch (Exception e){
-            return false;
+        }else {
+            return 400;
         }
-
     }
 
     public MainUserEntity getUser(CustomUserDetails user) {
@@ -210,4 +205,10 @@ public class MainPageService {
         folder.setFolderName(description);
         folderRepository.save(folder);
     }
+
+    public List<MainUserEntity> getUsers(String id) {
+        return mainUserRepository.findAllByUserId("%"+id+"%");
+    }
+
+
 }

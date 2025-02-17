@@ -24,4 +24,11 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
      */
     @Query("SELECT f FROM FolderEntity f WHERE f.parentFolderCode = :folderCode AND f.user = :userCode")
     List<FolderEntity> getFolderInFolder(Long userCode, Long folderCode);
+
+    @Query("SELECT f.folderCode FROM FolderEntity f WHERE f.groupCode=:groupCode AND f.parentFolderCode IS NULL")
+    Long getGroupRootFolderCode(Long groupCode);
+    @Query("SELECT f FROM FolderEntity f WHERE f.parentFolderCode=:folderCode AND f.groupCode=:groupCode")
+    List<FolderEntity> getFolderInFolderGroup(Long folderCode,Long groupCode);
+
+    List<FolderEntity> findAllByGroupCode(Long groupCode);
 }

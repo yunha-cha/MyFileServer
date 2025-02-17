@@ -5,6 +5,8 @@ import Pagination from 'react-js-pagination';
 import { calcFileSize, canOpenFile, deleteFile, downloadFile, formattedDateTime } from '../function';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { FaTrashAlt } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
 
 function PCMainPublic() {
 
@@ -28,7 +30,7 @@ function PCMainPublic() {
     const getPublicFile = useCallback(async () => { //페이지에 따라 파일 가져오는 함수
         const res = await api.get(`/main/file/public?page=${page}`);
         setTotalElements(res.data.totalElements);        
-        setFiles(res.data.content);
+        setFiles(res.data.content);        
     },[page]);
 
     const downloadSelectedFile = (file) => {    //파일 다운로드 함수
@@ -45,6 +47,9 @@ function PCMainPublic() {
             if(fileName.length===0){
                 name='새 파일';
             }
+            console.log(name);
+            console.log(uploadFile);
+            
             await api.post('/main/upload/public', { file: uploadFile, description: name }, {
                 onUploadProgress: (e) => {
                     const percent = Math.round((e.loaded * 100) / e.total);
@@ -109,6 +114,10 @@ function PCMainPublic() {
                     }
 
                 </div>
+                <div>
+
+      <Tooltip id="tooltip" />
+    </div>
             </div>
             <table className={s.table}>
                 <thead>
@@ -126,8 +135,8 @@ function PCMainPublic() {
                     {
                         files.map((file)=>(
                             <tr key={file.fileCode}>
-                                <td style={{flex:0.5}} className={s.center}>{data&&data.userCode===file.uploadedByUser.userCode?<button onClick={()=>deleteSelectedFile(file)}>삭제</button>:file.fileCode}</td>
-                                <td style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
+                                <td style={{flex:0.5}} className={s.center}>{data?(data.userCode===file.uploadedByUser.userCode)||(data.userRole==='ROLE_ADMIN')?<button className={s.delete} onClick={()=>deleteSelectedFile(file)}><FaTrashAlt size={15} color="#ff2020" style={{alignSelf:'center'}}/></button>:file.fileCode:undefined}</td>
+                                <td data-tooltip-id='tooltip' data-tooltip-content={file.description} style={{flex:5}} className={s.left} onClick={()=>openFile(file)}>{file.description}{}</td>
                                 <td style={{flex:1}} className={s.center}><div onClick={()=>selectUser(file.uploadedByUser)} className={s.uploaderData}>{file.uploadedByUser.id}</div></td>
                                 <td style={{flex:1}} className={s.timeData}>{formattedDateTime(file.uploadedAt)}</td>
                                 <td style={{flex:1}} className={s.center}>{file.download_count}</td>
@@ -141,11 +150,11 @@ function PCMainPublic() {
             <div className={s.pagination}>
                 <Pagination
                 activePage={page}
-                itemsCountPerPage={10}
+                itemsCountPerPage={15}
                 totalItemsCount={totalElements}
                 onChange={(page)=>setPage(page-1)}/>
             </div>
-
+        
         </div>
     );
 }

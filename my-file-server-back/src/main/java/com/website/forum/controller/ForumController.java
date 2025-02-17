@@ -53,7 +53,7 @@ public class ForumController {
 
     /* 게시글 등록 */
     @PostMapping("/forum")
-    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, ForumDTO forumDTO, HttpServletRequest request ){
+    public ResponseEntity<String> registForum(@AuthenticationPrincipal CustomUserDetails user, ForumDTO forumDTO, HttpServletRequest request){
 
         return ResponseEntity.ok().body(forumService.registForum(user, forumDTO, request.getRemoteAddr()));
     }
@@ -69,10 +69,11 @@ public class ForumController {
 
     /* 조회수 세기 */
     @PostMapping("/views/{forumCode}")
-    public ResponseEntity<?> countView(@PathVariable Long forumCode, HttpServletRequest request){
+    public ResponseEntity<?> countView(@PathVariable Long forumCode){
         try{
-            forumService.countView(forumCode, request.getRemoteAddr());
-            return ResponseEntity.ok().body("조회수 세기 성공");
+
+            forumService.countView(forumCode);
+           return ResponseEntity.ok().body("조회수 세기 성공");
         }catch (Exception e){
             e.printStackTrace(); // 예외 내용
             return ResponseEntity.badRequest().body("조회수 세기 실패");

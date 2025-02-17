@@ -1,9 +1,11 @@
 package com.website.forum.service;
 
 import com.website.common.Tool;
+import com.website.forum.dto.AttachmentDTO;
 import com.website.forum.dto.ForumDTO;
 import com.website.forum.entity.Attachment;
 import com.website.forum.entity.Forum;
+import com.website.forum.repository.AttachmentRepository;
 import com.website.forum.repository.CommentRepository;
 import com.website.forum.repository.ForumRepository;
 import com.website.security.dto.CustomUserDetails;
@@ -20,9 +22,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ForumService {
@@ -33,12 +38,14 @@ public class ForumService {
     private final ForumRepository forumRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final AttachmentRepository attachmentRepository;
 
-    public ForumService(Tool tool, ForumRepository forumRepository, CommentRepository commentRepository, UserRepository userRepository) {
+    public ForumService(Tool tool, ForumRepository forumRepository, CommentRepository commentRepository, UserRepository userRepository, AttachmentRepository attachmentRepository) {
         this.tool = tool;
         this.forumRepository = forumRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
 
@@ -51,18 +58,18 @@ public class ForumService {
 
 
     public ForumDTO getForumDetail(Long forumCode) {
-
-        return forumRepository.findByForumCode(forumCode);
+        List<AttachmentDTO> attachmentDTO = attachmentRepository.findAllByForumCode(forumCode);
+        ForumDTO forumDTO = forumRepository.findByForumCode(forumCode);
+        forumDTO.setFile(attachmentDTO);
+        return forumDTO;
     }
 
 
     @Transactional
     public String registForum(CustomUserDetails user, ForumDTO forumDTO, String remoteAddr) {
 
-        // user entity 조회
         User registUser = userRepository.findById(user.getUsername());
 
-        // 1. 객체 생성해서 save      2. setter 사용
         Forum newForum = new Forum(
                 forumDTO.getForumCode(),
                 forumDTO.getTitle(),
@@ -73,47 +80,61 @@ public class ForumService {
                 "비공개",
                 remoteAddr
         );
-        forumRepository.save(newForum);
-
+        newForum = forumRepository.save(newForum);
+        List<MultipartFile> files = forumDTO.getFiles();
+        if(files != null){
+            List<Attachment> attachments = new ArrayList<>();
+            for (MultipartFile f : files){
+                String changedName = tool.upload(f);
+                Attachment attachment = new Attachment(
+                        newForum.getForumCode(),
+                        changedName,
+                        f.getOriginalFilename(),
+                        downloadUrl+changedName,
+                        0,
+                        f.getSize(),
+                        LocalDate.now()
+                );
+                attachments.add(attachment);
+            }
+            attachmentRepository.saveAll(attachments);
+        }
         return "등록 굿";
     }
 
 
     @Transactional
     public String removeForum(Long forumCode) {
+        Forum forum = forumRepository.findById(forumCode).orElseThrow();
 
-//        Forum removedForum = forumRepository.findById(forumCode).orElseThrow(() -> new NoSuchElementException("데이터가 없음"));
-        // 게시글의 댓글 먼저 삭제
-        commentRepository.deleteByForumCode(forumCode);
+        String regex = "src\\s*=\\s*\"[^\"]*?/download/([^\"]+?)\"";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(forum.getContent());
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        while (matcher.find()) {
+            fileNames.add(matcher.group(1));
+        }
+        String[] result = fileNames.toArray(new String[0]);
+
+        // 결과 출력
+        for (String fileName : result) {
+            System.out.println(fileName);
+            if(tool.deleteFile(fileName)){
+                System.out.println("사진 삭제 성공");
+            } else {
+                System.out.println("사진 삭제 실패");
+            }
+        }
         forumRepository.deleteById(forumCode);
         return "게시글 삭제 완료";
     }
 
 
     @Transactional
-    public void countView(Long forumCode, String remoteAddr) {
-
-        System.out.println("forumCode = " + forumCode);
-        System.out.println("request = " + remoteAddr);
-
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-
-        String sessionKey = "viewedForum_" + forumCode + "_ip_" + remoteAddr;
-        Boolean hasViewed = (Boolean) session.getAttribute(sessionKey);
-
-
-        if(hasViewed == null || !hasViewed){
-
-            System.out.println("hasViewed = " + hasViewed);
-            System.out.println(session.getAttribute(sessionKey));
-            forumRepository.incrementViewCount(forumCode);
-            session.setAttribute(sessionKey, true);
-        } else{
-            System.out.println("hasViewed = " + hasViewed);
-
-        }
-
+    public void countView(Long forumCode) {
+        forumRepository.incrementViewCount(forumCode);
     }
 
 

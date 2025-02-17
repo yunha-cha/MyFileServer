@@ -3,6 +3,7 @@ package com.website.security.config;
 import com.website.security.jwt.JWTFilter;
 import com.website.security.jwt.JWTUtil;
 import com.website.security.jwt.LoginFilter;
+import com.website.security.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +30,11 @@ public class SecurityConfig {
     private String allowOrigin;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    private final UserService userService;
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserService userService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     @Bean   //빈이기 때문에 주입 가능하다.
@@ -94,7 +96,7 @@ public class SecurityConfig {
                             response.getWriter().write("{\"error\": \"권한 부족\", \"message\": \"어드민만 접근 가능합니다.\"}");
                         }));
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,userService), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .sessionManagement((session)-> session

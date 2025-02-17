@@ -4,7 +4,7 @@ import api from "../common/api";
 export const getUser = createAsyncThunk('get/user', async () => {
     try{
         const res = await api.get("/main/user");        
-        console.log('(경고!) dispatch 했음 최대한 이거 안뜨게 하자');
+        console.log('dispatch');
         return res.data;
     } catch(err){
         console.log(err);

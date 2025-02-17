@@ -2,6 +2,10 @@ package com.website.security.repository;
 
 import com.website.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDateTime;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     /**
@@ -13,4 +17,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findById(String username);
     User findByUserCode(Long userCode);
+
+    @Modifying
+    @Query("UPDATE User u SET u.lastLoginTime = :now WHERE u.userCode = :userCode")
+    void updateUserLoginTime(Long userCode, LocalDateTime now);
 }

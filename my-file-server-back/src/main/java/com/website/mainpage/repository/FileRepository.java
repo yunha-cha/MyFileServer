@@ -1,6 +1,7 @@
 package com.website.mainpage.repository;
 
 import com.website.mainpage.entity.FileEntity;
+import com.website.mainpage.entity.FolderEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,9 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
      */
     @Query("SELECT f FROM FileEntity f WHERE f.uploadedByUser.userCode = :userCode AND f.folder.folderCode = :folderCode AND f.isPrivate=true")
     List<FileEntity> getFileInFolder(Long userCode, Long folderCode);
+
+    @Query("SELECT f FROM FileEntity f WHERE f.folder.folderCode=:folderCode")
+    List<FileEntity> getFileInGroupFolder(Long folderCode);
+
+    List<FileEntity> findAllByFolderIn(List<FolderEntity> folderCodes);
 }

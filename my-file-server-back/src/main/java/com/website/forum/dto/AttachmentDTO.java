@@ -1,12 +1,8 @@
 package com.website.forum.dto;
 
-import com.website.forum.entity.Forum;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @NoArgsConstructor
@@ -28,7 +24,7 @@ public class AttachmentDTO {
 
     private int downloadCount;
 
-    private int size;
+    private long size;
 
-    private LocalDateTime uploadDate;
+    private LocalDate uploadDate;
 }

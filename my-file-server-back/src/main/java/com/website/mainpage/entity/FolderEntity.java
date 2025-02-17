@@ -26,6 +26,8 @@ public class FolderEntity {
     private Long user;
     @Column(name = "parent_folder_code")
     private Long parentFolderCode;
+    @Column(name = "group_code")
+    private Long groupCode;
 
 //    @OneToMany(mappedBy = "folder")
 //    private List<FileEntity> files = new ArrayList<>();

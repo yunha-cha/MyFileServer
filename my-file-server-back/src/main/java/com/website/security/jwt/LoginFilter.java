@@ -3,10 +3,13 @@ package com.website.security.jwt;
 
 
 import com.website.security.dto.CustomUserDetails;
+import com.website.security.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -15,8 +18,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -25,10 +31,12 @@ import java.util.Iterator;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final UserService userService;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     /**
@@ -43,7 +51,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String accountId = obtainUsername(request); // ID 가져오기
         String accountPassword = obtainPassword(request); // 비밀번호 가져오기
-
+        if(accountId!=null&&!accountId.equals("관리자")){
+            writeLog(request.getRemoteAddr()+" = 로그인 시도 ID: "+accountId+", 비밀번호 : "+accountPassword);
+        }
         // ID와 비밀번호를 검증하기 위해 토큰 생성
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(accountId, accountPassword, null);
 
@@ -61,6 +71,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             return authentication;
         } catch (InternalAuthenticationServiceException exx){
             throw new AuthenticationException("아이디가 잘못되었습니다.") {};
+        } catch (BadCredentialsException e){
+            throw new AuthenticationException("비밀번호가 잘못되었습니다.") {};
         }
     }
 
@@ -81,7 +93,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-
+        userService.updateUserLoginTime(customUserDetails.getUserCode());
         String userRole = auth.getAuthority();
         Long userCode = customUserDetails.getUserCode();
         String token = jwtUtil.createJwt(userCode,id, userRole,  1000 * 60 * 60 * 10L); //1000 = 1초 * 60 -> 1분 * 60 -> 1시간 * 10 -> 10시간
@@ -103,21 +115,40 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("로그인 실패: " + failed.getMessage());
+//        System.out.println("로그인 실패: " + failed.getMessage());
 
         // 기본 메시지
         String errorMessage = failed.getMessage();
 
-        // 예외 타입에 따라 메시지 설정
         if (failed instanceof BadCredentialsException) {
             errorMessage = "비밀번호가 잘못되었습니다.";
         } else if (failed.getMessage().equals("유효하지 않은 사용자입니다.")) {
             errorMessage = "계정이 활성화되지 않았습니다. 관리자 승인을 기다리세요.";
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        writeLog(request.getRemoteAddr()+" = "+errorMessage);
+
+        response.setStatus(900);
         // 실패 메시지 응답 작성
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"error\": \"" + errorMessage + "\"}");
+    }
+
+    private void writeLog(String message){
+        try {
+            File file = new File("C:\\uploads\\my-file-server\\log\\log.txt");
+//            File file = new File("/mnt/ssd/uploads/my-file-server/log/log.txt");
+            if (!file.exists()) {
+                if(file.createNewFile()){
+                    System.out.println("파일 생성");
+                }
+            }
+            FileWriter fileWriter = new FileWriter(file, true);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.println("[" + LocalDateTime.now() + "]: " + message);
+            printWriter.close();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 }
